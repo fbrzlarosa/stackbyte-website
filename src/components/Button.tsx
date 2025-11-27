@@ -45,7 +45,7 @@ const Button = React.forwardRef<HTMLButtonElement | HTMLAnchorElement, ButtonPro
         "bg-transparent border-2 border-white/20 text-white hover:bg-white/10 hover:border-white/40",
       ghost: "bg-transparent text-white hover:bg-white/5",
       gradient:
-        "bg-gradient-to-r from-primary to-purple-600 text-white shadow-lg shadow-primary/25 hover:shadow-primary/40 hover:-translate-y-0.5",
+        "bg-linear-to-r from-primary via-purple-400 to-primary bg-size-[200%_auto] animate-gradient text-white shadow-lg shadow-primary/25 hover:shadow-primary/40 hover:-translate-y-0.5",
     };
 
     const sizes = {

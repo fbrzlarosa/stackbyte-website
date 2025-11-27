@@ -58,17 +58,31 @@ function ExperienceCard({
   exp: (typeof experiences)[0];
   index: number;
 }) {
-  const mouseX = useMotionValue(0);
-  const mouseY = useMotionValue(0);
+  const mouseX = useMotionValue(0.5);
+  const mouseY = useMotionValue(0.5);
+  const cardRef = useRef<HTMLDivElement>(null);
+
+  const rotateX = useTransform(mouseY, [0, 1], [8, -8]);
+  const rotateY = useTransform(mouseX, [0, 1], [-8, 8]);
+
+  const mouseXPercent = useTransform(mouseX, [0, 1], ["0%", "100%"]);
+  const mouseYPercent = useTransform(mouseY, [0, 1], ["0%", "100%"]);
 
   function handleMouseMove({
     currentTarget,
     clientX,
     clientY,
   }: MouseEvent<HTMLDivElement>) {
-    const { left, top } = currentTarget.getBoundingClientRect();
-    mouseX.set(clientX - left);
-    mouseY.set(clientY - top);
+    const { left, top, width, height } = currentTarget.getBoundingClientRect();
+    const x = (clientX - left) / width;
+    const y = (clientY - top) / height;
+    mouseX.set(x);
+    mouseY.set(y);
+  }
+
+  function handleMouseLeave() {
+    mouseX.set(0.5);
+    mouseY.set(0.5);
   }
 
   return (
@@ -102,20 +116,28 @@ function ExperienceCard({
               transition={{ duration: 0.3 }}
             />
           </motion.div>
-          {/* Connecting Line Segment - Only visible when active/hovered if needed, but main line handles it */}
         </div>
 
-        <div
+        <motion.div
+          ref={cardRef}
           onMouseMove={handleMouseMove}
-          className="flex-1 relative rounded-2xl border border-white/10 bg-white/5 overflow-hidden group/card"
+          onMouseLeave={handleMouseLeave}
+          style={{
+            rotateX,
+            rotateY,
+            transformStyle: "preserve-3d",
+            perspective: "1000px",
+          }}
+          className="flex-1 relative rounded-2xl border border-white/10 bg-white/5 overflow-hidden group/card transition-shadow duration-300"
+          whileHover={{ scale: 1.02 }}
         >
           {/* Spotlight Effect */}
           <motion.div
-            className="pointer-events-none absolute -inset-px opacity-0 transition duration-300 group-hover/card:opacity-100"
+            className="pointer-events-none absolute -inset-px opacity-0 transition duration-300 group-hover/card:opacity-100 rounded-2xl"
             style={{
               background: useMotionTemplate`
                 radial-gradient(
-                  650px circle at ${mouseX}px ${mouseY}px,
+                  650px circle at ${mouseXPercent} ${mouseYPercent},
                   rgba(6, 182, 212, 0.15),
                   transparent 80%
                 )
@@ -123,27 +145,61 @@ function ExperienceCard({
             }}
           />
 
-          <div className="relative p-6 z-10">
+          {/* 3D Glow Effect */}
+          <motion.div
+            className="pointer-events-none absolute -inset-1 opacity-0 group-hover/card:opacity-100 transition-opacity duration-300 rounded-2xl"
+            style={{
+              background: useMotionTemplate`
+                radial-gradient(
+                  400px circle at ${mouseXPercent} ${mouseYPercent},
+                  rgba(6, 182, 212, 0.2),
+                  transparent 70%
+                )
+              `,
+              transform: "translateZ(-10px)",
+            }}
+          />
+
+          <div
+            className="relative p-6 z-10"
+            style={{ transform: "translateZ(20px)" }}
+          >
             <div className="flex items-center gap-3 mb-3">
               <motion.span
                 className="text-xs font-mono text-primary/80 px-2 py-1 rounded border border-primary/20 bg-primary/5"
                 whileHover={{ scale: 1.05 }}
+                style={{ transform: "translateZ(10px)" }}
               >
                 {exp.year}
               </motion.span>
-              <exp.icon className="w-5 h-5 text-gray-500 group-hover/card:text-primary transition-colors" />
+              <motion.div
+                style={{ transform: "translateZ(10px)" }}
+                whileHover={{ rotate: 360 }}
+                transition={{ duration: 0.5 }}
+              >
+                <exp.icon className="w-5 h-5 text-gray-500 group-hover/card:text-primary transition-colors" />
+              </motion.div>
             </div>
-            <h3 className="text-xl font-bold text-white mb-1 group-hover/card:text-primary transition-colors">
+            <motion.h3
+              className="text-xl font-bold text-white mb-1 group-hover/card:text-primary transition-colors"
+              style={{ transform: "translateZ(15px)" }}
+            >
               {exp.title}
-            </h3>
-            <div className="text-sm text-gray-400 mb-3 font-medium">
+            </motion.h3>
+            <motion.div
+              className="text-sm text-gray-400 mb-3 font-medium"
+              style={{ transform: "translateZ(12px)" }}
+            >
               {exp.company}
-            </div>
-            <p className="text-sm text-gray-500 leading-relaxed group-hover/card:text-gray-400 transition-colors">
+            </motion.div>
+            <motion.p
+              className="text-sm text-gray-500 leading-relaxed group-hover/card:text-gray-400 transition-colors"
+              style={{ transform: "translateZ(8px)" }}
+            >
               {exp.description}
-            </p>
+            </motion.p>
           </div>
-        </div>
+        </motion.div>
       </motion.div>
     </ScrollReveal>
   );
@@ -162,7 +218,6 @@ export default function About() {
     restDelta: 0.001,
   });
 
-  const y = useTransform(scrollYProgress, [0, 1], [100, -100]);
   const rotateX = useTransform(smoothProgress, [0, 1], [15, -15]);
   const rotateY = useTransform(smoothProgress, [0, 1], [-10, 10]);
   const scale = useTransform(smoothProgress, [0, 0.5, 1], [0.95, 1.02, 0.95]);

@@ -107,7 +107,7 @@ export default function Process() {
               }}
               className="text-gray-500"
             >
-              Perfect execution.
+              Real results.
             </motion.span>
           </motion.h2>
           <motion.p

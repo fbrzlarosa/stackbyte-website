@@ -1,6 +1,12 @@
 "use client";
 
-import { motion, useScroll, useSpring, useTransform } from "framer-motion";
+import {
+  motion,
+  useReducedMotion,
+  useScroll,
+  useSpring,
+  useTransform,
+} from "framer-motion";
 import { ArrowRight } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import AnimatedOrb from "./AnimatedOrb";
@@ -10,6 +16,17 @@ import StatusBadge from "./StatusBadge";
 export default function Hero() {
   const ref = useRef(null);
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+  const [isMobile, setIsMobile] = useState(false);
+  const prefersReducedMotion = useReducedMotion();
+
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+    return () => window.removeEventListener("resize", checkMobile);
+  }, []);
 
   const { scrollYProgress } = useScroll({
     target: ref,
@@ -17,24 +34,64 @@ export default function Hero() {
   });
 
   const smoothProgress = useSpring(scrollYProgress, {
-    stiffness: 100,
-    damping: 30,
+    stiffness: isMobile ? 200 : 100,
+    damping: isMobile ? 40 : 30,
     restDelta: 0.001,
   });
 
-  const backgroundY = useTransform(scrollYProgress, [0, 1], ["0%", "50%"]);
-  const textY = useTransform(scrollYProgress, [0, 1], ["0%", "100%"]);
+  const backgroundY = useTransform(
+    scrollYProgress,
+    [0, 1],
+    ["0%", isMobile ? "30%" : "50%"]
+  );
+  const textY = useTransform(
+    scrollYProgress,
+    [0, 1],
+    ["0%", isMobile ? "50%" : "100%"]
+  );
 
-  // 3D transforms for text - start straight (0) and animate during scroll
-  const rotateX = useTransform(smoothProgress, [0, 1], [0, -20]);
-  const rotateY = useTransform(smoothProgress, [0, 1], [0, 15]);
-  const rotateZ = useTransform(smoothProgress, [0, 1], [0, 3]);
-  const translateZ = useTransform(smoothProgress, [0, 1], [0, 80]);
-  const textScale = useTransform(smoothProgress, [0, 0.5, 1], [1, 1.05, 1.2]);
+  // 3D transforms for text - reduced on mobile for better performance
+  const rotateX = useTransform(
+    smoothProgress,
+    [0, 1],
+    [0, isMobile || prefersReducedMotion ? 0 : -20]
+  );
+  const rotateY = useTransform(
+    smoothProgress,
+    [0, 1],
+    [0, isMobile || prefersReducedMotion ? 0 : 15]
+  );
+  const rotateZ = useTransform(
+    smoothProgress,
+    [0, 1],
+    [0, isMobile || prefersReducedMotion ? 0 : 3]
+  );
+  const translateZ = useTransform(
+    smoothProgress,
+    [0, 1],
+    [0, isMobile || prefersReducedMotion ? 0 : 80]
+  );
+  const textScale = useTransform(
+    smoothProgress,
+    [0, 0.5, 1],
+    [1, isMobile ? 1.02 : 1.05, isMobile ? 1.1 : 1.2]
+  );
 
-  const paraRotateX = useTransform(smoothProgress, [0, 1], [0, -12]);
-  const paraY = useTransform(smoothProgress, [0, 1], [0, -40]);
-  const paraTranslateZ = useTransform(smoothProgress, [0, 1], [0, 40]);
+  const paraRotateX = useTransform(
+    smoothProgress,
+    [0, 1],
+    [0, isMobile || prefersReducedMotion ? 0 : -12]
+  );
+  const paraY = useTransform(
+    smoothProgress,
+    [0, 1],
+    [0, isMobile || prefersReducedMotion ? -15 : -40]
+  );
+  const paraTranslateZ = useTransform(
+    smoothProgress,
+    [0, 1],
+    [0, isMobile || prefersReducedMotion ? 0 : 40]
+  );
 
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
@@ -57,21 +114,26 @@ export default function Hero() {
       <motion.div
         style={{
           y: backgroundY,
-          x: mousePosition.x,
+          x: isMobile ? 0 : mousePosition.x,
+          willChange: "transform",
         }}
         className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] md:w-[1000px] h-[300px] md:h-[500px] bg-primary/20 rounded-full blur-[80px] md:blur-[120px] -z-10"
       />
       <motion.div
         style={{
           y: backgroundY,
-          x: -mousePosition.x,
+          x: isMobile ? 0 : -mousePosition.x,
+          willChange: "transform",
         }}
         className="absolute bottom-0 right-0 w-[400px] md:w-[800px] h-[400px] md:h-[600px] bg-purple-500/10 rounded-full blur-[60px] md:blur-[100px] -z-10"
       />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
         <motion.div
-          style={{ y: textY }}
+          style={{
+            y: textY,
+            willChange: "transform",
+          }}
           className="max-w-4xl relative z-10"
           initial="hidden"
           animate="visible"
@@ -98,38 +160,87 @@ export default function Hero() {
               rotateZ,
               translateZ,
               scale: textScale,
-              transformStyle: "preserve-3d",
-              perspective: "1500px",
+              transformStyle: isMobile ? "flat" : "preserve-3d",
+              perspective: isMobile ? "none" : "1500px",
+              willChange: "transform",
             }}
             className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight leading-[1.1] mb-6 md:mb-8"
           >
             <motion.span
               style={{
                 display: "inline-block",
-                transformStyle: "preserve-3d",
-                translateZ: useTransform(smoothProgress, [0, 1], [0, 40]),
+                transformStyle: isMobile ? "flat" : "preserve-3d",
+                translateZ: useTransform(
+                  smoothProgress,
+                  [0, 1],
+                  [0, isMobile || prefersReducedMotion ? 0 : 40]
+                ),
+                willChange: "transform",
               }}
             >
               Crafting efficient,
             </motion.span>
             <br />
+            <motion.span
+              style={{
+                display: "inline-block",
+                transformStyle: isMobile ? "flat" : "preserve-3d",
+                translateZ: useTransform(
+                  smoothProgress,
+                  [0, 1],
+                  [0, isMobile || prefersReducedMotion ? 0 : -50]
+                ),
+                rotateY: useTransform(
+                  smoothProgress,
+                  [0, 1],
+                  [0, isMobile || prefersReducedMotion ? 0 : 10]
+                ),
+                willChange: "transform",
+              }}
+            >
+              scalable solutions
+            </motion.span>{" "}
+            <br />
+            <motion.span
+              style={{
+                display: "inline-block",
+                transformStyle: isMobile ? "flat" : "preserve-3d",
+                translateZ: useTransform(
+                  smoothProgress,
+                  [0, 1],
+                  [0, isMobile || prefersReducedMotion ? 0 : 30]
+                ),
+                willChange: "transform",
+              }}
+            >
+              in
+            </motion.span>{" "}
             <span className="relative inline-block">
               <motion.span
                 style={{
                   display: "inline-block",
-                  transformStyle: "preserve-3d",
-                  translateZ: useTransform(smoothProgress, [0, 1], [0, -50]),
-                  rotateY: useTransform(smoothProgress, [0, 1], [0, 10]),
+                  transformStyle: isMobile ? "flat" : "preserve-3d",
+                  translateZ: useTransform(
+                    smoothProgress,
+                    [0, 1],
+                    [0, isMobile || prefersReducedMotion ? 0 : 30]
+                  ),
+                  willChange: "transform",
                 }}
                 className="text-transparent bg-clip-text bg-linear-to-r from-primary via-purple-400 to-primary bg-size-[200%_auto] animate-gradient"
               >
-                scalable solutions
+                software & web.
               </motion.span>
               <motion.span
                 className="absolute -inset-1 bg-linear-to-r from-primary/20 to-purple-500/20 blur-xl -z-10"
                 style={{
-                  transform: "translateZ(-30px)",
-                  scale: useTransform(smoothProgress, [0, 1], [1, 1.2]),
+                  transform: isMobile ? "none" : "translateZ(-30px)",
+                  scale: useTransform(
+                    smoothProgress,
+                    [0, 1],
+                    [1, isMobile ? 1.1 : 1.2]
+                  ),
+                  willChange: "transform, opacity",
                 }}
                 animate={{
                   opacity: [0.5, 0.9, 0.5],
@@ -140,17 +251,7 @@ export default function Hero() {
                   ease: "easeInOut",
                 }}
               />
-            </span>{" "}
-            <br />
-            <motion.span
-              style={{
-                display: "inline-block",
-                transformStyle: "preserve-3d",
-                translateZ: useTransform(smoothProgress, [0, 1], [0, 30]),
-              }}
-            >
-              in software & web.
-            </motion.span>
+            </span>
           </motion.h1>
 
           <motion.p
@@ -162,7 +263,8 @@ export default function Hero() {
               rotateX: paraRotateX,
               y: paraY,
               translateZ: paraTranslateZ,
-              transformStyle: "preserve-3d",
+              transformStyle: isMobile ? "flat" : "preserve-3d",
+              willChange: "transform",
             }}
             className="text-base sm:text-lg md:text-xl text-gray-400 max-w-2xl mb-8 md:mb-10 leading-relaxed"
           >

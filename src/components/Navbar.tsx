@@ -95,7 +95,7 @@ export default function Navbar() {
 
             <div className="w-px h-6 bg-white/10 mx-2" />
 
-            <Button href="#contact" variant="primary" size="sm">
+            <Button href="#contact" variant="gradient" size="sm">
               Let&apos;s Talk
             </Button>
           </div>
