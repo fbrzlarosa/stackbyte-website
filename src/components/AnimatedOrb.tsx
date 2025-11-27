@@ -7,9 +7,10 @@ import { useEffect, useState } from "react";
 interface Particle {
   id: number;
   initialZ: number;
-  targetX: number[];
-  targetY: number[];
+  pathX: number[];
+  pathY: number[];
   duration: number;
+  scaleVariations: number[];
 }
 
 export default function AnimatedOrb() {
@@ -25,27 +26,55 @@ export default function AnimatedOrb() {
   const springX = useSpring(mouseX, springConfig);
   const springY = useSpring(mouseY, springConfig);
 
-  // Intense 3D Rotation based on mouse
-  const rotateX = useTransform(springY, [-500, 500], [45, -45]);
-  const rotateY = useTransform(springX, [-500, 500], [-45, 45]);
+  // 3D Rotation based on mouse - reduced
+  const rotateX = useTransform(springY, [-500, 500], [25, -25]);
+  const rotateY = useTransform(springX, [-500, 500], [-25, 25]);
 
-  // Parallax layers
-  const layer1X = useTransform(springX, [-500, 500], [-50, 50]);
-  const layer1Y = useTransform(springY, [-500, 500], [-50, 50]);
+  // Parallax layers with different speeds for depth effect - increased
+  const parallaxBackX = useTransform(springX, [-500, 500], [-120, 120]); // Furthest back - fastest
+  const parallaxBackY = useTransform(springY, [-500, 500], [-120, 120]);
 
-  const layer2X = useTransform(springX, [-500, 500], [-25, 25]);
-  const layer2Y = useTransform(springY, [-500, 500], [-25, 25]);
+  const parallaxMidX = useTransform(springX, [-500, 500], [-80, 80]); // Middle layer
+  const parallaxMidY = useTransform(springY, [-500, 500], [-80, 80]);
+
+  const parallaxFrontX = useTransform(springX, [-500, 500], [-40, 40]); // Front layer - slowest
+  const parallaxFrontY = useTransform(springY, [-500, 500], [-40, 40]);
+
+  const parallaxLogoX = useTransform(springX, [-500, 500], [-25, 25]); // Logo - very slow
+  const parallaxLogoY = useTransform(springY, [-500, 500], [-25, 25]);
+
+  const parallaxParticlesX = useTransform(springX, [-500, 500], [-90, 90]); // Particles parallax
+  const parallaxParticlesY = useTransform(springY, [-500, 500], [-90, 90]);
 
   useEffect(() => {
-    // Generate particles only once on mount
+    // Generate particles only once on mount with insect-like movement paths
     const timer = setTimeout(() => {
-      const newParticles = Array.from({ length: 12 }).map((_, i) => ({
-        id: i,
-        initialZ: Math.random() * 200,
-        targetX: [Math.random() * 200 - 100, Math.random() * 200 - 100],
-        targetY: [Math.random() * 200 - 100, Math.random() * 200 - 100],
-        duration: Math.random() * 3 + 2,
-      }));
+      const newParticles = Array.from({ length: 12 }).map((_, i) => {
+        // Create multiple waypoints for insect-like erratic movement
+        const waypoints = 5;
+        const pathX: number[] = [];
+        const pathY: number[] = [];
+
+        for (let j = 0; j < waypoints; j++) {
+          pathX.push(Math.random() * 300 - 150);
+          pathY.push(Math.random() * 300 - 150);
+        }
+        // Close the loop
+        pathX.push(pathX[0]);
+        pathY.push(pathY[0]);
+
+        return {
+          id: i,
+          initialZ: Math.random() * 200,
+          pathX,
+          pathY,
+          duration: Math.random() * 4 + 3, // Slower, more erratic
+          scaleVariations: Array.from(
+            { length: waypoints + 1 },
+            () => Math.random() * 0.5 + 0.5
+          ),
+        };
+      });
       setParticles(newParticles);
     }, 0);
     return () => clearTimeout(timer);
@@ -77,9 +106,14 @@ export default function AnimatedOrb() {
           rotateY,
         }}
       >
-        {/* Core Glow */}
+        {/* Core Glow - Parallax Background */}
         <motion.div
           className="absolute inset-0 bg-cyan-500/20 rounded-full blur-[80px]"
+          style={{
+            x: parallaxBackX,
+            y: parallaxBackY,
+            translateZ: -100,
+          }}
           animate={{
             scale: [0.8, 1.2, 0.8],
             opacity: [0.2, 0.5, 0.2],
@@ -87,10 +121,15 @@ export default function AnimatedOrb() {
           transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
         />
 
-        {/* Outer Hexagon Grid - Rotating */}
+        {/* Outer Hexagon Grid - Rotating with Parallax */}
         <motion.div
           className="absolute inset-0 border border-cyan-500/10 rounded-full"
-          style={{ translateZ: 50, rotateZ: 0 }}
+          style={{
+            translateZ: 50,
+            rotateZ: 0,
+            x: parallaxBackX,
+            y: parallaxBackY,
+          }}
           animate={{ rotateZ: 360 }}
           transition={{ duration: 30, repeat: Infinity, ease: "linear" }}
         >
@@ -105,50 +144,88 @@ export default function AnimatedOrb() {
           ))}
         </motion.div>
 
-        {/* Dynamic Rings */}
+        {/* Dynamic Rings with Parallax */}
         <motion.div
           className="absolute inset-10 border-2 border-dashed border-cyan-500/20 rounded-full"
-          style={{ translateZ: 80 }}
+          style={{
+            translateZ: 80,
+            x: parallaxMidX,
+            y: parallaxMidY,
+          }}
           animate={{ rotateZ: -360, scale: isHovered ? 1.1 : 1 }}
           transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
         />
 
         <motion.div
           className="absolute inset-20 border border-dotted border-purple-500/30 rounded-full"
-          style={{ translateZ: 100 }}
+          style={{
+            translateZ: 100,
+            x: parallaxMidX,
+            y: parallaxMidY,
+          }}
           animate={{ rotateZ: 360, scale: isHovered ? 0.9 : 1 }}
           transition={{ duration: 15, repeat: Infinity, ease: "linear" }}
         />
 
-        {/* Floating Particles Cloud */}
+        {/* Floating Particles Cloud - Insect-like Movement - Behind Logo */}
         {particles.map((p, i) => (
           <motion.div
             key={`p-${p.id}`}
-            className="absolute top-1/2 left-1/2 w-2 h-2 bg-white rounded-full mix-blend-overlay"
+            className="absolute top-1/2 left-1/2 transform-style-3d"
             style={{
-              x: layer1X,
-              y: layer1Y,
-              z: p.initialZ,
+              translateZ: p.initialZ - 200, // Negative Z to be behind logo
+              x: parallaxParticlesX,
+              y: parallaxParticlesY,
             }}
-            animate={{
-              x: p.targetX,
-              y: p.targetY,
-              opacity: [0, 1, 0],
-              scale: [0, 1.5, 0],
-            }}
-            transition={{
-              duration: p.duration,
-              repeat: Infinity,
-              ease: "easeInOut",
-              delay: i * 0.2,
-            }}
-          />
+          >
+            <motion.div
+              className="w-2 h-2 bg-white rounded-full mix-blend-overlay"
+              animate={{
+                x: p.pathX,
+                y: p.pathY,
+                scale: p.scaleVariations,
+                opacity: [0.3, 1, 0.8, 1, 0.5, 1, 0.3],
+              }}
+              transition={{
+                x: {
+                  duration: p.duration,
+                  repeat: Infinity,
+                  ease: [0.4, 0, 0.6, 1], // Custom easing for erratic movement
+                  times: p.pathX.map((_, idx) => idx / (p.pathX.length - 1)),
+                },
+                y: {
+                  duration: p.duration * 0.95, // Slightly different duration for organic feel
+                  repeat: Infinity,
+                  ease: [0.4, 0, 0.6, 1],
+                  times: p.pathY.map((_, idx) => idx / (p.pathY.length - 1)),
+                },
+                scale: {
+                  duration: p.duration * 0.8,
+                  repeat: Infinity,
+                  ease: "easeInOut",
+                  times: p.scaleVariations.map(
+                    (_, idx) => idx / (p.scaleVariations.length - 1)
+                  ),
+                },
+                opacity: {
+                  duration: p.duration * 1.2,
+                  repeat: Infinity,
+                  ease: "easeInOut",
+                },
+                delay: i * 0.3,
+              }}
+            />
+          </motion.div>
         ))}
 
-        {/* Main Logo Container - 3D Floating */}
+        {/* Main Logo Container - 3D Floating with Parallax */}
         <motion.div
           className="absolute inset-0 flex items-center justify-center transform-style-3d"
-          style={{ translateZ: 150, x: layer2X, y: layer2Y }}
+          style={{
+            translateZ: 150,
+            x: parallaxLogoX,
+            y: parallaxLogoY,
+          }}
           whileHover={{ scale: 1.1 }}
         >
           {/* Glassmorphism Background Card for Logo */}
@@ -211,9 +288,13 @@ export default function AnimatedOrb() {
           </div>
         </motion.div>
 
-        {/* Orbiting Elements - Interaction */}
+        {/* Orbiting Elements - Interaction with Parallax */}
         <motion.div
           className="absolute inset-0 pointer-events-none"
+          style={{
+            x: parallaxFrontX,
+            y: parallaxFrontY,
+          }}
           animate={{ rotate: 360 }}
           transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
         >
