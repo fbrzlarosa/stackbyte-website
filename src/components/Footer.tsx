@@ -282,23 +282,17 @@ export default function Footer() {
                   onClick={(e) => e.stopPropagation()}
                   className="w-full max-w-4xl max-h-[90vh] bg-[#0D1117] border border-primary/30 rounded-3xl shadow-2xl overflow-hidden flex flex-col"
                 >
-                  {/* Animated Background */}
                   <motion.div
-                    className="absolute inset-0 bg-linear-to-br from-primary/10 via-purple-500/10 to-primary/10"
-                    animate={{
-                      background: [
-                        "linear-gradient(135deg, rgba(6, 182, 212, 0.1) 0%, rgba(168, 85, 247, 0.1) 100%)",
-                        "linear-gradient(135deg, rgba(168, 85, 247, 0.1) 0%, rgba(6, 182, 212, 0.1) 100%)",
-                        "linear-gradient(135deg, rgba(6, 182, 212, 0.1) 0%, rgba(168, 85, 247, 0.1) 100%)",
-                      ],
-                    }}
+                    className="absolute inset-0 bg-[linear-gradient(rgba(6,182,212,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(6,182,212,0.03)_1px,transparent_1px)] bg-[size:50px_50px]"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
                     transition={{
-                      duration: 5,
-                      repeat: Infinity,
-                      ease: "easeInOut",
+                      duration: 0.6,
+                      delay: 0.2,
+                      ease: "easeOut",
                     }}
                   />
-                  <div className="absolute inset-0 bg-[linear-gradient(rgba(6,182,212,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(6,182,212,0.03)_1px,transparent_1px)] bg-[size:50px_50px]" />
 
                   {/* Content */}
                   <div

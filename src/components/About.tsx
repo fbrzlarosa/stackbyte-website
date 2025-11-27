@@ -363,23 +363,44 @@ export default function About() {
                   viewport={{ once: true }}
                   transition={{ duration: 0.6 }}
                 >
-                  Every great developer begins with an{" "}
+                  Every great{" "}
                   <span className="relative inline-block">
-                    <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary via-purple-400 to-primary bg-[length:200%_auto] animate-gradient">
-                      even better story.
+                    <span className="text-transparent bg-clip-text bg-linear-to-r from-primary via-purple-400 to-primary bg-[length:200%_auto] animate-gradient">
+                      developer
                     </span>
                     <motion.span
-                      className="absolute -inset-2 bg-gradient-to-r from-primary/20 to-purple-500/20 blur-2xl -z-10"
+                      className="absolute inset-0 text-transparent bg-clip-text bg-linear-to-r from-primary via-purple-400 to-primary bg-[length:200%_auto] animate-gradient blur-xl opacity-60"
                       animate={{
-                        opacity: [0.3, 0.6, 0.3],
-                        scale: [1, 1.1, 1],
+                        opacity: [0.4, 0.7, 0.4],
                       }}
                       transition={{
                         duration: 3,
                         repeat: Infinity,
                         ease: "easeInOut",
                       }}
-                    />
+                    >
+                      developer
+                    </motion.span>
+                  </span>{" "}
+                  begins with an even better{" "}
+                  <span className="relative inline-block">
+                    <span className="text-transparent bg-clip-text bg-linear-to-r from-purple-400 via-primary to-purple-400 bg-[length:200%_auto] animate-gradient">
+                      story.
+                    </span>
+                    <motion.span
+                      className="absolute inset-0 text-transparent bg-clip-text bg-linear-to-r from-purple-400 via-primary to-purple-400 bg-[length:200%_auto] animate-gradient blur-xl opacity-60"
+                      animate={{
+                        opacity: [0.4, 0.7, 0.4],
+                      }}
+                      transition={{
+                        duration: 3,
+                        repeat: Infinity,
+                        ease: "easeInOut",
+                        delay: 0.5,
+                      }}
+                    >
+                      story.
+                    </motion.span>
                   </span>
                 </motion.h2>
 

@@ -207,7 +207,7 @@ export default function Process() {
               transformStyle: "preserve-3d",
               perspective: "1200px",
             }}
-            className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-4 md:mb-6"
+            className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-black mb-4 md:mb-6 relative"
           >
             <motion.span
               style={{
@@ -215,6 +215,7 @@ export default function Process() {
                 transformStyle: "preserve-3d",
                 translateZ: useTransform(smoothProgress, [0, 1], [0, 40]),
               }}
+              className="relative z-10 text-white"
             >
               Your vision. My code.
             </motion.span>
@@ -226,9 +227,27 @@ export default function Process() {
                 translateZ: useTransform(smoothProgress, [0, 1], [40, -40]),
                 rotateY: useTransform(smoothProgress, [0, 1], [-8, 8]),
               }}
-              className="text-gray-500"
+              className="relative z-10 text-white"
             >
-              Real results.
+              <span className="relative inline-block">
+                <span className="text-transparent bg-clip-text bg-linear-to-r from-purple-400 via-primary to-purple-400 bg-[length:200%_auto] animate-gradient">
+                  Real results.
+                </span>
+                <motion.span
+                  className="absolute inset-0 text-transparent bg-clip-text bg-linear-to-r from-purple-400 via-primary to-purple-400 bg-[length:200%_auto] animate-gradient blur-xl opacity-60"
+                  animate={{
+                    opacity: [0.4, 0.7, 0.4],
+                  }}
+                  transition={{
+                    duration: 3,
+                    repeat: Infinity,
+                    ease: "easeInOut",
+                    delay: 0.5,
+                  }}
+                >
+                  Real results.
+                </motion.span>
+              </span>
             </motion.span>
           </motion.h2>
           <motion.p
