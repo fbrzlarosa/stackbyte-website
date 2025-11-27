@@ -1,4 +1,14 @@
-const idle = require('desktop-idle');
+let idle;
+try {
+    idle = require('desktop-idle');
+} catch (error) {
+    console.error('ERROR: desktop-idle module not found or could not be loaded.');
+    console.error('This module is required for the tracker to work.');
+    console.error('Please run: npm install');
+    console.error('If the error persists, make sure you are running this on a desktop OS (Windows/macOS/Linux desktop).');
+    process.exit(1);
+}
+
 const axios = require('axios');
 const path = require('path');
 const fs = require('fs');
