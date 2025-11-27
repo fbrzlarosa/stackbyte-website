@@ -63,11 +63,13 @@ function ContactStep({
     clientX,
     clientY,
   }: MouseEvent<HTMLDivElement>) {
-    const { left, top, width, height } = currentTarget.getBoundingClientRect();
-    const x = (clientX - left) / width;
-    const y = (clientY - top) / height;
-    mouseX.set(x);
-    mouseY.set(y);
+    requestAnimationFrame(() => {
+      const { left, top, width, height } = currentTarget.getBoundingClientRect();
+      const x = (clientX - left) / width;
+      const y = (clientY - top) / height;
+      mouseX.set(x);
+      mouseY.set(y);
+    });
   }
 
   function handleMouseLeave() {
@@ -165,6 +167,7 @@ export default function Process() {
     stiffness: 100,
     damping: 30,
     restDelta: 0.001,
+    mass: 0.5,
   });
 
   const titleRotateX = useTransform(smoothProgress, [0, 1], [18, -18]);

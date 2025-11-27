@@ -51,6 +51,46 @@ body {
   width: 100%;
 }
 
+/* Performance optimizations */
+* {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Optimize animations */
+[data-animate],
+[style*="transform"],
+[style*="opacity"] {
+  will-change: transform, opacity;
+  backface-visibility: hidden;
+  perspective: 1000px;
+}
+
+/* Reduce layout shifts for animated elements */
+.motion-safe\:will-change-transform {
+  will-change: transform;
+}
+
+/* Optimize rendering for off-screen content */
+section {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 500px;
+  contain: layout style;
+}
+
+/* Optimize framer-motion components */
+[data-framer-component] {
+  contain: layout style paint;
+  will-change: transform;
+}
+
+/* Reduce layout thrashing for animated elements */
+.motion-div,
+[class*="motion"] {
+  backface-visibility: hidden;
+  transform: translateZ(0);
+}
+
 /* Custom Scrollbar Styles - Global */
 * {
   scrollbar-width: thin;

@@ -11,9 +11,13 @@ import {
 import { AlertCircle, CheckCircle2, Send } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
-import Turnstile from "react-turnstile";
+import dynamic from "next/dynamic";
 import Button from "./Button";
 import ScrollReveal from "./ScrollReveal";
+
+const Turnstile = dynamic(() => import("react-turnstile"), {
+  ssr: false,
+});
 
 type FormData = {
   name: string;
@@ -49,13 +53,46 @@ export default function Contact() {
   const [status, setStatus] = useState<"idle" | "success" | "error">("idle");
   const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
   const [isMobile, setIsMobile] = useState(false);
+  const [shouldLoadTurnstile, setShouldLoadTurnstile] = useState(false);
 
   useEffect(() => {
-    const checkMobile = () => setIsMobile(window.innerWidth < 768);
-    checkMobile();
-    window.addEventListener("resize", checkMobile);
-    return () => window.removeEventListener("resize", checkMobile);
+    let timeoutId: NodeJS.Timeout;
+    const checkMobile = () => {
+      clearTimeout(timeoutId);
+      timeoutId = setTimeout(() => {
+        setIsMobile(window.innerWidth < 768);
+      }, 150);
+    };
+    setIsMobile(window.innerWidth < 768);
+    window.addEventListener("resize", checkMobile, { passive: true });
+    return () => {
+      window.removeEventListener("resize", checkMobile);
+      clearTimeout(timeoutId);
+    };
   }, []);
+
+  useEffect(() => {
+    if (!sectionRef.current) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting && !shouldLoadTurnstile) {
+            setShouldLoadTurnstile(true);
+            observer.disconnect();
+          }
+        });
+      },
+      {
+        rootMargin: "200px",
+        threshold: 0.1,
+      }
+    );
+
+    observer.observe(sectionRef.current);
+
+    return () => observer.disconnect();
+  }, [shouldLoadTurnstile]);
 
   const { scrollYProgress } = useScroll({
     target: sectionRef,
@@ -66,6 +103,7 @@ export default function Contact() {
     stiffness: 100,
     damping: 30,
     restDelta: 0.001,
+    mass: 0.5,
   });
 
   const rotateX = useTransform(smoothProgress, [0, 1], [25, -25]);
@@ -546,16 +584,18 @@ export default function Contact() {
                       </div>
                     </div>
 
-                    <div className="w-full overflow-hidden">
-                      <Turnstile
-                        sitekey={
-                          process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY ||
-                          "1x00000000000000000000AA"
-                        }
-                        onVerify={(token) => setTurnstileToken(token)}
-                        theme="dark"
-                      />
-                    </div>
+                    {shouldLoadTurnstile && (
+                      <div className="w-full overflow-hidden">
+                        <Turnstile
+                          sitekey={
+                            process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY ||
+                            "1x00000000000000000000AA"
+                          }
+                          onVerify={(token) => setTurnstileToken(token)}
+                          theme="dark"
+                        />
+                      </div>
+                    )}
 
                     <Button
                       type="submit"

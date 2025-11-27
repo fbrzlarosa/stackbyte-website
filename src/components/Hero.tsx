@@ -1,11 +1,11 @@
 "use client";
 
 import {
-  motion,
-  useReducedMotion,
-  useScroll,
-  useSpring,
-  useTransform,
+    motion,
+    useReducedMotion,
+    useScroll,
+    useSpring,
+    useTransform,
 } from "framer-motion";
 import { ArrowRight } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
@@ -20,12 +20,19 @@ export default function Hero() {
   const prefersReducedMotion = useReducedMotion();
 
   useEffect(() => {
+    let timeoutId: NodeJS.Timeout;
     const checkMobile = () => {
-      setIsMobile(window.innerWidth < 768);
+      clearTimeout(timeoutId);
+      timeoutId = setTimeout(() => {
+        setIsMobile(window.innerWidth < 768);
+      }, 150);
     };
-    checkMobile();
-    window.addEventListener("resize", checkMobile);
-    return () => window.removeEventListener("resize", checkMobile);
+    setIsMobile(window.innerWidth < 768);
+    window.addEventListener("resize", checkMobile, { passive: true });
+    return () => {
+      window.removeEventListener("resize", checkMobile);
+      clearTimeout(timeoutId);
+    };
   }, []);
 
   const { scrollYProgress } = useScroll({
@@ -37,6 +44,7 @@ export default function Hero() {
     stiffness: isMobile ? 200 : 100,
     damping: isMobile ? 40 : 30,
     restDelta: 0.001,
+    mass: 0.5,
   });
 
   const backgroundY = useTransform(
@@ -90,21 +98,35 @@ export default function Hero() {
   );
 
   useEffect(() => {
+    let rafId: number;
+    let lastUpdate = 0;
+    const throttleMs = 16;
+
     const handleMouseMove = (e: MouseEvent) => {
-      const { clientX, clientY } = e;
-      const x = (clientX / window.innerWidth - 0.5) * 20;
-      const y = (clientY / window.innerHeight - 0.5) * 20;
-      setMousePosition({ x, y });
+      const now = performance.now();
+      if (now - lastUpdate < throttleMs) return;
+      lastUpdate = now;
+
+      rafId = requestAnimationFrame(() => {
+        const { clientX, clientY } = e;
+        const x = (clientX / window.innerWidth - 0.5) * 20;
+        const y = (clientY / window.innerHeight - 0.5) * 20;
+        setMousePosition({ x, y });
+      });
     };
 
-    window.addEventListener("mousemove", handleMouseMove);
-    return () => window.removeEventListener("mousemove", handleMouseMove);
+    window.addEventListener("mousemove", handleMouseMove, { passive: true });
+    return () => {
+      window.removeEventListener("mousemove", handleMouseMove);
+      if (rafId) cancelAnimationFrame(rafId);
+    };
   }, []);
 
   return (
     <section
       ref={ref}
       className="relative min-h-screen flex items-center pt-24 sm:pt-28 md:pt-32 pb-16 sm:pb-20 md:pb-24 overflow-hidden"
+      style={{ contain: 'layout style' }}
     >
       {/* Mouse-tracking Background Gradients */}
       <motion.div
@@ -130,7 +152,7 @@ export default function Hero() {
             y: textY,
             willChange: "transform",
           }}
-          className="max-w-4xl relative z-10"
+          className="max-w-4xl relative z-10 max-md:!opacity-100 max-md:!translate-y-0 max-md:!transform-none"
           initial="hidden"
           animate="visible"
           variants={{
@@ -160,7 +182,7 @@ export default function Hero() {
               perspective: isMobile ? "none" : "1500px",
               willChange: "transform",
             }}
-            className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight leading-[1.1] mb-6 md:mb-8"
+            className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight leading-[1.1] mb-6 md:mb-8 max-md:!opacity-100 max-md:!translate-y-0 max-md:!transform-none"
           >
             <motion.span
               style={{
@@ -262,7 +284,7 @@ export default function Hero() {
               transformStyle: isMobile ? "flat" : "preserve-3d",
               willChange: "transform",
             }}
-            className="text-base sm:text-lg md:text-xl text-gray-400 max-w-2xl mb-8 md:mb-10 leading-relaxed"
+            className="text-base sm:text-lg md:text-xl text-gray-400 max-w-2xl mb-8 md:mb-10 leading-relaxed max-md:!opacity-100 max-md:!translate-y-0 max-md:!transform-none"
           >
             I&apos;m Fabrizio La Rosa — full-stack engineer, code artisan,
             digital problem solver. Turning complex problems into elegant,
@@ -274,7 +296,7 @@ export default function Hero() {
               hidden: { opacity: 0, y: 20 },
               visible: { opacity: 1, y: 0 },
             }}
-            className="flex flex-col sm:flex-row gap-3 sm:gap-4 mb-12 md:mb-16"
+            className="flex flex-col sm:flex-row gap-3 sm:gap-4 mb-12 md:mb-16 max-md:!opacity-100 max-md:!translate-y-0"
           >
             <Button
               href="#contact"
@@ -315,11 +337,9 @@ export default function Hero() {
           </motion.div>
         </motion.div>
       </div>
-      {!isMobile && (
-        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 w-full absolute top-0 right-0 h-full hidden lg:flex items-center justify-center pointer-events-none">
-          <AnimatedOrb />
-        </div>
-      )}
+      <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 w-full absolute top-0 right-0 h-full hidden lg:flex items-center justify-center pointer-events-none">
+        <AnimatedOrb />
+      </div>
     </section>
   );
 }

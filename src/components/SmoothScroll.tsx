@@ -1,9 +1,12 @@
 'use client';
 
 import Lenis from 'lenis';
-import { ReactNode, useEffect } from 'react';
+import { ReactNode, useEffect, useRef } from 'react';
 
 export default function SmoothScroll({ children }: { children: ReactNode }) {
+  const lenisRef = useRef<Lenis | null>(null);
+  const rafIdRef = useRef<number | null>(null);
+
   useEffect(() => {
     const lenis = new Lenis({
       duration: 1.2,
@@ -12,17 +15,29 @@ export default function SmoothScroll({ children }: { children: ReactNode }) {
       gestureOrientation: 'vertical',
       smoothWheel: true,
       touchMultiplier: 2,
+      wheelMultiplier: 1,
+      infinite: false,
     });
 
+    lenisRef.current = lenis;
+
+    let lastTime = 0;
     function raf(time: number) {
-      lenis.raf(time);
-      requestAnimationFrame(raf);
+      if (time - lastTime >= 16) {
+        lenis.raf(time);
+        lastTime = time;
+      }
+      rafIdRef.current = requestAnimationFrame(raf);
     }
 
-    requestAnimationFrame(raf);
+    rafIdRef.current = requestAnimationFrame(raf);
 
     return () => {
+      if (rafIdRef.current !== null) {
+        cancelAnimationFrame(rafIdRef.current);
+      }
       lenis.destroy();
+      lenisRef.current = null;
     };
   }, []);
 

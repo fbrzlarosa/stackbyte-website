@@ -81,22 +81,35 @@ export default function AnimatedOrb() {
   }, []); // Only run once on mount
 
   useEffect(() => {
+    let rafId: number;
+    let lastUpdate = 0;
+    const throttleMs = 16;
+
     const handleMouseMove = (e: MouseEvent) => {
-      const centerX = window.innerWidth / 2;
-      const centerY = window.innerHeight / 2;
-      mouseX.set(e.clientX - centerX);
-      mouseY.set(e.clientY - centerY);
+      const now = performance.now();
+      if (now - lastUpdate < throttleMs) return;
+      lastUpdate = now;
+
+      rafId = requestAnimationFrame(() => {
+        const centerX = window.innerWidth / 2;
+        const centerY = window.innerHeight / 2;
+        mouseX.set(e.clientX - centerX);
+        mouseY.set(e.clientY - centerY);
+      });
     };
 
-    window.addEventListener("mousemove", handleMouseMove);
-    return () => window.removeEventListener("mousemove", handleMouseMove);
+    window.addEventListener("mousemove", handleMouseMove, { passive: true });
+    return () => {
+      window.removeEventListener("mousemove", handleMouseMove);
+      if (rafId) cancelAnimationFrame(rafId);
+    };
   }, [mouseX, mouseY]);
 
   return (
     <motion.div
-      // className="absolute left-[-10%] top-1/2 -translate-y-1/2 w-[600px] h-[600px] hidden lg:flex items-center justify-center perspective-distant z-10 pointer-events-none"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
+      style={{ contain: 'layout style paint', willChange: 'transform' }}
     >
       {/* 3D Container */}
       <motion.div

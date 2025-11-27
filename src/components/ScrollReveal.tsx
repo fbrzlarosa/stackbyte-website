@@ -16,11 +16,11 @@ export default function ScrollReveal({ children, className = "" }: ScrollRevealP
     offset: ["start end", "end start"]
   });
 
-  // Smooth spring physics for scroll mapping
   const smoothProgress = useSpring(scrollYProgress, {
     damping: 30,
     stiffness: 100,
-    mass: 0.5
+    mass: 0.5,
+    restDelta: 0.001,
   });
 
   // Entrance Effects
@@ -39,10 +39,16 @@ export default function ScrollReveal({ children, className = "" }: ScrollRevealP
         opacity,
         scale,
         y,
+        willChange: 'transform, opacity',
       }}
       className={`relative ${className}`}
     >
-      <motion.div style={{ y: parallaxY }}>
+      <motion.div 
+        style={{ 
+          y: parallaxY,
+          willChange: 'transform',
+        }}
+      >
         {children}
       </motion.div>
     </motion.div>

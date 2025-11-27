@@ -204,7 +204,7 @@ function SkillCard({ skill, index, smoothProgress }: SkillCardProps) {
 
   return (
     <motion.div
-      className="absolute top-32 md:top-auto w-[85vw] sm:w-[90vw] max-w-6xl h-[55vh] sm:h-[70vh] md:h-[70vh] flex flex-col lg:flex-row overflow-hidden rounded-2xl sm:rounded-3xl bg-[#0D1117] border border-white/10 shadow-2xl origin-center perspective-1000"
+      className="absolute top-32 md:top-auto w-[85vw] sm:w-[90vw] max-w-6xl h-[70vh] sm:h-[70vh] md:h-[70vh] flex flex-col lg:flex-row overflow-hidden rounded-2xl sm:rounded-3xl bg-[#0D1117] border border-white/10 shadow-2xl origin-center perspective-1000"
       style={{
         opacity,
         scale,
@@ -398,7 +398,7 @@ export default function SkillsShowcase() {
     >
       <div className="sticky top-0 h-screen overflow-hidden flex items-center justify-center">
         {/* Navigation Dots / Menu */}
-        <div className="absolute bottom-6 sm:bottom-12 left-1/2 -translate-x-1/2 z-50 flex items-center gap-4 sm:gap-4 bg-black/40 backdrop-blur-md px-3 sm:px-6 py-2 sm:py-3 rounded-full border border-white/10">
+        <div className="absolute bottom-6 sm:bottom-12 left-4 sm:left-1/2 sm:-translate-x-1/2 z-50 flex items-center gap-4 sm:gap-4 bg-black/40 backdrop-blur-md px-3 sm:px-6 py-2 sm:py-3 rounded-full border border-white/10">
           {skills.map((skill, index) => (
             <NavigationDot
               key={skill.id}

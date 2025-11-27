@@ -1,27 +1,42 @@
 'use client';
 
-import { motion, useScroll, useTransform } from 'framer-motion';
+import { motion, useScroll, useSpring, useTransform } from 'framer-motion';
 import { ReactNode } from 'react';
 
 export default function ScrollBackground({ children }: { children: ReactNode }) {
   const { scrollYProgress } = useScroll();
+  
+  const smoothProgress = useSpring(scrollYProgress, {
+    stiffness: 100,
+    damping: 30,
+    restDelta: 0.001,
+  });
 
-  // Trasformiamo il background attraverso diverse tonalità
-  const backgroundColor = useTransform(
-    scrollYProgress,
+  const opacity = useTransform(
+    smoothProgress,
     [0, 0.25, 0.5, 0.75, 1],
-    [
-      '#0D1117', // Dark blue-black (hero)
-      '#0F1419', // Slightly lighter
-      '#1A1B26', // Violet tint
-      '#191724', // Purple tint
-      '#0D1117', // Back to original
-    ]
+    [0, 0.1, 0.15, 0.1, 0]
   );
 
   return (
-    <motion.div style={{ backgroundColor }} className="min-h-screen">
+    <div className="min-h-screen relative" style={{ contain: 'layout style paint' }}>
+      <motion.div
+        className="fixed inset-0 -z-10"
+        style={{
+          backgroundColor: '#0D1117',
+          opacity,
+          willChange: 'opacity',
+        }}
+      />
+      <motion.div
+        className="fixed inset-0 -z-10"
+        style={{
+          background: 'linear-gradient(180deg, #0F1419 0%, #1A1B26 50%, #191724 100%)',
+          opacity: useTransform(smoothProgress, [0, 1], [0, 0.3]),
+          willChange: 'opacity',
+        }}
+      />
       {children}
-    </motion.div>
+    </div>
   );
 }

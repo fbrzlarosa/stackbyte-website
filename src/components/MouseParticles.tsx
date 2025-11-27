@@ -1,7 +1,7 @@
 'use client';
 
 import { AnimatePresence, motion } from 'framer-motion';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 interface Particle {
   id: number;
@@ -18,24 +18,28 @@ const codeSnippets = [
 
 export default function MouseParticles() {
   const [particles, setParticles] = useState<Particle[]>([]);
+  const lastTime = useRef(0);
+  const particleId = useRef(0);
 
   useEffect(() => {
-    let particleId = 0;
-
     const handleMouseMove = (e: MouseEvent) => {
-      if (Math.random() > 0.2) return; // Throttling
+      const now = performance.now();
+      if (now - lastTime.current < 100) return;
+      lastTime.current = now;
+
+      if (Math.random() > 0.3) return;
 
       const newParticle = {
-        id: particleId++,
+        id: particleId.current++,
         x: e.clientX,
         y: e.clientY,
         text: codeSnippets[Math.floor(Math.random() * codeSnippets.length)]
       };
 
-      setParticles((prev) => [...prev, newParticle].slice(-8)); 
+      setParticles((prev) => [...prev, newParticle].slice(-6)); 
     };
 
-    window.addEventListener('mousemove', handleMouseMove);
+    window.addEventListener('mousemove', handleMouseMove, { passive: true });
 
     return () => {
       window.removeEventListener('mousemove', handleMouseMove);
@@ -52,17 +56,21 @@ export default function MouseParticles() {
   }, [particles]);
 
   return (
-    <div className="fixed inset-0 pointer-events-none z-40 hidden md:block overflow-hidden">
+    <div 
+      className="fixed inset-0 pointer-events-none z-40 hidden md:block overflow-hidden"
+      style={{ contain: 'layout style paint' }}
+    >
       <AnimatePresence>
         {particles.map((particle) => (
           <motion.div
             key={particle.id}
             className="absolute text-primary/60 font-mono text-[10px] select-none whitespace-nowrap"
             style={{
-                left: particle.x,
-                top: particle.y,
-                translateX: "-50%", // Center horizontally relative to cursor point
-                translateY: "-50%"  // Center vertically relative to cursor point
+              left: particle.x,
+              top: particle.y,
+              x: "-50%",
+              y: "-50%",
+              willChange: 'transform, opacity',
             }}
             initial={{
               opacity: 0,
@@ -71,11 +79,11 @@ export default function MouseParticles() {
             animate={{
               opacity: 0.8,
               scale: 1,
-              y: 15 // Slight fall
+              y: "-50%",
             }}
             exit={{ 
               opacity: 0,
-              y: 30, // Continue falling
+              y: "-50%",
               scale: 0.5
             }}
             transition={{
