@@ -9,9 +9,9 @@ import {
   Variants,
 } from "framer-motion";
 import { AlertCircle, CheckCircle2, Send } from "lucide-react";
+import dynamic from "next/dynamic";
 import { useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
-import dynamic from "next/dynamic";
 import Button from "./Button";
 import ScrollReveal from "./ScrollReveal";
 
@@ -63,7 +63,9 @@ export default function Contact() {
         setIsMobile(window.innerWidth < 768);
       }, 150);
     };
-    setIsMobile(window.innerWidth < 768);
+    requestAnimationFrame(() => {
+      setIsMobile(window.innerWidth < 768);
+    });
     window.addEventListener("resize", checkMobile, { passive: true });
     return () => {
       window.removeEventListener("resize", checkMobile);
@@ -100,10 +102,10 @@ export default function Contact() {
   });
 
   const smoothProgress = useSpring(scrollYProgress, {
-    stiffness: 100,
+    stiffness: 200,
     damping: 30,
-    restDelta: 0.001,
-    mass: 0.5,
+    restDelta: 0.002,
+    mass: 0.2,
   });
 
   const rotateX = useTransform(smoothProgress, [0, 1], [25, -25]);

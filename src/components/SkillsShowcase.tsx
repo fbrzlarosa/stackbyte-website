@@ -176,16 +176,24 @@ function SkillCard({ skill, index, smoothProgress }: SkillCardProps) {
     ["15%", "-15%"]
   );
 
-  // Mouse tilt effect for 3D text
   const mouseX = useMotionValue(0);
   const mouseY = useMotionValue(0);
+  const rafId = useRef<number | null>(null);
+  const lastUpdate = useRef(0);
 
   const handleMouseMove = (e: MouseEvent<HTMLDivElement>) => {
-    const rect = e.currentTarget.getBoundingClientRect();
-    const xPos = e.clientX - rect.left - rect.width / 2;
-    const yPos = e.clientY - rect.top - rect.height / 2;
-    mouseX.set(xPos);
-    mouseY.set(yPos);
+    const now = performance.now();
+    if (now - lastUpdate.current < 32) return;
+    lastUpdate.current = now;
+
+    if (rafId.current) cancelAnimationFrame(rafId.current);
+    rafId.current = requestAnimationFrame(() => {
+      const rect = e.currentTarget.getBoundingClientRect();
+      const xPos = e.clientX - rect.left - rect.width / 2;
+      const yPos = e.clientY - rect.top - rect.height / 2;
+      mouseX.set(xPos);
+      mouseY.set(yPos);
+    });
   };
 
   const handleMouseLeave = () => {
@@ -194,12 +202,14 @@ function SkillCard({ skill, index, smoothProgress }: SkillCardProps) {
   };
 
   const contentRotateX = useSpring(useTransform(mouseY, [-300, 300], [5, -5]), {
-    stiffness: 150,
-    damping: 20,
+    stiffness: 200,
+    damping: 25,
+    mass: 0.2,
   });
   const contentRotateY = useSpring(useTransform(mouseX, [-300, 300], [-5, 5]), {
-    stiffness: 150,
-    damping: 20,
+    stiffness: 200,
+    damping: 25,
+    mass: 0.2,
   });
 
   return (
@@ -214,6 +224,8 @@ function SkillCard({ skill, index, smoothProgress }: SkillCardProps) {
         rotateZ,
         z,
         zIndex: 10 - index,
+        willChange: 'transform, opacity',
+        transformStyle: 'preserve-3d',
       }}
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
@@ -385,9 +397,10 @@ export default function SkillsShowcase() {
   });
 
   const smoothProgress = useSpring(scrollYProgress, {
-    stiffness: 100,
+    stiffness: 200,
     damping: 30,
-    restDelta: 0.001,
+    restDelta: 0.002,
+    mass: 0.2,
   });
 
   return (

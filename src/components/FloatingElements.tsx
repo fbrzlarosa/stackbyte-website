@@ -5,8 +5,10 @@ import { useEffect, useMemo, useState } from 'react';
 
 export default function FloatingElements() {
   const [dimensions, setDimensions] = useState({ width: 1000, height: 1000 });
+  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
+    setMounted(true);
     const updateDimensions = () => {
       setDimensions({ width: window.innerWidth, height: window.innerHeight });
     };
@@ -16,42 +18,62 @@ export default function FloatingElements() {
   }, []);
 
   const shapes = useMemo(() => {
-    return Array.from({ length: 5 }, (_, i) => ({
-      id: i,
-      initialX: Math.random() * dimensions.width,
-      initialY: Math.random() * dimensions.height,
-      initialRotate: Math.random() * 360,
-      keyframes: {
-        x: [
-          Math.random() * dimensions.width,
-          Math.random() * dimensions.width,
-          Math.random() * dimensions.width,
-        ],
-        y: [
-          Math.random() * dimensions.height,
-          Math.random() * dimensions.height,
-          Math.random() * dimensions.height,
-        ],
-      },
-      duration: 20 + i * 5,
-    }));
-  }, [dimensions.width, dimensions.height]);
+    if (!mounted) return [];
+    
+    const seed = (n: number) => {
+      const x = Math.sin(n) * 10000;
+      return x - Math.floor(x);
+    };
+
+    return Array.from({ length: 4 }, (_, i) => {
+      const baseSeed = i * 100;
+      return {
+        id: i,
+        initialX: seed(baseSeed) * dimensions.width,
+        initialY: seed(baseSeed + 1) * dimensions.height,
+        initialRotate: seed(baseSeed + 2) * 360,
+        keyframes: {
+          x: [
+            seed(baseSeed + 3) * dimensions.width,
+            seed(baseSeed + 4) * dimensions.width,
+            seed(baseSeed + 5) * dimensions.width,
+          ],
+          y: [
+            seed(baseSeed + 6) * dimensions.height,
+            seed(baseSeed + 7) * dimensions.height,
+            seed(baseSeed + 8) * dimensions.height,
+          ],
+        },
+        duration: 20 + i * 5,
+      };
+    });
+  }, [dimensions.width, dimensions.height, mounted]);
 
   const dots = useMemo(() => {
-    return Array.from({ length: 15 }, (_, i) => ({
-      id: i,
-      initialX: Math.random() * dimensions.width,
-      initialY: Math.random() * dimensions.height,
-      keyframes: {
-        y: [
-          Math.random() * dimensions.height,
-          Math.random() * dimensions.height,
-          Math.random() * dimensions.height,
-        ],
-      },
-      duration: 10 + i * 2,
-    }));
-  }, [dimensions.width, dimensions.height]);
+    if (!mounted) return [];
+    
+    const seed = (n: number) => {
+      const x = Math.sin(n) * 10000;
+      return x - Math.floor(x);
+    };
+
+    return Array.from({ length: 12 }, (_, i) => {
+      const baseSeed = i * 200;
+      return {
+        id: i,
+        initialX: seed(baseSeed) * dimensions.width,
+        initialY: seed(baseSeed + 1) * dimensions.height,
+        keyframes: {
+          y: [
+            seed(baseSeed + 2) * dimensions.height,
+            seed(baseSeed + 3) * dimensions.height,
+            seed(baseSeed + 4) * dimensions.height,
+          ],
+        },
+        duration: 10 + i * 2,
+      };
+    });
+  }, [dimensions.width, dimensions.height, mounted]);
 
   return (
     <div 

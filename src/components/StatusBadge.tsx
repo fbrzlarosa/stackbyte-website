@@ -21,11 +21,14 @@ type StatusType = "online" | "offline" | "holidays";
 export default function StatusBadge() {
   const [status, setStatus] = useState<StatusType>("offline");
   const [loading, setLoading] = useState(true);
-  // Removed explicit tooltip state as we now have a persistent status pill
   const [showModal, setShowModal] = useState(false);
   const [time, setTime] = useState("");
+  const [mounted, setMounted] = useState(false);
 
-  // Update local time
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
   useEffect(() => {
     const updateTime = () => {
       setTime(
@@ -144,8 +147,8 @@ export default function StatusBadge() {
         </motion.button>
 
         {/* Floating Notification Pill (Portal) - Persistent Status Indicator */}
-        {!showModal &&
-          typeof window !== "undefined" &&
+        {mounted &&
+          !showModal &&
           createPortal(
             <AnimatePresence>
               <motion.div
@@ -156,7 +159,7 @@ export default function StatusBadge() {
                   type: "spring",
                   stiffness: 260,
                   damping: 20,
-                  delay: 1, // Delay appearance to not distract immediately
+                  delay: 1,
                 }}
                 className="fixed bottom-3.5 right-16 sm:bottom-18 sm:right-4 z-[9999] cursor-pointer group"
                 onClick={() => setShowModal(true)}
@@ -186,7 +189,7 @@ export default function StatusBadge() {
       </div>
 
       {/* Modal Overlay */}
-      {typeof window !== "undefined" &&
+      {mounted &&
         createPortal(
           <AnimatePresence>
             {showModal && (

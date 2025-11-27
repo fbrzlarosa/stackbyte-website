@@ -50,6 +50,8 @@ function ContactStep({
   const mouseX = useMotionValue(0.5);
   const mouseY = useMotionValue(0.5);
   const cardRef = useRef<HTMLDivElement>(null);
+  const rafId = useRef<number | null>(null);
+  const lastUpdate = useRef(0);
 
   const rotateX = useTransform(mouseY, [0, 1], [8, -8]);
   const rotateY = useTransform(mouseX, [0, 1], [-8, 8]);
@@ -63,8 +65,14 @@ function ContactStep({
     clientX,
     clientY,
   }: MouseEvent<HTMLDivElement>) {
-    requestAnimationFrame(() => {
-      const { left, top, width, height } = currentTarget.getBoundingClientRect();
+    const now = performance.now();
+    if (now - lastUpdate.current < 32) return;
+    lastUpdate.current = now;
+
+    if (rafId.current) cancelAnimationFrame(rafId.current);
+    rafId.current = requestAnimationFrame(() => {
+      const { left, top, width, height } =
+        currentTarget.getBoundingClientRect();
       const x = (clientX - left) / width;
       const y = (clientY - top) / height;
       mouseX.set(x);
@@ -105,6 +113,7 @@ function ContactStep({
         translateZ,
         transformStyle: "preserve-3d",
         perspective: "1000px",
+        willChange: "transform",
       }}
       className="group p-6 md:p-8 rounded-2xl md:rounded-3xl bg-white/5 border border-white/10 hover:bg-white/10 transition-colors backdrop-blur-sm perspective-1000 cursor-pointer transform-none md:transform"
       whileHover={{ scale: 1.05 }}
@@ -164,10 +173,10 @@ export default function Process() {
   });
 
   const smoothProgress = useSpring(scrollYProgress, {
-    stiffness: 100,
+    stiffness: 200,
     damping: 30,
-    restDelta: 0.001,
-    mass: 0.5,
+    restDelta: 0.002,
+    mass: 0.2,
   });
 
   const titleRotateX = useTransform(smoothProgress, [0, 1], [18, -18]);
@@ -209,6 +218,7 @@ export default function Process() {
               scale: titleScale,
               transformStyle: "preserve-3d",
               perspective: "1200px",
+              willChange: "transform",
             }}
             className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-black mb-4 md:mb-6 relative"
           >
@@ -217,6 +227,7 @@ export default function Process() {
                 display: "inline-block",
                 transformStyle: "preserve-3d",
                 translateZ: useTransform(smoothProgress, [0, 1], [0, 40]),
+                willChange: "transform",
               }}
               className="relative z-10 text-white"
             >
@@ -229,6 +240,7 @@ export default function Process() {
                 transformStyle: "preserve-3d",
                 translateZ: useTransform(smoothProgress, [0, 1], [40, -40]),
                 rotateY: useTransform(smoothProgress, [0, 1], [-8, 8]),
+                willChange: "transform",
               }}
               className="relative z-10 text-white"
             >
@@ -259,6 +271,7 @@ export default function Process() {
               y: paraY,
               translateZ: paraTranslateZ,
               transformStyle: "preserve-3d",
+              willChange: "transform",
             }}
             className="text-base sm:text-lg md:text-xl text-gray-400 max-w-2xl mx-auto px-4"
           >

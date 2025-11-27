@@ -63,6 +63,7 @@ body {
 [style*="opacity"] {
   will-change: transform, opacity;
   backface-visibility: hidden;
+  transform: translate3d(0, 0, 0);
   perspective: 1000px;
 }
 
@@ -75,7 +76,21 @@ body {
 section {
   content-visibility: auto;
   contain-intrinsic-size: auto 500px;
-  contain: layout style;
+  contain: layout style paint;
+}
+
+/* Optimize scroll performance */
+html {
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* GPU acceleration for animated elements */
+.motion-div,
+[class*="motion"],
+[data-framer-component] {
+  transform: translate3d(0, 0, 0);
+  will-change: transform;
 }
 
 /* Optimize framer-motion components */

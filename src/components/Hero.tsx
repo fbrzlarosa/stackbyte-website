@@ -45,10 +45,10 @@ export default function Hero() {
   });
 
   const smoothProgress = useSpring(scrollYProgress, {
-    stiffness: isMobile ? 200 : 100,
-    damping: isMobile ? 40 : 30,
-    restDelta: 0.001,
-    mass: 0.5,
+    stiffness: isMobile ? 300 : 200,
+    damping: isMobile ? 35 : 30,
+    restDelta: 0.002,
+    mass: 0.2,
   });
 
   const backgroundY = useTransform(
@@ -104,13 +104,14 @@ export default function Hero() {
   useEffect(() => {
     let rafId: number;
     let lastUpdate = 0;
-    const throttleMs = 16;
+    const throttleMs = 32;
 
     const handleMouseMove = (e: MouseEvent) => {
       const now = performance.now();
       if (now - lastUpdate < throttleMs) return;
       lastUpdate = now;
 
+      if (rafId) cancelAnimationFrame(rafId);
       rafId = requestAnimationFrame(() => {
         const { clientX, clientY } = e;
         const x = (clientX / window.innerWidth - 0.5) * 20;
@@ -130,7 +131,6 @@ export default function Hero() {
     <section
       ref={ref}
       className="relative min-h-screen flex items-center pt-24 sm:pt-28 md:pt-32 pb-16 sm:pb-20 md:pb-24 overflow-hidden"
-      style={{ contain: "layout style" }}
     >
       {/* Mouse-tracking Background Gradients */}
       <motion.div

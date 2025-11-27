@@ -31,7 +31,7 @@ export default function CodeRain() {
     // Use a timeout to push the state update to the next tick
     // avoiding synchronous setState warning in useEffect
     const timer = setTimeout(() => {
-      const cols = Array.from({ length: 40 }).map(() => ({
+      const cols = Array.from({ length: 30 }).map(() => ({
         delay: `${Math.random() * -30}s`,
         duration: `${30 + Math.random() * 20}s`,
         opacity: Math.random() * 0.5 + 0.3,

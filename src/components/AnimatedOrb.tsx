@@ -21,8 +21,7 @@ export default function AnimatedOrb() {
   // State for stable random values
   const [particles, setParticles] = useState<Particle[]>([]);
 
-  // Smooth mouse movement
-  const springConfig = { damping: 15, stiffness: 150, mass: 0.5 };
+  const springConfig = { damping: 25, stiffness: 250, mass: 0.2 };
   const springX = useSpring(mouseX, springConfig);
   const springY = useSpring(mouseY, springConfig);
 
@@ -47,11 +46,9 @@ export default function AnimatedOrb() {
   const parallaxParticlesY = useTransform(springY, [-500, 500], [-90, 90]);
 
   useEffect(() => {
-    // Generate particles only once on mount with insect-like movement paths
     const timer = setTimeout(() => {
-      const newParticles = Array.from({ length: 12 }).map((_, i) => {
-        // Create multiple waypoints for insect-like erratic movement
-        const waypoints = 5;
+      const newParticles = Array.from({ length: 8 }).map((_, i) => {
+        const waypoints = 4;
         const pathX: number[] = [];
         const pathY: number[] = [];
 
@@ -68,7 +65,7 @@ export default function AnimatedOrb() {
           initialZ: Math.random() * 200,
           pathX,
           pathY,
-          duration: Math.random() * 4 + 3, // Slower, more erratic
+          duration: Math.random() * 3 + 4,
           scaleVariations: Array.from(
             { length: waypoints + 1 },
             () => Math.random() * 0.5 + 0.5
@@ -83,13 +80,14 @@ export default function AnimatedOrb() {
   useEffect(() => {
     let rafId: number;
     let lastUpdate = 0;
-    const throttleMs = 16;
+    const throttleMs = 32;
 
     const handleMouseMove = (e: MouseEvent) => {
       const now = performance.now();
       if (now - lastUpdate < throttleMs) return;
       lastUpdate = now;
 
+      if (rafId) cancelAnimationFrame(rafId);
       rafId = requestAnimationFrame(() => {
         const centerX = window.innerWidth / 2;
         const centerY = window.innerHeight / 2;
@@ -117,6 +115,8 @@ export default function AnimatedOrb() {
         style={{
           rotateX,
           rotateY,
+          willChange: 'transform',
+          transformStyle: 'preserve-3d',
         }}
       >
         {/* Core Glow - Parallax Background */}
@@ -241,8 +241,14 @@ export default function AnimatedOrb() {
           }}
           whileHover={{ scale: 1.1 }}
         >
-          {/* Glassmorphism Background Card for Logo */}
-          <div className="relative w-48 h-48 flex items-center justify-center overflow-hidden group">
+          <div 
+            className="relative w-48 h-48 flex items-center justify-center overflow-hidden group"
+            style={{
+              transform: "translateZ(0)",
+              backfaceVisibility: "hidden",
+              WebkitFontSmoothing: "antialiased",
+            }}
+          >
             {/* Internal Scan Light */}
             {/* <motion.div
               className="absolute inset-0 bg-linear-to-tr from-transparent via-white/10 to-transparent skew-x-12 translate-x-[-200%]"
@@ -255,18 +261,27 @@ export default function AnimatedOrb() {
               }}
             /> */}
 
-            {/* The Logo Icon itself */}
             <svg
               viewBox="-4 0 400 300"
-              className="w-32 h-32 drop-shadow-[0_0_20px_rgba(6,182,212,0.5)]"
+              className="w-40 h-40 drop-shadow-[0_0_20px_rgba(6,182,212,0.5)]"
+              style={{
+                shapeRendering: "geometricPrecision",
+                imageRendering: "auto",
+                transform: "translateZ(0)",
+                backfaceVisibility: "hidden",
+                WebkitFontSmoothing: "antialiased",
+              }}
+              preserveAspectRatio="xMidYMid meet"
             >
-              {/* Path 1: Bottom Part */}
               <motion.path
                 d="M374.7,140.2c12.1,6.7,12.1,17.4,0,24.2L214,252.2c-12.1,6.6-32.1,6.6-44.2,0L9.1,164.4c-12.1-6.9-12.1-17.5,0-24.2l30.8-16.8c-3.8,5-2.1,11,5.3,15.1l129.1,70.4c9.7,5.3,25.7,5.3,35.4,0l129.1-70.4c7.4-4.1,9.1-10.1,5.3-15.1L374.7,140.2z"
                 fill="none"
                 stroke="#06B6D4"
                 strokeWidth="8"
+                strokeLinecap="round"
+                strokeLinejoin="round"
                 opacity={0.2}
+                style={{ shapeRendering: "geometricPrecision" }}
                 initial={{ pathLength: 0, opacity: 0 }}
                 animate={{ pathLength: 1, opacity: 0.2 }}
                 transition={{ duration: 2, ease: "easeInOut" }}
@@ -275,6 +290,7 @@ export default function AnimatedOrb() {
                 d="M374.7,140.2c12.1,6.7,12.1,17.4,0,24.2L214,252.2c-12.1,6.6-32.1,6.6-44.2,0L9.1,164.4c-12.1-6.9-12.1-17.5,0-24.2l30.8-16.8c-3.8,5-2.1,11,5.3,15.1l129.1,70.4c9.7,5.3,25.7,5.3,35.4,0l129.1-70.4c7.4-4.1,9.1-10.1,5.3-15.1L374.7,140.2z"
                 fill="#06B6D4"
                 opacity="1"
+                style={{ shapeRendering: "geometricPrecision" }}
                 initial={{ scale: 0.8, opacity: 0 }}
                 animate={{ scale: 1, opacity: 1 }}
                 transition={{ duration: 1, delay: 1 }}
@@ -295,7 +311,10 @@ export default function AnimatedOrb() {
                   fill="none"
                   stroke="#06B6D4"
                   strokeWidth="8"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
                   opacity={0.2}
+                  style={{ shapeRendering: "geometricPrecision" }}
                   initial={{ pathLength: 0, opacity: 0 }}
                   animate={{ pathLength: 1, opacity: 0.2 }}
                   transition={{ duration: 2, ease: "easeInOut", delay: 0.5 }}
@@ -304,6 +323,7 @@ export default function AnimatedOrb() {
                   d="M209.6,3.9l129.1,70.4c9.7,5.4,9.7,14,0,19.4l-129.1,70.5c-9.7,5.3-25.7,5.3-35.4,0L45.2,93.8c-9.7-5.4-9.7-14,0-19.4L174.2,3.9C183.9-1.3,199.9-1.3,209.6,3.9L209.6,3.9z"
                   fill="#06B6D4"
                   opacity="1"
+                  style={{ shapeRendering: "geometricPrecision" }}
                   initial={{ scale: 0.8, opacity: 0 }}
                   animate={{ scale: 1, opacity: 1 }}
                   transition={{ duration: 1, delay: 1.5 }}
