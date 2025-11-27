@@ -17,6 +17,7 @@ const nextConfig: NextConfig = {
       "lucide-react",
       "@floating-ui/react",
     ],
+    optimizeCss: true,
   },
 
   headers: async () => {

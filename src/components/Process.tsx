@@ -9,9 +9,13 @@ import {
   useTransform,
 } from "framer-motion";
 import { Code2, MessageSquare, PenTool, Rocket } from "lucide-react";
+import dynamic from "next/dynamic";
 import { MouseEvent, useRef } from "react";
-import CodeRain from "./CodeRain";
 import FullScreenSection from "./FullScreenSection";
+
+const CodeRain = dynamic(() => import("./CodeRain"), {
+  loading: () => null,
+});
 
 const steps = [
   {

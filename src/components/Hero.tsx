@@ -8,10 +8,14 @@ import {
   useTransform,
 } from "framer-motion";
 import { ArrowRight } from "lucide-react";
+import dynamic from "next/dynamic";
 import { useEffect, useRef, useState } from "react";
-import AnimatedOrb from "./AnimatedOrb";
 import Button from "./Button";
 import StatusBadge from "./StatusBadge";
+
+const AnimatedOrb = dynamic(() => import("./AnimatedOrb"), {
+  loading: () => null,
+});
 
 export default function Hero() {
   const ref = useRef(null);
