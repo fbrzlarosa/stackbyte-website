@@ -1,8 +1,15 @@
 "use client";
 
-import { motion, useScroll, useSpring, useTransform } from "framer-motion";
+import {
+  motion,
+  useMotionTemplate,
+  useMotionValue,
+  useScroll,
+  useSpring,
+  useTransform,
+} from "framer-motion";
 import { Code2, MessageSquare, PenTool, Rocket } from "lucide-react";
-import { useRef } from "react";
+import { MouseEvent, useRef } from "react";
 import CodeRain from "./CodeRain";
 import FullScreenSection from "./FullScreenSection";
 
@@ -32,6 +39,120 @@ const steps = [
       "Launching your product to the world with proper testing and optimization.",
   },
 ];
+
+function ContactStep({
+  step,
+  index,
+}: {
+  step: (typeof steps)[0];
+  index: number;
+}) {
+  const mouseX = useMotionValue(0.5);
+  const mouseY = useMotionValue(0.5);
+  const cardRef = useRef<HTMLDivElement>(null);
+
+  const rotateX = useTransform(mouseY, [0, 1], [8, -8]);
+  const rotateY = useTransform(mouseX, [0, 1], [-8, 8]);
+  const translateZ = useTransform(mouseY, [0, 1], [0, 20]);
+
+  const mouseXPercent = useTransform(mouseX, [0, 1], ["0%", "100%"]);
+  const mouseYPercent = useTransform(mouseY, [0, 1], ["0%", "100%"]);
+
+  function handleMouseMove({
+    currentTarget,
+    clientX,
+    clientY,
+  }: MouseEvent<HTMLDivElement>) {
+    const { left, top, width, height } = currentTarget.getBoundingClientRect();
+    const x = (clientX - left) / width;
+    const y = (clientY - top) / height;
+    mouseX.set(x);
+    mouseY.set(y);
+  }
+
+  function handleMouseLeave() {
+    mouseX.set(0.5);
+    mouseY.set(0.5);
+  }
+
+  function handleClick() {
+    const element = document.getElementById("contact");
+    if (element) {
+      element.scrollIntoView({ behavior: "smooth" });
+    }
+  }
+
+  return (
+    <motion.div
+      ref={cardRef}
+      initial={{ opacity: 0, y: 50, rotateY: 30 }}
+      whileInView={{ opacity: 1, y: 0, rotateY: 0 }}
+      viewport={{ once: true }}
+      transition={{
+        delay: index * 0.2,
+        duration: 0.8,
+        type: "spring",
+        bounce: 0.4,
+      }}
+      onMouseMove={handleMouseMove}
+      onMouseLeave={handleMouseLeave}
+      onClick={handleClick}
+      style={{
+        rotateX,
+        rotateY,
+        translateZ,
+        transformStyle: "preserve-3d",
+        perspective: "1000px",
+      }}
+      className="group p-6 md:p-8 rounded-2xl md:rounded-3xl bg-white/5 border border-white/10 hover:bg-white/10 transition-colors backdrop-blur-sm perspective-1000 cursor-pointer transform-none md:transform"
+      whileHover={{ scale: 1.05 }}
+    >
+      {/* Spotlight Effect */}
+      <motion.div
+        className="pointer-events-none absolute -inset-px opacity-0 transition duration-300 group-hover:opacity-100 rounded-2xl md:rounded-3xl"
+        style={{
+          background: useMotionTemplate`
+            radial-gradient(
+              400px circle at ${mouseXPercent} ${mouseYPercent},
+              rgba(6, 182, 212, 0.2),
+              transparent 70%
+            )
+          `,
+        }}
+      />
+
+      {/* 3D Glow Effect */}
+      <motion.div
+        className="pointer-events-none absolute -inset-1 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-2xl md:rounded-3xl"
+        style={{
+          background: useMotionTemplate`
+            radial-gradient(
+              300px circle at ${mouseXPercent} ${mouseYPercent},
+              rgba(6, 182, 212, 0.15),
+              transparent 60%
+            )
+          `,
+          transform: "translateZ(-10px)",
+        }}
+      />
+
+      <div
+        className="relative z-10 transform-none md:transform"
+        style={{ transform: "translateZ(20px)" }}
+      >
+        <div className="w-12 h-12 bg-primary/20 rounded-2xl flex items-center justify-center text-primary mb-4 md:mb-6 group-hover:scale-110 transition-transform duration-300">
+          <step.icon className="w-6 h-6" />
+        </div>
+        <h3 className="text-lg md:text-xl font-bold mb-2 md:mb-3">
+          {step.title}
+        </h3>
+        <p className="text-sm md:text-base text-gray-400 leading-relaxed">
+          {step.description}
+        </p>
+      </div>
+    </motion.div>
+  );
+}
 
 export default function Process() {
   const sectionRef = useRef<HTMLElement>(null);
@@ -136,31 +257,37 @@ export default function Process() {
             />
           </div>
 
-          {steps.map((step, index) => (
-            <motion.div
-              key={index}
-              initial={{ opacity: 0, y: 50, rotateY: 30 }}
-              whileInView={{ opacity: 1, y: 0, rotateY: 0 }}
-              viewport={{ once: true }}
-              transition={{
-                delay: index * 0.2,
-                duration: 0.8,
-                type: "spring",
-                bounce: 0.4,
-              }}
-              className="group p-6 md:p-8 rounded-2xl md:rounded-3xl bg-white/5 border border-white/10 hover:bg-white/10 transition-colors backdrop-blur-sm perspective-1000"
-            >
-              <div className="w-12 h-12 bg-primary/20 rounded-2xl flex items-center justify-center text-primary mb-4 md:mb-6 group-hover:scale-110 transition-transform duration-300">
-                <step.icon className="w-6 h-6" />
-              </div>
-              <h3 className="text-lg md:text-xl font-bold mb-2 md:mb-3">
-                {step.title}
-              </h3>
-              <p className="text-sm md:text-base text-gray-400 leading-relaxed">
-                {step.description}
-              </p>
-            </motion.div>
-          ))}
+          {steps.map((step, index) => {
+            if (step.title === "Contact") {
+              return <ContactStep key={index} step={step} index={index} />;
+            }
+
+            return (
+              <motion.div
+                key={index}
+                initial={{ opacity: 0, y: 50, rotateY: 30 }}
+                whileInView={{ opacity: 1, y: 0, rotateY: 0 }}
+                viewport={{ once: true }}
+                transition={{
+                  delay: index * 0.2,
+                  duration: 0.8,
+                  type: "spring",
+                  bounce: 0.4,
+                }}
+                className="group p-6 md:p-8 rounded-2xl md:rounded-3xl bg-white/5 border border-white/10 hover:bg-white/10 transition-colors backdrop-blur-sm perspective-1000"
+              >
+                <div className="w-12 h-12 bg-primary/20 rounded-2xl flex items-center justify-center text-primary mb-4 md:mb-6 group-hover:scale-110 transition-transform duration-300">
+                  <step.icon className="w-6 h-6" />
+                </div>
+                <h3 className="text-lg md:text-xl font-bold mb-2 md:mb-3">
+                  {step.title}
+                </h3>
+                <p className="text-sm md:text-base text-gray-400 leading-relaxed">
+                  {step.description}
+                </p>
+              </motion.div>
+            );
+          })}
         </div>
       </div>
     </FullScreenSection>

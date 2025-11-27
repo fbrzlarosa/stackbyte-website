@@ -10,7 +10,7 @@ export default function Footer() {
           <div className="col-span-2 md:col-span-2">
             <Link
               href="/"
-              className="mb-4 sm:mb-6 block w-32 sm:w-40 hover:opacity-80 transition-opacity cursor-pointer"
+              className="mb-4 sm:mb-6 block w-32 sm:w-44 hover:opacity-80 transition-opacity cursor-pointer"
             >
               <Logo className="w-full h-auto" />
             </Link>
@@ -28,25 +28,28 @@ export default function Footer() {
               <li>
                 <Link
                   href="#about"
-                  className="hover:text-primary transition-colors cursor-pointer"
+                  className="relative group hover:text-primary transition-colors cursor-pointer inline-block"
                 >
                   My Story
+                  <span className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-0 h-0.5 bg-primary group-hover:w-full transition-all duration-300" />
                 </Link>
               </li>
               <li>
                 <Link
                   href="#process"
-                  className="hover:text-primary transition-colors cursor-pointer"
+                  className="relative group hover:text-primary transition-colors cursor-pointer inline-block"
                 >
                   How I Work
+                  <span className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-0 h-0.5 bg-primary group-hover:w-full transition-all duration-300" />
                 </Link>
               </li>
               <li>
                 <Link
                   href="#services"
-                  className="hover:text-primary transition-colors cursor-pointer"
+                  className="relative group hover:text-primary transition-colors cursor-pointer inline-block"
                 >
                   Expertise
+                  <span className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-0 h-0.5 bg-primary group-hover:w-full transition-all duration-300" />
                 </Link>
               </li>
             </ul>
@@ -60,36 +63,40 @@ export default function Footer() {
               <li>
                 <Link
                   href="#contact"
-                  className="hover:text-primary transition-colors cursor-pointer"
+                  className="relative group hover:text-primary transition-colors cursor-pointer inline-block"
                 >
                   Contact
+                  <span className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-0 h-0.5 bg-primary group-hover:w-full transition-all duration-300" />
                 </Link>
               </li>
               <li>
                 <Link
                   href={process.env.NEXT_PUBLIC_SOCIAL_GITHUB || "#"}
                   target="_blank"
-                  className="hover:text-primary transition-colors cursor-pointer"
+                  className="relative group hover:text-primary transition-colors cursor-pointer inline-block"
                 >
                   GitHub
+                  <span className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-0 h-0.5 bg-primary group-hover:w-full transition-all duration-300" />
                 </Link>
               </li>
               <li>
                 <Link
                   href={process.env.NEXT_PUBLIC_SOCIAL_LINKEDIN || "#"}
                   target="_blank"
-                  className="hover:text-primary transition-colors cursor-pointer"
+                  className="relative group hover:text-primary transition-colors cursor-pointer inline-block"
                 >
                   LinkedIn
+                  <span className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-0 h-0.5 bg-primary group-hover:w-full transition-all duration-300" />
                 </Link>
               </li>
               <li>
                 <Link
                   href={process.env.NEXT_PUBLIC_SOCIAL_DEVTO || "#"}
                   target="_blank"
-                  className="hover:text-primary transition-colors cursor-pointer"
+                  className="relative group hover:text-primary transition-colors cursor-pointer inline-block"
                 >
                   Dev.to
+                  <span className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-0 h-0.5 bg-primary group-hover:w-full transition-all duration-300" />
                 </Link>
               </li>
             </ul>
@@ -116,9 +123,10 @@ export default function Footer() {
               }`}
               target="_blank"
               rel="noopener noreferrer"
-              className="hover:text-primary transition-colors cursor-pointer"
+              className="relative group hover:text-primary transition-colors cursor-pointer inline-block"
             >
               Privacy Policy
+              <span className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-0 h-0.5 bg-primary group-hover:w-full transition-all duration-300" />
             </a>
           </div>
         </div>

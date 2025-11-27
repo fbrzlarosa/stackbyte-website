@@ -128,7 +128,7 @@ function ExperienceCard({
             transformStyle: "preserve-3d",
             perspective: "1000px",
           }}
-          className="flex-1 relative rounded-2xl border border-white/10 bg-white/5 overflow-hidden group/card transition-shadow duration-300"
+          className="flex-1 relative rounded-2xl border border-white/10 bg-white/5 overflow-hidden group/card transition-shadow duration-300 transform-none md:transform"
           whileHover={{ scale: 1.02 }}
         >
           {/* Spotlight Effect */}
@@ -314,7 +314,7 @@ export default function About() {
           <div className="relative">
             <ScrollReveal>
               <motion.div
-                className="relative z-10"
+                className="relative z-10 transform-none md:transform"
                 style={{
                   rotateX,
                   rotateY,

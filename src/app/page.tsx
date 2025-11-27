@@ -8,6 +8,7 @@ import MouseSpotlight from "@/components/MouseSpotlight";
 import Navbar from "@/components/Navbar";
 import NoiseOverlay from "@/components/NoiseOverlay";
 import Process from "@/components/Process";
+import ReadyToStart from "@/components/ReadyToStart";
 import ScrollBackground from "@/components/ScrollBackground";
 import SkillsShowcase from "@/components/SkillsShowcase";
 import StunningLoader from "@/components/StunningLoader";
@@ -28,6 +29,7 @@ export default function Home() {
             <About />
             <Process />
             <SkillsShowcase />
+            <ReadyToStart />
             <Contact />
             <Footer />
           </main>

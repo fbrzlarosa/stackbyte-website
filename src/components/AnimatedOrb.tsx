@@ -229,9 +229,9 @@ export default function AnimatedOrb() {
           whileHover={{ scale: 1.1 }}
         >
           {/* Glassmorphism Background Card for Logo */}
-          <div className="relative w-48 h-48 bg-black/40 backdrop-blur-md rounded-2xl border border-white/10 shadow-[0_0_50px_rgba(6,182,212,0.15)] flex items-center justify-center overflow-hidden group">
+          <div className="relative w-48 h-48 flex items-center justify-center overflow-hidden group">
             {/* Internal Scan Light */}
-            <motion.div
+            {/* <motion.div
               className="absolute inset-0 bg-linear-to-tr from-transparent via-white/10 to-transparent skew-x-12 translate-x-[-200%]"
               animate={{ translateX: ["-200%", "200%"] }}
               transition={{
@@ -240,11 +240,11 @@ export default function AnimatedOrb() {
                 ease: "easeInOut",
                 delay: 1,
               }}
-            />
+            /> */}
 
             {/* The Logo Icon itself */}
             <svg
-              viewBox="0 0 400 300"
+              viewBox="-4 0 400 300"
               className="w-32 h-32 drop-shadow-[0_0_20px_rgba(6,182,212,0.5)]"
             >
               {/* Path 1: Bottom Part */}
@@ -260,9 +260,9 @@ export default function AnimatedOrb() {
               <motion.path
                 d="M374.7,140.2c12.1,6.7,12.1,17.4,0,24.2L214,252.2c-12.1,6.6-32.1,6.6-44.2,0L9.1,164.4c-12.1-6.9-12.1-17.5,0-24.2l30.8-16.8c-3.8,5-2.1,11,5.3,15.1l129.1,70.4c9.7,5.3,25.7,5.3,35.4,0l129.1-70.4c7.4-4.1,9.1-10.1,5.3-15.1L374.7,140.2z"
                 fill="#06B6D4"
-                opacity="0.2"
+                opacity="1"
                 initial={{ scale: 0.8, opacity: 0 }}
-                animate={{ scale: 1, opacity: 0.2 }}
+                animate={{ scale: 1, opacity: 1 }}
                 transition={{ duration: 1, delay: 1 }}
               />
 
@@ -279,9 +279,9 @@ export default function AnimatedOrb() {
               <motion.path
                 d="M209.6,3.9l129.1,70.4c9.7,5.4,9.7,14,0,19.4l-129.1,70.5c-9.7,5.3-25.7,5.3-35.4,0L45.2,93.8c-9.7-5.4-9.7-14,0-19.4L174.2,3.9C183.9-1.3,199.9-1.3,209.6,3.9L209.6,3.9z"
                 fill="#06B6D4"
-                opacity="0.2"
+                opacity="1"
                 initial={{ scale: 0.8, opacity: 0 }}
-                animate={{ scale: 1, opacity: 0.2 }}
+                animate={{ scale: 1, opacity: 1 }}
                 transition={{ duration: 1, delay: 1.5 }}
               />
             </svg>

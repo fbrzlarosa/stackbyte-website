@@ -70,7 +70,7 @@ export default function Navbar() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-full flex items-center justify-between">
           <Link
             href="/"
-            className="block w-24 sm:w-32 hover:opacity-80 transition-opacity relative z-50 cursor-pointer"
+            className="block w-32 sm:w-44 hover:opacity-80 transition-opacity relative z-50 cursor-pointer"
             onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
           >
             <Logo className="w-full h-auto" />
