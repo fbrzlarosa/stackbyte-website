@@ -28,7 +28,7 @@ export const metadata: Metadata = {
     template: "%s | Stackbyte",
   },
   description:
-    "Fabrizio 'Rubber' La Rosa is a Full Stack Engineer and Software Architect with 15+ years of experience in crafting efficient, scalable digital solutions.",
+    "Fabrizio La Rosa is a Full Stack Engineer and Software Architect with 15+ years of experience in crafting efficient, scalable digital solutions.",
   keywords: [
     "Full Stack Developer",
     "Software Engineer",

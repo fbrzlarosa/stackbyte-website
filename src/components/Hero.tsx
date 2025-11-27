@@ -166,9 +166,9 @@ export default function Hero() {
             }}
             className="text-base sm:text-lg md:text-xl text-gray-400 max-w-2xl mb-8 md:mb-10 leading-relaxed"
           >
-            I&apos;m Fabrizio &quot;Rubber&quot; La Rosa — full-stack engineer,
-            code artisan, digital problem solver. Turning complex problems into
-            elegant, user-centric digital experiences.
+            I&apos;m Fabrizio La Rosa — full-stack engineer, code artisan,
+            digital problem solver. Turning complex problems into elegant,
+            user-centric digital experiences.
           </motion.p>
 
           <motion.div
