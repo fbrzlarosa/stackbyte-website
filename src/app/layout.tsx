@@ -2,7 +2,6 @@ import IubendaScript from "@/components/IubendaScript";
 import SmoothScroll from "@/components/SmoothScroll";
 import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
-// @ts-expect-error - No types for globals.css
 import "./globals.css";
 
 const geistSans = Geist({

@@ -1,0 +1,9 @@
+# *
+User-agent: *
+Allow: /
+
+# Host
+Host: https://stackbyte.dev
+
+# Sitemaps
+Sitemap: https://stackbyte.dev/sitemap.xml
