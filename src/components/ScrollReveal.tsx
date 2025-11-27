@@ -1,7 +1,7 @@
 'use client';
 
-import { motion, useScroll, useTransform, useSpring, MotionValue } from 'framer-motion';
-import { useRef, ReactNode } from 'react';
+import { motion, useScroll, useSpring, useTransform } from 'framer-motion';
+import { ReactNode, useRef } from 'react';
 
 interface ScrollRevealProps {
   children: ReactNode;

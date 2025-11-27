@@ -65,16 +65,16 @@ export default function Process() {
       ignoreOpacity={true}
       ref={sectionRef}
       id="process"
-      className="py-32 bg-[#0D1117] overflow-hidden relative z-20"
+      className="py-16 sm:py-24 md:py-32 bg-[#0D1117] overflow-hidden relative z-20"
     >
       <CodeRain />
-      <div className="max-w-7xl mx-auto px-6 relative z-10">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
-          className="mb-20 text-center"
+          className="mb-12 md:mb-16 lg:mb-20 text-center"
         >
           <motion.h2
             style={{
@@ -86,7 +86,7 @@ export default function Process() {
               transformStyle: "preserve-3d",
               perspective: "1200px",
             }}
-            className="text-3xl md:text-5xl font-bold mb-6"
+            className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-4 md:mb-6"
           >
             <motion.span
               style={{
@@ -117,14 +117,14 @@ export default function Process() {
               translateZ: paraTranslateZ,
               transformStyle: "preserve-3d",
             }}
-            className="text-xl text-gray-400 max-w-2xl mx-auto"
+            className="text-base sm:text-lg md:text-xl text-gray-400 max-w-2xl mx-auto px-4"
           >
             A streamlined process designed to take your project from concept to
             reality efficiently.
           </motion.p>
         </motion.div>
 
-        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8 relative">
+        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8 relative">
           {/* Connecting Line (Desktop) */}
           <div className="hidden lg:block absolute top-12 left-0 w-full h-0.5 bg-white/10 -z-10">
             <motion.div
@@ -148,13 +148,15 @@ export default function Process() {
                 type: "spring",
                 bounce: 0.4,
               }}
-              className="group p-8 rounded-3xl bg-white/5 border border-white/10 hover:bg-white/10 transition-colors backdrop-blur-sm perspective-1000"
+              className="group p-6 md:p-8 rounded-2xl md:rounded-3xl bg-white/5 border border-white/10 hover:bg-white/10 transition-colors backdrop-blur-sm perspective-1000"
             >
-              <div className="w-12 h-12 bg-primary/20 rounded-2xl flex items-center justify-center text-primary mb-6 group-hover:scale-110 transition-transform duration-300">
+              <div className="w-12 h-12 bg-primary/20 rounded-2xl flex items-center justify-center text-primary mb-4 md:mb-6 group-hover:scale-110 transition-transform duration-300">
                 <step.icon className="w-6 h-6" />
               </div>
-              <h3 className="text-xl font-bold mb-3">{step.title}</h3>
-              <p className="text-gray-400 leading-relaxed">
+              <h3 className="text-lg md:text-xl font-bold mb-2 md:mb-3">
+                {step.title}
+              </h3>
+              <p className="text-sm md:text-base text-gray-400 leading-relaxed">
                 {step.description}
               </p>
             </motion.div>

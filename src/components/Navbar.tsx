@@ -1,12 +1,39 @@
 "use client";
 
-import { motion, useMotionValueEvent, useScroll } from "framer-motion";
-import { Github, Linkedin, Mail, Menu, Twitter, X } from "lucide-react";
+import {
+  AnimatePresence,
+  motion,
+  useMotionValueEvent,
+  useScroll,
+} from "framer-motion";
+import { Github, Linkedin, Mail } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
+import Button from "./Button";
 import Logo from "./Logo";
 
+function DevToIcon() {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className="lucide lucide-book-open"
+    >
+      <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z" />
+      <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z" />
+    </svg>
+  );
+}
+
 const navLinks = [
+  { name: "My Story", href: "#about" },
   { name: "How I Work", href: "#process" },
   { name: "Expertise", href: "#services" },
 ];
@@ -36,26 +63,26 @@ export default function Navbar() {
         }}
         className={`fixed top-0 left-0 right-0 z-[9999] transition-all duration-500 ${
           isScrolled
-            ? "bg-black/30 backdrop-blur-md h-16 shadow-lg"
-            : "bg-black/0 backdrop-blur-sm h-24"
+            ? "bg-black/30 backdrop-blur-md h-14 sm:h-16 shadow-lg"
+            : "bg-black/0 backdrop-blur-sm h-20 sm:h-24"
         }`}
       >
-        <div className="max-w-7xl mx-auto px-6 h-full flex items-center justify-between">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-full flex items-center justify-between">
           <Link
             href="/"
-            className="block w-32 hover:opacity-80 transition-opacity relative z-50"
+            className="block w-24 sm:w-32 hover:opacity-80 transition-opacity relative z-50 cursor-pointer"
             onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
           >
             <Logo className="w-full h-auto" />
           </Link>
 
           {/* Desktop Menu - Minimal & Modern */}
-          <div className="hidden md:flex items-center gap-8">
+          <div className="hidden md:flex items-center gap-6 lg:gap-8">
             {navLinks.map((item) => (
               <Link
                 key={item.name}
                 href={item.href}
-                className={`text-sm font-medium transition-colors relative group ${
+                className={`text-sm font-medium transition-colors relative group cursor-pointer ${
                   isScrolled
                     ? "text-gray-300 hover:text-white"
                     : "text-white/90 hover:text-white"
@@ -68,81 +95,153 @@ export default function Navbar() {
 
             <div className="w-px h-6 bg-white/10 mx-2" />
 
-            <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-              <Link
-                href="#contact"
-                className="bg-white text-black px-5 py-2 rounded-full text-sm font-bold hover:bg-gray-200 transition-colors"
-              >
-                Let&apos;s Talk
-              </Link>
-            </motion.div>
+            <Button href="#contact" variant="primary" size="sm">
+              Let&apos;s Talk
+            </Button>
           </div>
 
           {/* Mobile Menu Toggle */}
           <button
-            className="md:hidden text-white relative z-50 p-2"
+            className="md:hidden text-white relative z-50 p-2 cursor-pointer focus:outline-none"
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
           >
-            {mobileMenuOpen ? <X /> : <Menu />}
+            <motion.div
+              animate={mobileMenuOpen ? "open" : "closed"}
+              className="w-6 h-6 flex flex-col justify-center items-center gap-1.5"
+            >
+              <motion.span
+                variants={{
+                  closed: { rotate: 0, y: 0 },
+                  open: { rotate: 45, y: 6 },
+                }}
+                className="w-full h-0.5 bg-white block origin-center"
+              />
+              <motion.span
+                variants={{
+                  closed: { opacity: 1 },
+                  open: { opacity: 0 },
+                }}
+                className="w-full h-0.5 bg-white block"
+              />
+              <motion.span
+                variants={{
+                  closed: { rotate: 0, y: 0 },
+                  open: { rotate: -45, y: -10 }, // Adjusted y for gap-1.5 (6px) + height
+                }}
+                className="w-full h-0.5 bg-white block origin-center"
+              />
+            </motion.div>
           </button>
         </div>
       </motion.nav>
 
       {/* Mobile Fullscreen Menu Overlay */}
-      <motion.div
-        initial={{ opacity: 0, pointerEvents: "none" }}
-        animate={{
-          opacity: mobileMenuOpen ? 1 : 0,
-          pointerEvents: mobileMenuOpen ? "auto" : "none",
-        }}
-        transition={{ duration: 0.3 }}
-        className="fixed inset-0 z-40 bg-black/95 backdrop-blur-xl flex items-center justify-center"
-      >
-        <div className="flex flex-col items-center gap-8 text-center">
-          {navLinks.map((item, i) => (
-            <motion.div
-              key={item.name}
-              initial={{ y: 20, opacity: 0 }}
-              animate={{
-                y: mobileMenuOpen ? 0 : 20,
-                opacity: mobileMenuOpen ? 1 : 0,
-              }}
-              transition={{ delay: i * 0.1 + 0.2 }}
-            >
-              <Link
-                href={item.href}
-                className="text-4xl font-bold text-white hover:text-primary transition-colors"
-                onClick={() => setMobileMenuOpen(false)}
-              >
-                {item.name}
-              </Link>
-            </motion.div>
-          ))}
-
+      <AnimatePresence>
+        {mobileMenuOpen && (
           <motion.div
-            initial={{ y: 20, opacity: 0 }}
+            initial={{ opacity: 0, clipPath: "circle(0% at 100% 0%)" }}
             animate={{
-              y: mobileMenuOpen ? 0 : 20,
-              opacity: mobileMenuOpen ? 1 : 0,
+              opacity: 1,
+              clipPath: "circle(150% at 100% 0%)",
+              transition: {
+                type: "spring",
+                stiffness: 30,
+                damping: 15,
+                duration: 0.5,
+              },
             }}
-            transition={{ delay: 0.5 }}
-            className="flex gap-6 mt-8"
+            exit={{
+              opacity: 0,
+              clipPath: "circle(0% at 100% 0%)",
+              transition: {
+                type: "spring",
+                stiffness: 30,
+                damping: 15,
+                duration: 0.5,
+                delay: 0.2, // Wait for content to exit
+              },
+            }}
+            className="fixed inset-0 z-40 bg-[#0D1117]/95 backdrop-blur-xl flex items-center justify-center"
           >
-            <a href="#" className="text-gray-400 hover:text-white">
-              <Github />
-            </a>
-            <a href="#" className="text-gray-400 hover:text-white">
-              <Linkedin />
-            </a>
-            <a href="#" className="text-gray-400 hover:text-white">
-              <Twitter />
-            </a>
-            <a href="#" className="text-gray-400 hover:text-white">
-              <Mail />
-            </a>
+            <motion.div
+              initial="closed"
+              animate="open"
+              exit="closed"
+              variants={{
+                open: {
+                  transition: { staggerChildren: 0.1, delayChildren: 0.2 },
+                },
+                closed: {
+                  transition: { staggerChildren: 0.05, staggerDirection: -1 },
+                },
+              }}
+              className="flex flex-col items-center gap-8 text-center"
+            >
+              {navLinks.map((item) => (
+                <motion.div
+                  key={item.name}
+                  variants={{
+                    open: { y: 0, opacity: 1 },
+                    closed: { y: 20, opacity: 0 },
+                  }}
+                >
+                  <Link
+                    href={item.href}
+                    className="text-4xl sm:text-5xl font-black text-transparent bg-clip-text bg-linear-to-r from-white to-gray-400 hover:to-primary transition-all cursor-pointer tracking-tight"
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
+                    {item.name}
+                  </Link>
+                </motion.div>
+              ))}
+
+              <motion.div
+                variants={{
+                  open: { y: 0, opacity: 1 },
+                  closed: { y: 20, opacity: 0 },
+                }}
+                className="flex gap-8 mt-8"
+              >
+                <a
+                  href={process.env.NEXT_PUBLIC_SOCIAL_GITHUB || "#"}
+                  target="_blank"
+                  className="text-gray-400 hover:text-white cursor-pointer transition-colors transform hover:scale-110"
+                >
+                  <Github className="w-6 h-6" />
+                </a>
+                <a
+                  href={process.env.NEXT_PUBLIC_SOCIAL_LINKEDIN || "#"}
+                  target="_blank"
+                  className="text-gray-400 hover:text-white cursor-pointer transition-colors transform hover:scale-110"
+                >
+                  <Linkedin className="w-6 h-6" />
+                </a>
+                <a
+                  href={process.env.NEXT_PUBLIC_SOCIAL_DEVTO || "#"}
+                  target="_blank"
+                  className="text-gray-400 hover:text-white cursor-pointer transition-colors transform hover:scale-110"
+                >
+                  <DevToIcon />
+                </a>
+                <a
+                  href="#contact"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    setMobileMenuOpen(false);
+                    const element = document.getElementById("contact");
+                    if (element) {
+                      element.scrollIntoView({ behavior: "smooth" });
+                    }
+                  }}
+                  className="text-gray-400 hover:text-white cursor-pointer transition-colors transform hover:scale-110"
+                >
+                  <Mail className="w-6 h-6" />
+                </a>
+              </motion.div>
+            </motion.div>
           </motion.div>
-        </div>
-      </motion.div>
+        )}
+      </AnimatePresence>
     </>
   );
 }

@@ -65,7 +65,7 @@ export default function AnimatedOrb() {
 
   return (
     <motion.div
-      className="absolute left-[-10%] top-1/2 -translate-y-1/2 w-[600px] h-[600px] hidden lg:flex items-center justify-center perspective-distant z-10 pointer-events-none"
+      // className="absolute left-[-10%] top-1/2 -translate-y-1/2 w-[600px] h-[600px] hidden lg:flex items-center justify-center perspective-distant z-10 pointer-events-none"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >

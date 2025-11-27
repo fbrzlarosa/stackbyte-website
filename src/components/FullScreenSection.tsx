@@ -50,7 +50,7 @@ const FullScreenSection = forwardRef<HTMLElement, FullScreenSectionProps>(
         id={id}
         style={{
           opacity: ignoreOpacity ? 1 : smoothOpacity,
-          scale: smoothScale,
+          // scale: smoothScale,
           rotateX: smoothTilt,
           perspective: "1000px",
         }}

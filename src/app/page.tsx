@@ -1,3 +1,4 @@
+import About from "@/components/About";
 import Contact from "@/components/Contact";
 import FloatingElements from "@/components/FloatingElements";
 import Footer from "@/components/Footer";
@@ -24,6 +25,7 @@ export default function Home() {
           <main className="min-h-screen text-foreground selection:bg-primary/30 relative">
             <FloatingElements />
             <Hero />
+            <About />
             <Process />
             <SkillsShowcase />
             <Contact />

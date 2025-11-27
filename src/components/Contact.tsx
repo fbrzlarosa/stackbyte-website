@@ -9,9 +9,10 @@ import {
   Variants,
 } from "framer-motion";
 import { AlertCircle, CheckCircle2, Send } from "lucide-react";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import Turnstile from "react-turnstile";
+import Button from "./Button";
 import ScrollReveal from "./ScrollReveal";
 
 type FormData = {
@@ -47,6 +48,14 @@ export default function Contact() {
   } = useForm<FormData>();
   const [status, setStatus] = useState<"idle" | "success" | "error">("idle");
   const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth < 768);
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+    return () => window.removeEventListener("resize", checkMobile);
+  }, []);
 
   const { scrollYProgress } = useScroll({
     target: sectionRef,
@@ -99,7 +108,7 @@ export default function Contact() {
     <section
       ref={sectionRef}
       id="contact"
-      className="py-32 relative overflow-hidden"
+      className="py-16 sm:py-24 md:py-32 relative overflow-hidden"
     >
       {/* Background Elements */}
       <motion.div
@@ -123,9 +132,9 @@ export default function Contact() {
         className="absolute left-0 top-1/4 w-1/4 h-1/4 bg-purple-500/10 rounded-full blur-[120px] -z-10"
       />
 
-      <div className="max-w-4xl mx-auto px-6">
+      <div className="max-w-4xl mx-auto px-6 sm:px-8">
         <ScrollReveal>
-          <div className="flex flex-col items-center text-center gap-12">
+          <div className="flex flex-col items-center gap-8 md:gap-12">
             {/* Text Content */}
             <motion.div
               initial={{ opacity: 0, y: 30 }}
@@ -139,7 +148,7 @@ export default function Contact() {
                   rotateX,
                   rotateY,
                   rotateZ,
-                  x,
+                  x: isMobile ? 0 : x,
                   y,
                   scale,
                   opacity,
@@ -147,7 +156,7 @@ export default function Contact() {
                   transformStyle: "preserve-3d",
                   perspective: "1500px",
                 }}
-                className="text-5xl md:text-7xl lg:text-8xl font-black mb-24"
+                className="text-center text-4xl sm:text-5xl lg:text-7xl xl:text-8xl font-black mb-12 md:mb-16 lg:mb-24 px-4 sm:px-4 mx-auto max-w-full sm:max-w-[90vw] break-words"
               >
                 <motion.span
                   style={{
@@ -156,6 +165,7 @@ export default function Contact() {
                     translateZ: useTransform(smoothProgress, [0, 1], [0, 50]),
                     rotateX: useTransform(smoothProgress, [0, 1], [10, -10]),
                   }}
+                  className="px-2"
                 >
                   Let&apos;s build something
                 </motion.span>
@@ -212,7 +222,7 @@ export default function Contact() {
                   ),
                   transformStyle: "preserve-3d",
                 }}
-                className="text-xl md:text-2xl text-gray-400 max-w-2xl mx-auto mb-12 leading-relaxed"
+                className="text-center text-base sm:text-lg md:text-xl lg:text-2xl text-gray-400 max-w-2xl mx-auto mb-8 md:mb-12 leading-relaxed px-6 sm:px-4"
               >
                 Ready to transform your digital presence? I&apos;m currently
                 available for new projects and collaborations.
@@ -266,7 +276,7 @@ export default function Contact() {
                     rotateY: useTransform(smoothProgress, [0, 1], [5, -5]),
                   }}
                   whileHover={{ scale: 1.1, y: -5, rotateZ: -2 }}
-                  className="flex items-center gap-3 px-5 py-3 rounded-full bg-primary/10 border border-primary/20 backdrop-blur-sm shadow-lg shadow-primary/20"
+                  className="flex items-center gap-3 px-5 py-3 rounded-full bg-primary/10 border border-primary/20 shadow-lg shadow-primary/20"
                 >
                   <motion.div
                     className="w-2 h-2 bg-primary rounded-full"
@@ -308,7 +318,7 @@ export default function Contact() {
                 ),
                 transformStyle: "preserve-3d",
               }}
-              className="w-full max-w-4xl bg-white/5 border border-white/10 p-10 md:p-16 rounded-3xl backdrop-blur-xl shadow-2xl transform-style-3d relative overflow-hidden"
+              className="w-full max-w-4xl bg-white/5 border border-white/10 p-6 md:p-16 rounded-3xl backdrop-blur-xl shadow-2xl transform-style-3d relative overflow-hidden"
             >
               {/* Animated Background Gradients */}
               <motion.div
@@ -395,13 +405,16 @@ export default function Contact() {
                       onClick={() => setStatus("idle")}
                       whileHover={{ scale: 1.05 }}
                       whileTap={{ scale: 0.95 }}
-                      className="px-6 py-3 bg-primary/10 hover:bg-primary/20 border border-primary/30 rounded-full text-primary font-medium transition-all"
+                      className="px-6 py-3 bg-primary/10 hover:bg-primary/20 border border-primary/30 rounded-full text-primary font-medium transition-all cursor-pointer"
                     >
                       Send another message
                     </motion.button>
                   </motion.div>
                 ) : (
-                  <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+                  <form
+                    onSubmit={handleSubmit(onSubmit)}
+                    className="space-y-4 sm:space-y-6"
+                  >
                     <motion.div
                       initial={{ opacity: 0, x: -20 }}
                       whileInView={{ opacity: 1, x: 0 }}
@@ -410,7 +423,7 @@ export default function Contact() {
                     >
                       <label
                         htmlFor="name"
-                        className="block text-sm font-semibold mb-3 text-gray-300"
+                        className="block text-sm font-semibold mb-2 sm:mb-3 text-gray-300"
                       >
                         Name
                       </label>
@@ -439,7 +452,7 @@ export default function Contact() {
                     >
                       <label
                         htmlFor="email"
-                        className="block text-sm font-semibold mb-3 text-gray-300"
+                        className="block text-sm font-semibold mb-2 sm:mb-3 text-gray-300"
                       >
                         Email
                       </label>
@@ -475,7 +488,7 @@ export default function Contact() {
                     >
                       <label
                         htmlFor="message"
-                        className="block text-sm font-semibold mb-3 text-gray-300"
+                        className="block text-sm font-semibold mb-2 sm:mb-3 text-gray-300"
                       >
                         Message
                       </label>
@@ -513,7 +526,14 @@ export default function Contact() {
                       <div className="text-sm">
                         <label htmlFor="privacy" className="text-gray-400">
                           I agree to the{" "}
-                          <a href="#" className="text-primary hover:underline">
+                          <a
+                            href={`https://www.iubenda.com/privacy-policy/${
+                              process.env.NEXT_PUBLIC_IUBENDA_POLICY_ID || ""
+                            }`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-primary hover:underline cursor-pointer"
+                          >
                             Privacy Policy
                           </a>{" "}
                           and consent to the processing of my data.
@@ -537,44 +557,19 @@ export default function Contact() {
                       />
                     </div>
 
-                    <motion.button
+                    <Button
                       type="submit"
                       disabled={isSubmitting}
-                      whileHover={{ scale: isSubmitting ? 1 : 1.02 }}
-                      whileTap={{ scale: isSubmitting ? 1 : 0.98 }}
-                      className="w-full bg-gradient-to-r from-primary to-purple-500 hover:from-primary/90 hover:to-purple-500/90 text-white font-bold py-4 rounded-xl transition-all flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed group shadow-lg shadow-primary/20 relative overflow-hidden"
+                      isLoading={isSubmitting}
+                      variant="gradient"
+                      size="lg"
+                      className="w-full"
+                      rightIcon={
+                        <Send className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                      }
                     >
-                      <motion.div
-                        className="absolute inset-0 bg-gradient-to-r from-primary via-purple-500 to-primary bg-[length:200%_auto] opacity-0 group-hover:opacity-100 transition-opacity"
-                        animate={{
-                          backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"],
-                        }}
-                        transition={{
-                          duration: 3,
-                          repeat: Infinity,
-                          ease: "linear",
-                        }}
-                      />
-                      {isSubmitting ? (
-                        <span className="relative z-10 flex items-center gap-2">
-                          <motion.span
-                            animate={{ rotate: 360 }}
-                            transition={{
-                              duration: 1,
-                              repeat: Infinity,
-                              ease: "linear",
-                            }}
-                            className="w-4 h-4 border-2 border-white border-t-transparent rounded-full"
-                          />
-                          Sending...
-                        </span>
-                      ) : (
-                        <span className="relative z-10 flex items-center gap-2">
-                          Send Message
-                          <Send className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-                        </span>
-                      )}
-                    </motion.button>
+                      {isSubmitting ? "Sending..." : "Send Message"}
+                    </Button>
 
                     {status === "error" && (
                       <div className="flex items-center gap-2 text-red-400 bg-red-400/10 p-3 rounded-lg text-sm">

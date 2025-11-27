@@ -2,9 +2,9 @@
 
 import { motion, useScroll, useSpring, useTransform } from "framer-motion";
 import { ArrowRight } from "lucide-react";
-import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import AnimatedOrb from "./AnimatedOrb";
+import Button from "./Button";
 import StatusBadge from "./StatusBadge";
 
 export default function Hero() {
@@ -51,7 +51,7 @@ export default function Hero() {
   return (
     <section
       ref={ref}
-      className="relative min-h-screen flex items-center pt-20"
+      className="relative min-h-screen flex items-center pt-24 sm:pt-28 md:pt-32 pb-16 sm:pb-20 md:pb-24 overflow-hidden"
     >
       {/* Mouse-tracking Background Gradients */}
       <motion.div
@@ -59,17 +59,17 @@ export default function Hero() {
           y: backgroundY,
           x: mousePosition.x,
         }}
-        className="absolute top-0 left-1/2 -translate-x-1/2 w-[1000px] h-[500px] bg-primary/20 rounded-full blur-[120px] -z-10"
+        className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] md:w-[1000px] h-[300px] md:h-[500px] bg-primary/20 rounded-full blur-[80px] md:blur-[120px] -z-10"
       />
       <motion.div
         style={{
           y: backgroundY,
           x: -mousePosition.x,
         }}
-        className="absolute bottom-0 right-0 w-[800px] h-[600px] bg-purple-500/10 rounded-full blur-[100px] -z-10"
+        className="absolute bottom-0 right-0 w-[400px] md:w-[800px] h-[400px] md:h-[600px] bg-purple-500/10 rounded-full blur-[60px] md:blur-[100px] -z-10"
       />
 
-      <div className="max-w-7xl mx-auto px-6 w-full">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
         <motion.div
           style={{ y: textY }}
           className="max-w-4xl relative z-10"
@@ -101,7 +101,7 @@ export default function Hero() {
               transformStyle: "preserve-3d",
               perspective: "1500px",
             }}
-            className="text-5xl md:text-7xl font-bold tracking-tight leading-[1.1] mb-8"
+            className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight leading-[1.1] mb-6 md:mb-8"
           >
             <motion.span
               style={{
@@ -121,12 +121,12 @@ export default function Hero() {
                   translateZ: useTransform(smoothProgress, [0, 1], [0, -50]),
                   rotateY: useTransform(smoothProgress, [0, 1], [0, 10]),
                 }}
-                className="text-transparent bg-clip-text bg-gradient-to-r from-primary via-purple-400 to-primary bg-[length:200%_auto] animate-gradient"
+                className="text-transparent bg-clip-text bg-linear-to-r from-primary via-purple-400 to-primary bg-size-[200%_auto] animate-gradient"
               >
                 scalable solutions
               </motion.span>
               <motion.span
-                className="absolute -inset-1 bg-gradient-to-r from-primary/20 to-purple-500/20 blur-xl -z-10"
+                className="absolute -inset-1 bg-linear-to-r from-primary/20 to-purple-500/20 blur-xl -z-10"
                 style={{
                   transform: "translateZ(-30px)",
                   scale: useTransform(smoothProgress, [0, 1], [1, 1.2]),
@@ -164,7 +164,7 @@ export default function Hero() {
               translateZ: paraTranslateZ,
               transformStyle: "preserve-3d",
             }}
-            className="text-xl text-gray-400 max-w-2xl mb-10 leading-relaxed"
+            className="text-base sm:text-lg md:text-xl text-gray-400 max-w-2xl mb-8 md:mb-10 leading-relaxed"
           >
             I&apos;m Fabrizio &quot;Rubber&quot; La Rosa — full-stack engineer,
             code artisan, digital problem solver. Turning complex problems into
@@ -176,29 +176,19 @@ export default function Hero() {
               hidden: { opacity: 0, y: 20 },
               visible: { opacity: 1, y: 0 },
             }}
-            className="flex flex-col sm:flex-row gap-4"
+            className="flex flex-col sm:flex-row gap-3 sm:gap-4 mb-12 md:mb-16"
           >
-            <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-              <Link
-                href="#contact"
-                className="inline-flex items-center justify-center gap-2 bg-white text-black px-8 py-4 rounded-full font-bold text-lg hover:bg-gray-100 transition-all relative overflow-hidden group"
-              >
-                <span className="relative z-10">Start a Project</span>
-                <ArrowRight className="w-5 h-5 relative z-10 group-hover:translate-x-1 transition-transform" />
-                <motion.span
-                  className="absolute inset-0 bg-gradient-to-r from-primary to-purple-500 opacity-0 group-hover:opacity-20"
-                  initial={false}
-                />
-              </Link>
-            </motion.div>
-            <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-              <Link
-                href="#process"
-                className="inline-flex items-center justify-center gap-2 px-8 py-4 rounded-full font-bold text-lg border border-white/20 hover:bg-white/5 transition-all backdrop-blur-sm"
-              >
-                How I Work
-              </Link>
-            </motion.div>
+            <Button
+              href="#contact"
+              variant="gradient"
+              size="lg"
+              rightIcon={<ArrowRight className="w-5 h-5" />}
+            >
+              Start a Project
+            </Button>
+            <Button href="#process" variant="secondary" size="lg">
+              How I Work
+            </Button>
           </motion.div>
 
           <motion.div
@@ -206,7 +196,7 @@ export default function Hero() {
               hidden: { opacity: 0, y: 20 },
               visible: { opacity: 1, y: 0 },
             }}
-            className="mt-20 grid grid-cols-2 md:grid-cols-4 gap-8 border-t border-white/10 pt-8"
+            className="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-8 border-t border-white/10 pt-6 md:pt-8"
           >
             {[
               { value: "15+", label: "Years Experience" },
@@ -218,7 +208,7 @@ export default function Hero() {
                 whileHover={{ y: -5 }}
                 transition={{ type: "spring", stiffness: 300 }}
               >
-                <div className="text-3xl font-bold text-white mb-1 bg-gradient-to-r from-white to-gray-400 bg-clip-text text-transparent">
+                <div className="text-3xl font-bold mb-1 bg-linear-to-r from-white to-gray-400 bg-clip-text text-transparent">
                   {stat.value}
                 </div>
                 <div className="text-sm text-gray-500">{stat.label}</div>
@@ -227,7 +217,7 @@ export default function Hero() {
           </motion.div>
         </motion.div>
       </div>
-      <div className="max-w-5xl mx-auto px-6 w-full absolute top-0 right-0 h-full">
+      <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 w-full absolute top-0 right-0 h-full hidden lg:flex items-center justify-center pointer-events-none">
         <AnimatedOrb />
       </div>
     </section>
