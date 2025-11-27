@@ -42,13 +42,9 @@ export default function Hero() {
   const backgroundY = useTransform(
     scrollYProgress,
     [0, 1],
-    ["0%", isMobile ? "30%" : "50%"]
+    [0, isMobile ? 0 : 250]
   );
-  const textY = useTransform(
-    scrollYProgress,
-    [0, 1],
-    ["0%", isMobile ? "50%" : "100%"]
-  );
+  const textY = useTransform(scrollYProgress, [0, 1], [0, isMobile ? 0 : 400]);
 
   // 3D transforms for text - reduced on mobile for better performance
   const rotateX = useTransform(
@@ -319,9 +315,11 @@ export default function Hero() {
           </motion.div>
         </motion.div>
       </div>
-      <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 w-full absolute top-0 right-0 h-full hidden lg:flex items-center justify-center pointer-events-none">
-        <AnimatedOrb />
-      </div>
+      {!isMobile && (
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 w-full absolute top-0 right-0 h-full hidden lg:flex items-center justify-center pointer-events-none">
+          <AnimatedOrb />
+        </div>
+      )}
     </section>
   );
 }
