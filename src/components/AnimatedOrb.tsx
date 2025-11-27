@@ -109,7 +109,7 @@ export default function AnimatedOrb() {
     <motion.div
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
-      style={{ contain: 'layout style paint', willChange: 'transform' }}
+      style={{ willChange: 'transform' }}
     >
       {/* 3D Container */}
       <motion.div

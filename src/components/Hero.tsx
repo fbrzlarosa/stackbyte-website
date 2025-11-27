@@ -1,11 +1,11 @@
 "use client";
 
 import {
-    motion,
-    useReducedMotion,
-    useScroll,
-    useSpring,
-    useTransform,
+  motion,
+  useReducedMotion,
+  useScroll,
+  useSpring,
+  useTransform,
 } from "framer-motion";
 import { ArrowRight } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
@@ -27,7 +27,11 @@ export default function Hero() {
         setIsMobile(window.innerWidth < 768);
       }, 150);
     };
-    setIsMobile(window.innerWidth < 768);
+
+    requestAnimationFrame(() => {
+      setIsMobile(window.innerWidth < 768);
+    });
+
     window.addEventListener("resize", checkMobile, { passive: true });
     return () => {
       window.removeEventListener("resize", checkMobile);
@@ -126,7 +130,7 @@ export default function Hero() {
     <section
       ref={ref}
       className="relative min-h-screen flex items-center pt-24 sm:pt-28 md:pt-32 pb-16 sm:pb-20 md:pb-24 overflow-hidden"
-      style={{ contain: 'layout style' }}
+      style={{ contain: "layout style" }}
     >
       {/* Mouse-tracking Background Gradients */}
       <motion.div
