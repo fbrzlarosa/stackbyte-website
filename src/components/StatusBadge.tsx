@@ -58,7 +58,7 @@ export default function StatusBadge() {
     };
 
     fetchStatus();
-    const interval = setInterval(fetchStatus, 30000);
+    const interval = setInterval(fetchStatus, 10000);
 
     return () => {
       clearInterval(interval);
@@ -158,7 +158,7 @@ export default function StatusBadge() {
                   damping: 20,
                   delay: 1, // Delay appearance to not distract immediately
                 }}
-                className="fixed bottom-4 right-16 sm:bottom-6 sm:right-6 z-[9999] cursor-pointer group"
+                className="fixed bottom-4 right-16 sm:bottom-18 sm:right-4 z-[9999] cursor-pointer group"
                 onClick={() => setShowModal(true)}
               >
                 <div className="bg-[#0D1117]/80 backdrop-blur-xl border border-white/10 px-2 py-2 sm:px-4 sm:py-2.5 rounded-full shadow-2xl flex items-center gap-2 sm:gap-3 hover:bg-white/5 transition-colors ring-1 ring-white/5 hover:ring-white/20">

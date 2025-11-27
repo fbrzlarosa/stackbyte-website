@@ -69,10 +69,13 @@ export const metadata: Metadata = {
   },
   icons: {
     icon: [
+      { url: "/favicon.ico", sizes: "any" },
       { url: "/icon.svg", type: "image/svg+xml" },
-      { url: "/favicon.ico" }, // Fallback
     ],
-    apple: "/icon.svg", // Using SVG as placeholder, ideally should be PNG
+    shortcut: ["/favicon.ico"],
+    apple: [
+      { url: "/icon.svg", type: "image/svg+xml" },
+    ],
   },
   manifest: "/site.webmanifest",
   robots: {
