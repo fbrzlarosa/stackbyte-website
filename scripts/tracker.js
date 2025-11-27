@@ -8,7 +8,7 @@ require('dotenv').config({ path: path.join(__dirname, '..', '.env.local') });
 // Se non trovi le variabili d'ambiente, usa valori di fallback o lancia errore
 const API_URL = process.env.TRACKER_API_URL || 'http://localhost:3000/api/status';
 const SECRET = process.env.STATUS_API_SECRET || 'dev_secret';
-const IDLE_THRESHOLD_SECONDS = 300; // 5 minuti
+const IDLE_THRESHOLD_SECONDS = 60; // 1 minute
 
 async function updateStatus() {
     const idleTime = idle.getIdleTime();

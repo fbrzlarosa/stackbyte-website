@@ -98,6 +98,119 @@ Enable-ScheduledTask -TaskName "StackbyteStatusTracker"
 Unregister-ScheduledTask -TaskName "StackbyteStatusTracker" -Confirm:$false
 ```
 
+## 🔄 Restarting the Tracker After Modifications
+
+If you've modified the tracker script (`tracker.js`), updated dependencies, or changed configuration files (like `.env.local`), you need to restart the tracker for changes to take effect.
+
+### Method 1: Restart via Task Scheduler (Recommended)
+
+This method stops the current running instance and starts a new one:
+
+```powershell
+# Stop the current task
+Stop-ScheduledTask -TaskName "StackbyteStatusTracker"
+
+# Wait a moment for the process to terminate
+Start-Sleep -Seconds 2
+
+# Start the task again
+Start-ScheduledTask -TaskName "StackbyteStatusTracker"
+```
+
+### Method 2: Restart via PowerShell (One-liner)
+
+```powershell
+Stop-ScheduledTask -TaskName "StackbyteStatusTracker"; Start-Sleep -Seconds 2; Start-ScheduledTask -TaskName "StackbyteStatusTracker"
+```
+
+### Method 3: Manual Process Termination
+
+If the task scheduler method doesn't work, you can manually stop the Node.js process:
+
+1. **Find the process:**
+
+   ```powershell
+   Get-Process | Where-Object {$_.Path -like "*node.exe*" -and $_.CommandLine -like "*tracker.js*"}
+   ```
+
+   Or use Task Manager:
+
+   - Press `Ctrl + Shift + Esc` to open Task Manager
+   - Look for `node.exe` processes
+   - Check the "Command line" column to find the tracker process
+
+2. **Stop the process:**
+
+   ```powershell
+   # Replace <PID> with the actual process ID
+   Stop-Process -Id <PID> -Force
+   ```
+
+3. **Restart the task:**
+   ```powershell
+   Start-ScheduledTask -TaskName "StackbyteStatusTracker"
+   ```
+
+### Method 4: Using Task Scheduler GUI
+
+1. Open **Task Scheduler** (`taskschd.msc`)
+2. Navigate to **Task Scheduler Library**
+3. Find `StackbyteStatusTracker`
+4. Right-click and select **End** (to stop)
+5. Right-click again and select **Run** (to start)
+
+### After Updating Dependencies
+
+If you've updated `package.json` or installed new dependencies:
+
+1. **Install/update dependencies:**
+
+   ```bash
+   npm install
+   ```
+
+2. **Restart the tracker** using one of the methods above
+
+### After Modifying Configuration
+
+If you've changed `.env.local` or other configuration:
+
+1. **Verify the changes** are saved
+2. **Restart the tracker** using one of the methods above
+3. **Check the logs** to verify the new configuration is loaded
+
+### Verifying the Restart
+
+To verify the tracker has restarted successfully:
+
+```powershell
+# Check if the task is running
+Get-ScheduledTask -TaskName "StackbyteStatusTracker" | Select-Object State
+
+# View recent task execution history
+Get-ScheduledTaskInfo -TaskName "StackbyteStatusTracker"
+```
+
+The `State` should show `Running` if the tracker is active.
+
+### Quick Restart Script
+
+You can create a quick restart script by saving this to `scripts/restart-tracker.ps1`:
+
+```powershell
+Write-Host "[*] Restarting StackbyteStatusTracker..." -ForegroundColor Cyan
+Stop-ScheduledTask -TaskName "StackbyteStatusTracker" -ErrorAction SilentlyContinue
+Start-Sleep -Seconds 2
+Start-ScheduledTask -TaskName "StackbyteStatusTracker"
+Write-Host "[SUCCESS] Tracker restarted!" -ForegroundColor Green
+```
+
+Then run it with:
+
+```powershell
+.\scripts\restart-tracker.ps1
+```
+
 ## 📝 Important Notes
 
 - The tracker starts **automatically** on every system reboot
