@@ -2,7 +2,7 @@ const idle = require('desktop-idle');
 const axios = require('axios');
 const path = require('path');
 const fs = require('fs');
-require('dotenv').config({ path: path.join(__dirname, '..', '.env.local') });
+require('dotenv').config({ path: path.join(__dirname, '..', '.env') });
 
 // CONFIGURAZIONE
 // Se non trovi le variabili d'ambiente, usa valori di fallback o lancia errore
@@ -25,7 +25,7 @@ async function updateStatus() {
         if (error.response) {
             console.error(`Error: ${error.response.status} - ${JSON.stringify(error.response.data)}`);
         } else {
-            console.error(`Error: ${error.message}`);
+            console.error(`Error: ${error.message}`, error, API_URL, SECRET);
         }
     }
 }

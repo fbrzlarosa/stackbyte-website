@@ -35,16 +35,25 @@ if ($existingTask) {
     Unregister-ScheduledTask -TaskName $taskName -Confirm:$false
 }
 
-# Create the action (command to execute)
-$action = New-ScheduledTaskAction -Execute $nodePath -Argument "`"$trackerScript`"" -WorkingDirectory $projectRoot
+# Create a VBScript wrapper to run Node.js completely hidden (no window)
+$wrapperScript = Join-Path $scriptPath "run-tracker-hidden.vbs"
+
+# Create the action (execute VBScript which runs Node.js hidden)
+$action = New-ScheduledTaskAction -Execute "wscript.exe" -Argument "`"$wrapperScript`"" -WorkingDirectory $projectRoot
 
 # Create the trigger (at startup)
 $trigger = New-ScheduledTaskTrigger -AtStartup
 
-# Create settings
-$settings = New-ScheduledTaskSettingsSet -AllowStartIfOnBatteries -DontStopIfGoingOnBatteries -StartWhenAvailable -RunOnlyIfNetworkAvailable
+# Create settings (run in background, don't show window)
+$settings = New-ScheduledTaskSettingsSet `
+    -AllowStartIfOnBatteries `
+    -DontStopIfGoingOnBatteries `
+    -StartWhenAvailable `
+    -RunOnlyIfNetworkAvailable `
+    -ExecutionTimeLimit (New-TimeSpan -Hours 0) `
+    -MultipleInstances IgnoreNew
 
-# Create principal (run as current user)
+# Create principal (run as current user, but hidden)
 $principal = New-ScheduledTaskPrincipal -UserId "$env:USERDOMAIN\$env:USERNAME" -LogonType Interactive -RunLevel Highest
 
 # Register the task

@@ -35,6 +35,7 @@ The script will:
 - ✅ Configure automatic startup when the PC boots
 - ✅ Set the task to run even if the PC is on battery
 - ✅ Require network connection
+- ✅ Run completely in background (no visible windows or terminals)
 
 ### Step 3: Verify
 
@@ -214,6 +215,7 @@ Then run it with:
 ## 📝 Important Notes
 
 - The tracker starts **automatically** on every system reboot
+- The tracker runs **completely in background** - no terminal windows will appear
 - The tracker checks status every **30 seconds** (configurable in `tracker.js`)
 - If the PC is idle for more than **5 minutes**, the status becomes "offline"
 - The tracker requires an active internet connection to work
