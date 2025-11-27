@@ -14,9 +14,21 @@ interface Particle {
   scaleVariations: number[];
 }
 
+interface SmallParticle {
+  id: number;
+  initialX: number;
+  initialY: number;
+  animateY: number[];
+  animateX: number[];
+  duration: number;
+  delay: number;
+}
+
 export default function ReadyToStart() {
   const sectionRef = useRef<HTMLElement>(null);
   const [particles, setParticles] = useState<Particle[]>([]);
+  const [smallParticles, setSmallParticles] = useState<SmallParticle[]>([]);
+  const [isMobile, setIsMobile] = useState(false);
   const { scrollYProgress } = useScroll({
     target: sectionRef,
     offset: ["start end", "end start"],
@@ -29,7 +41,16 @@ export default function ReadyToStart() {
   });
 
   useEffect(() => {
-    const newParticles = Array.from({ length: 20 }).map((_, i) => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+    return () => window.removeEventListener("resize", checkMobile);
+  }, []);
+
+  useEffect(() => {
+    const newParticles = Array.from({ length: 25 }).map((_, i) => {
       const waypoints = 6;
       const pathX: number[] = [];
       const pathY: number[] = [];
@@ -60,40 +81,140 @@ export default function ReadyToStart() {
         ),
       };
     });
-    setParticles(newParticles);
+    setTimeout(() => {
+      setParticles(newParticles);
+    }, 0);
+
+    const newSmallParticles = Array.from({ length: 30 }).map((_, i) => ({
+      id: i,
+      initialX: Math.random() * window.innerWidth,
+      initialY: Math.random() * window.innerHeight,
+      animateY: [
+        Math.random() * window.innerHeight,
+        Math.random() * window.innerHeight,
+        Math.random() * window.innerHeight,
+      ],
+      animateX: [
+        Math.random() * window.innerWidth,
+        Math.random() * window.innerWidth,
+        Math.random() * window.innerWidth,
+      ],
+      duration: 15 + Math.random() * 10,
+      delay: Math.random() * 5,
+    }));
+
+    setTimeout(() => {
+      setSmallParticles(newSmallParticles);
+    }, 0);
   }, []);
 
-  const rotateX = useTransform(smoothProgress, [0, 1], [20, -20]);
-  const rotateY = useTransform(smoothProgress, [0, 1], [-15, 15]);
-  const scale = useTransform(smoothProgress, [0, 0.5, 1], [0.9, 1.1, 0.9]);
-  const translateZ = useTransform(smoothProgress, [0, 1], [-80, 80]);
-  const y = useTransform(smoothProgress, [0, 1], [40, -40]);
+  const rotateX = useTransform(
+    smoothProgress,
+    [0, 1],
+    isMobile ? [0, 0] : [20, -20]
+  );
+  const rotateY = useTransform(
+    smoothProgress,
+    [0, 1],
+    isMobile ? [0, 0] : [-15, 15]
+  );
+  const scale = useTransform(
+    smoothProgress,
+    [0, 0.5, 1],
+    isMobile ? [1, 1, 1] : [0.9, 1.1, 0.9]
+  );
+  const translateZ = useTransform(
+    smoothProgress,
+    [0, 1],
+    isMobile ? [0, 0] : [-80, 80]
+  );
+  const y = useTransform(smoothProgress, [0, 1], isMobile ? [0, 0] : [40, -40]);
 
-  const word1RotateX = useTransform(smoothProgress, [0, 1], [25, -25]);
-  const word1RotateY = useTransform(smoothProgress, [0, 1], [-10, 10]);
-  const word1TranslateZ = useTransform(smoothProgress, [0, 1], [0, 100]);
-  const word1Y = useTransform(smoothProgress, [0, 1], [30, -30]);
-  
-  const word2RotateX = useTransform(smoothProgress, [0, 1], [-15, 15]);
-  const word2RotateY = useTransform(smoothProgress, [0, 1], [-20, 20]);
-  const word2TranslateZ = useTransform(smoothProgress, [0, 1], [100, -100]);
-  const word2Y = useTransform(smoothProgress, [0, 1], [-20, 20]);
-  
-  const word3RotateX = useTransform(smoothProgress, [0, 1], [-25, 25]);
-  const word3RotateY = useTransform(smoothProgress, [0, 1], [10, -10]);
-  const word3TranslateZ = useTransform(smoothProgress, [0, 1], [-100, 100]);
-  const word3Y = useTransform(smoothProgress, [0, 1], [20, -20]);
+  const word1RotateX = useTransform(
+    smoothProgress,
+    [0, 1],
+    isMobile ? [0, 0] : [25, -25]
+  );
+  const word1RotateY = useTransform(
+    smoothProgress,
+    [0, 1],
+    isMobile ? [0, 0] : [-10, 10]
+  );
+  const word1TranslateZ = useTransform(
+    smoothProgress,
+    [0, 1],
+    isMobile ? [0, 0] : [0, 100]
+  );
+  const word1Y = useTransform(
+    smoothProgress,
+    [0, 1],
+    isMobile ? [0, 0] : [30, -30]
+  );
 
-  const subtitleRotateX = useTransform(smoothProgress, [0, 1], [8, -8]);
-  const subtitleTranslateZ = useTransform(smoothProgress, [0, 1], [-30, 30]);
-  const subtitleY = useTransform(smoothProgress, [0, 1], [15, -15]);
+  const word2RotateX = useTransform(
+    smoothProgress,
+    [0, 1],
+    isMobile ? [0, 0] : [-15, 15]
+  );
+  const word2RotateY = useTransform(
+    smoothProgress,
+    [0, 1],
+    isMobile ? [0, 0] : [-20, 20]
+  );
+  const word2TranslateZ = useTransform(
+    smoothProgress,
+    [0, 1],
+    isMobile ? [0, 0] : [100, -100]
+  );
+  const word2Y = useTransform(
+    smoothProgress,
+    [0, 1],
+    isMobile ? [0, 0] : [-20, 20]
+  );
+
+  const word3RotateX = useTransform(
+    smoothProgress,
+    [0, 1],
+    isMobile ? [0, 0] : [-25, 25]
+  );
+  const word3RotateY = useTransform(
+    smoothProgress,
+    [0, 1],
+    isMobile ? [0, 0] : [10, -10]
+  );
+  const word3TranslateZ = useTransform(
+    smoothProgress,
+    [0, 1],
+    isMobile ? [0, 0] : [-100, 100]
+  );
+  const word3Y = useTransform(
+    smoothProgress,
+    [0, 1],
+    isMobile ? [0, 0] : [20, -20]
+  );
+
+  const subtitleRotateX = useTransform(
+    smoothProgress,
+    [0, 1],
+    isMobile ? [0, 0] : [8, -8]
+  );
+  const subtitleTranslateZ = useTransform(
+    smoothProgress,
+    [0, 1],
+    isMobile ? [0, 0] : [-30, 30]
+  );
+  const subtitleY = useTransform(
+    smoothProgress,
+    [0, 1],
+    isMobile ? [0, 0] : [15, -15]
+  );
 
   return (
     <FullScreenSection
       ignoreOpacity={true}
       ref={sectionRef}
       id="ready"
-      className="py-24 sm:py-32 md:py-40 bg-gradient-to-b from-[#0D1117] via-[#161B22] to-[#0D1117] overflow-hidden relative z-20"
+      className="py-12 sm:py-32 md:py-40 bg-gradient-to-b from-[#0D1117] via-[#161B22] to-[#0D1117] overflow-hidden relative z-20 pb-0"
     >
       {/* Animated Background Effects */}
       <motion.div
@@ -200,41 +321,33 @@ export default function ReadyToStart() {
         ))}
 
         {/* Additional smaller particles */}
-        {[...Array(30)].map((_, i) => (
+        {smallParticles.map((p) => (
           <motion.div
-            key={`small-${i}`}
+            key={`small-${p.id}`}
             className="absolute w-1 h-1 bg-primary/30 rounded-full"
             initial={{
-              x: Math.random() * window.innerWidth,
-              y: Math.random() * window.innerHeight,
+              x: p.initialX,
+              y: p.initialY,
               opacity: 0,
             }}
             animate={{
-              y: [
-                Math.random() * window.innerHeight,
-                Math.random() * window.innerHeight,
-                Math.random() * window.innerHeight,
-              ],
-              x: [
-                Math.random() * window.innerWidth,
-                Math.random() * window.innerWidth,
-                Math.random() * window.innerWidth,
-              ],
+              y: p.animateY,
+              x: p.animateX,
               opacity: [0, 0.6, 0.3, 0.7, 0],
               scale: [0.5, 1.2, 0.8, 1, 0.5],
             }}
             transition={{
-              duration: 15 + Math.random() * 10,
+              duration: p.duration,
               repeat: Infinity,
               ease: "easeInOut",
-              delay: Math.random() * 5,
+              delay: p.delay,
             }}
           />
         ))}
       </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        <div className="flex flex-col items-center justify-center min-h-[80vh]">
+        <div className="flex flex-col items-center justify-center min-h-[50vh] sm:min-h-[80vh]">
           <motion.div
             style={{
               rotateX,
@@ -257,15 +370,43 @@ export default function ReadyToStart() {
                   y: word1Y,
                   transformStyle: "preserve-3d",
                 }}
-                className="text-6xl sm:text-7xl md:text-8xl lg:text-9xl xl:text-[14rem] 2xl:text-[18rem] font-black leading-none mb-4 md:mb-6 transform-none md:transform"
+                className="text-6xl sm:text-7xl md:text-8xl lg:text-9xl xl:text-[14rem] 2xl:text-[18rem] font-black leading-none mb-4 md:mb-6 transform-none md:transform relative"
                 initial={{ opacity: 0, y: 100 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                transition={{ duration: 1, ease: "easeOut" }}
+                animate={
+                  !isMobile
+                    ? {
+                        rotateX: [0, 5, -5, 0],
+                        rotateY: [0, -4, 4, 0],
+                        translateZ: [0, 25, -25, 0],
+                      }
+                    : {}
+                }
+                transition={{
+                  opacity: { duration: 1, ease: "easeOut" },
+                  y: { duration: 1, ease: "easeOut" },
+                  rotateX: { duration: 8, repeat: Infinity, ease: "easeInOut" },
+                  rotateY: { duration: 8, repeat: Infinity, ease: "easeInOut" },
+                  translateZ: { duration: 8, repeat: Infinity, ease: "easeInOut" },
+                }}
               >
-                <span className="text-transparent bg-clip-text bg-linear-to-r from-primary via-purple-400 to-primary bg-[length:200%_auto] animate-gradient">
+                <span className="relative z-10 text-transparent bg-clip-text bg-linear-to-r from-primary via-purple-400 to-primary bg-[length:200%_auto] animate-gradient">
                   CODE.
                 </span>
+                <motion.span
+                  className="absolute inset-0 text-transparent bg-clip-text bg-linear-to-r from-primary via-purple-400 to-primary bg-[length:200%_auto] animate-gradient blur-xl opacity-60"
+                  animate={{
+                    opacity: [0.4, 0.7, 0.4],
+                  }}
+                  transition={{
+                    duration: 3,
+                    repeat: Infinity,
+                    ease: "easeInOut",
+                  }}
+                >
+                  CODE.
+                </motion.span>
               </motion.h2>
 
               <motion.h2
@@ -276,13 +417,42 @@ export default function ReadyToStart() {
                   y: word2Y,
                   transformStyle: "preserve-3d",
                 }}
-                className="text-6xl sm:text-7xl md:text-8xl lg:text-9xl xl:text-[14rem] 2xl:text-[18rem] font-black leading-none mb-4 md:mb-6 transform-none md:transform"
+                className="text-6xl sm:text-7xl md:text-8xl lg:text-9xl xl:text-[14rem] 2xl:text-[18rem] font-black leading-none mb-4 md:mb-6 transform-none md:transform relative"
                 initial={{ opacity: 0, y: 100 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                transition={{ duration: 1, delay: 0.2, ease: "easeOut" }}
+                animate={
+                  !isMobile
+                    ? {
+                        rotateX: [0, -5, 5, 0],
+                        rotateY: [0, 4, -4, 0],
+                        translateZ: [0, -25, 25, 0],
+                      }
+                    : {}
+                }
+                transition={{
+                  opacity: { duration: 1, delay: 0.2, ease: "easeOut" },
+                  y: { duration: 1, delay: 0.2, ease: "easeOut" },
+                  rotateX: { duration: 10, repeat: Infinity, ease: "easeInOut", delay: 1 },
+                  rotateY: { duration: 10, repeat: Infinity, ease: "easeInOut", delay: 1 },
+                  translateZ: { duration: 10, repeat: Infinity, ease: "easeInOut", delay: 1 },
+                }}
               >
-                <span className="text-white">CREATE.</span>
+                <span className="relative z-10 text-white">CREATE.</span>
+                <motion.span
+                  className="absolute inset-0 text-white blur-xl opacity-50"
+                  animate={{
+                    opacity: [0.3, 0.6, 0.3],
+                  }}
+                  transition={{
+                    duration: 3,
+                    repeat: Infinity,
+                    ease: "easeInOut",
+                    delay: 0.5,
+                  }}
+                >
+                  CREATE.
+                </motion.span>
               </motion.h2>
 
               <motion.h2
@@ -293,15 +463,44 @@ export default function ReadyToStart() {
                   y: word3Y,
                   transformStyle: "preserve-3d",
                 }}
-                className="text-6xl sm:text-7xl md:text-8xl lg:text-9xl xl:text-[14rem] 2xl:text-[18rem] font-black leading-none transform-none md:transform"
+                className="text-6xl sm:text-7xl md:text-8xl lg:text-9xl xl:text-[14rem] 2xl:text-[18rem] font-black leading-none transform-none md:transform relative"
                 initial={{ opacity: 0, y: 100 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                transition={{ duration: 1, delay: 0.4, ease: "easeOut" }}
+                animate={
+                  !isMobile
+                    ? {
+                        rotateX: [0, 4, -4, 0],
+                        rotateY: [0, -5, 5, 0],
+                        translateZ: [0, 20, -20, 0],
+                      }
+                    : {}
+                }
+                transition={{
+                  opacity: { duration: 1, delay: 0.4, ease: "easeOut" },
+                  y: { duration: 1, delay: 0.4, ease: "easeOut" },
+                  rotateX: { duration: 12, repeat: Infinity, ease: "easeInOut", delay: 2 },
+                  rotateY: { duration: 12, repeat: Infinity, ease: "easeInOut", delay: 2 },
+                  translateZ: { duration: 12, repeat: Infinity, ease: "easeInOut", delay: 2 },
+                }}
               >
-                <span className="text-transparent bg-clip-text bg-linear-to-r from-purple-400 via-primary to-purple-400 bg-[length:200%_auto] animate-gradient">
+                <span className="relative z-10 text-transparent bg-clip-text bg-linear-to-r from-purple-400 via-primary to-purple-400 bg-[length:200%_auto] animate-gradient">
                   CONQUER.
                 </span>
+                <motion.span
+                  className="absolute inset-0 text-transparent bg-clip-text bg-linear-to-r from-purple-400 via-primary to-purple-400 bg-[length:200%_auto] animate-gradient blur-xl opacity-60"
+                  animate={{
+                    opacity: [0.4, 0.7, 0.4],
+                  }}
+                  transition={{
+                    duration: 3,
+                    repeat: Infinity,
+                    ease: "easeInOut",
+                    delay: 1,
+                  }}
+                >
+                  CONQUER.
+                </motion.span>
               </motion.h2>
             </div>
 
@@ -331,4 +530,3 @@ export default function ReadyToStart() {
     </FullScreenSection>
   );
 }
-

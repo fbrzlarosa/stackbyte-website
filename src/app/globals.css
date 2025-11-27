@@ -51,6 +51,33 @@ body {
   width: 100%;
 }
 
+/* Custom Scrollbar Styles - Global */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(6, 182, 212, 0.5) rgba(6, 182, 212, 0.1);
+}
+
+*::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+*::-webkit-scrollbar-track {
+  background: rgba(6, 182, 212, 0.1);
+  border-radius: 10px;
+}
+
+*::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, #06B6D4 0%, #A855F7 100%);
+  border-radius: 10px;
+  border: 1px solid rgba(6, 182, 212, 0.2);
+}
+
+*::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, #06B6D4 0%, #A855F7 50%, #06B6D4 100%);
+  box-shadow: 0 0 10px rgba(6, 182, 212, 0.5);
+}
+
 html.lenis, html.lenis body {
   height: auto;
 }

@@ -54,7 +54,7 @@ const FullScreenSection = forwardRef<HTMLElement, FullScreenSectionProps>(
           rotateX: smoothTilt,
           perspective: "1000px",
         }}
-        className={`min-h-screen flex items-center justify-center relative ${className}`}
+        className={`sm:min-h-screen flex items-center justify-center relative ${className}`}
       >
         {children}
       </motion.section>

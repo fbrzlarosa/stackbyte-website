@@ -108,14 +108,14 @@ export default function Contact() {
     <section
       ref={sectionRef}
       id="contact"
-      className="py-16 sm:py-24 md:py-32 relative overflow-hidden"
+      className="py-16 sm:py-24 md:py-32 relative overflow-hidden -mt-1"
     >
       {/* Background Elements */}
       <motion.div
         initial={{ opacity: 0 }}
         whileInView={{ opacity: 1 }}
         viewport={{ once: true }}
-        className="absolute inset-0 bg-linear-to-b from-transparent to-primary/5 -z-10"
+        className="absolute inset-0 bg-linear-to-b from-[#0D1117] via-[#161B22] to-primary/5 -z-10"
       />
       <motion.div
         initial={{ scale: 0.8, opacity: 0 }}

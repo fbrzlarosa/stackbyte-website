@@ -9,7 +9,7 @@ import {
   useTransform,
 } from "framer-motion";
 import { Briefcase, GraduationCap, Sparkles, Trophy } from "lucide-react";
-import { MouseEvent, useRef } from "react";
+import { MouseEvent, useEffect, useRef, useState } from "react";
 import ScrollReveal from "./ScrollReveal";
 
 const experiences = [
@@ -58,21 +58,48 @@ function ExperienceCard({
   exp: (typeof experiences)[0];
   index: number;
 }) {
+  const [isMobile, setIsMobile] = useState(false);
   const mouseX = useMotionValue(0.5);
   const mouseY = useMotionValue(0.5);
   const cardRef = useRef<HTMLDivElement>(null);
 
-  const rotateX = useTransform(mouseY, [0, 1], [8, -8]);
-  const rotateY = useTransform(mouseX, [0, 1], [-8, 8]);
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+    return () => window.removeEventListener("resize", checkMobile);
+  }, []);
+
+  const rotateXRaw = useTransform(mouseY, [0, 1], [8, -8]);
+  const rotateYRaw = useTransform(mouseX, [0, 1], [-8, 8]);
 
   const mouseXPercent = useTransform(mouseX, [0, 1], ["0%", "100%"]);
   const mouseYPercent = useTransform(mouseY, [0, 1], ["0%", "100%"]);
+
+  const spotlightBackground = useMotionTemplate`
+    radial-gradient(
+      650px circle at ${mouseXPercent} ${mouseYPercent},
+      rgba(6, 182, 212, 0.15),
+      transparent 80%
+    )
+  `;
+
+  const glowBackground = useMotionTemplate`
+    radial-gradient(
+      400px circle at ${mouseXPercent} ${mouseYPercent},
+      rgba(6, 182, 212, 0.2),
+      transparent 70%
+    )
+  `;
 
   function handleMouseMove({
     currentTarget,
     clientX,
     clientY,
   }: MouseEvent<HTMLDivElement>) {
+    if (isMobile) return;
     const { left, top, width, height } = currentTarget.getBoundingClientRect();
     const x = (clientX - left) / width;
     const y = (clientY - top) / height;
@@ -81,6 +108,7 @@ function ExperienceCard({
   }
 
   function handleMouseLeave() {
+    if (isMobile) return;
     mouseX.set(0.5);
     mouseY.set(0.5);
   }
@@ -93,11 +121,11 @@ function ExperienceCard({
         whileInView={{ opacity: 1, x: 0, rotateY: 0 }}
         viewport={{ once: true, margin: "-50px" }}
         transition={{
-          duration: 0.7,
-          delay: index * 0.15,
-          type: "spring",
-          stiffness: 50,
-          damping: 20,
+          duration: isMobile ? 0.4 : 0.7,
+          delay: isMobile ? index * 0.05 : index * 0.15,
+          type: isMobile ? "tween" : "spring",
+          stiffness: isMobile ? undefined : 50,
+          damping: isMobile ? undefined : 20,
         }}
       >
         {/* Timeline Dot with Glow */}
@@ -123,58 +151,50 @@ function ExperienceCard({
           onMouseMove={handleMouseMove}
           onMouseLeave={handleMouseLeave}
           style={{
-            rotateX,
-            rotateY,
-            transformStyle: "preserve-3d",
-            perspective: "1000px",
+            rotateX: isMobile ? 0 : rotateXRaw,
+            rotateY: isMobile ? 0 : rotateYRaw,
+            transformStyle: isMobile ? "flat" : "preserve-3d",
+            perspective: isMobile ? "none" : "1000px",
           }}
           className="flex-1 relative rounded-2xl border border-white/10 bg-white/5 overflow-hidden group/card transition-shadow duration-300 transform-none md:transform"
-          whileHover={{ scale: 1.02 }}
+          whileHover={isMobile ? {} : { scale: 1.02 }}
         >
           {/* Spotlight Effect */}
-          <motion.div
-            className="pointer-events-none absolute -inset-px opacity-0 transition duration-300 group-hover/card:opacity-100 rounded-2xl"
-            style={{
-              background: useMotionTemplate`
-                radial-gradient(
-                  650px circle at ${mouseXPercent} ${mouseYPercent},
-                  rgba(6, 182, 212, 0.15),
-                  transparent 80%
-                )
-              `,
-            }}
-          />
+          {!isMobile && (
+            <motion.div
+              className="pointer-events-none absolute -inset-px opacity-0 transition duration-300 group-hover/card:opacity-100 rounded-2xl"
+              style={{
+                background: spotlightBackground,
+              }}
+            />
+          )}
 
           {/* 3D Glow Effect */}
-          <motion.div
-            className="pointer-events-none absolute -inset-1 opacity-0 group-hover/card:opacity-100 transition-opacity duration-300 rounded-2xl"
-            style={{
-              background: useMotionTemplate`
-                radial-gradient(
-                  400px circle at ${mouseXPercent} ${mouseYPercent},
-                  rgba(6, 182, 212, 0.2),
-                  transparent 70%
-                )
-              `,
-              transform: "translateZ(-10px)",
-            }}
-          />
+          {!isMobile && (
+            <motion.div
+              className="pointer-events-none absolute -inset-1 opacity-0 group-hover/card:opacity-100 transition-opacity duration-300 rounded-2xl"
+              style={{
+                background: glowBackground,
+                transform: "translateZ(-10px)",
+              }}
+            />
+          )}
 
           <div
             className="relative p-6 z-10"
-            style={{ transform: "translateZ(20px)" }}
+            style={{ transform: isMobile ? "none" : "translateZ(20px)" }}
           >
             <div className="flex items-center gap-3 mb-3">
               <motion.span
                 className="text-xs font-mono text-primary/80 px-2 py-1 rounded border border-primary/20 bg-primary/5"
-                whileHover={{ scale: 1.05 }}
-                style={{ transform: "translateZ(10px)" }}
+                whileHover={isMobile ? {} : { scale: 1.05 }}
+                style={{ transform: isMobile ? "none" : "translateZ(10px)" }}
               >
                 {exp.year}
               </motion.span>
               <motion.div
-                style={{ transform: "translateZ(10px)" }}
-                whileHover={{ rotate: 360 }}
+                style={{ transform: isMobile ? "none" : "translateZ(10px)" }}
+                whileHover={isMobile ? {} : { rotate: 360 }}
                 transition={{ duration: 0.5 }}
               >
                 <exp.icon className="w-5 h-5 text-gray-500 group-hover/card:text-primary transition-colors" />
@@ -182,19 +202,19 @@ function ExperienceCard({
             </div>
             <motion.h3
               className="text-xl font-bold text-white mb-1 group-hover/card:text-primary transition-colors"
-              style={{ transform: "translateZ(15px)" }}
+              style={{ transform: isMobile ? "none" : "translateZ(15px)" }}
             >
               {exp.title}
             </motion.h3>
             <motion.div
               className="text-sm text-gray-400 mb-3 font-medium"
-              style={{ transform: "translateZ(12px)" }}
+              style={{ transform: isMobile ? "none" : "translateZ(12px)" }}
             >
               {exp.company}
             </motion.div>
             <motion.p
               className="text-sm text-gray-500 leading-relaxed group-hover/card:text-gray-400 transition-colors"
-              style={{ transform: "translateZ(8px)" }}
+              style={{ transform: isMobile ? "none" : "translateZ(8px)" }}
             >
               {exp.description}
             </motion.p>

@@ -253,8 +253,9 @@ export default function AnimatedOrb() {
                 fill="none"
                 stroke="#06B6D4"
                 strokeWidth="8"
+                opacity={0.2}
                 initial={{ pathLength: 0, opacity: 0 }}
-                animate={{ pathLength: 1, opacity: 1 }}
+                animate={{ pathLength: 1, opacity: 0.2 }}
                 transition={{ duration: 2, ease: "easeInOut" }}
               />
               <motion.path
@@ -267,23 +268,34 @@ export default function AnimatedOrb() {
               />
 
               {/* Path 2: Top Part */}
-              <motion.path
-                d="M209.6,3.9l129.1,70.4c9.7,5.4,9.7,14,0,19.4l-129.1,70.5c-9.7,5.3-25.7,5.3-35.4,0L45.2,93.8c-9.7-5.4-9.7-14,0-19.4L174.2,3.9C183.9-1.3,199.9-1.3,209.6,3.9L209.6,3.9z"
-                fill="none"
-                stroke="#06B6D4"
-                strokeWidth="8"
-                initial={{ pathLength: 0, opacity: 0 }}
-                animate={{ pathLength: 1, opacity: 1 }}
-                transition={{ duration: 2, ease: "easeInOut", delay: 0.5 }}
-              />
-              <motion.path
-                d="M209.6,3.9l129.1,70.4c9.7,5.4,9.7,14,0,19.4l-129.1,70.5c-9.7,5.3-25.7,5.3-35.4,0L45.2,93.8c-9.7-5.4-9.7-14,0-19.4L174.2,3.9C183.9-1.3,199.9-1.3,209.6,3.9L209.6,3.9z"
-                fill="#06B6D4"
-                opacity="1"
-                initial={{ scale: 0.8, opacity: 0 }}
-                animate={{ scale: 1, opacity: 1 }}
-                transition={{ duration: 1, delay: 1.5 }}
-              />
+              <motion.g
+                animate={{ y: [0, 0, 0, 30, 0] }}
+                transition={{
+                  duration: 4,
+                  repeat: Infinity,
+                  ease: "easeInOut",
+                  times: [0, 0.1, 0.9, 0.95, 1],
+                }}
+              >
+                <motion.path
+                  d="M209.6,3.9l129.1,70.4c9.7,5.4,9.7,14,0,19.4l-129.1,70.5c-9.7,5.3-25.7,5.3-35.4,0L45.2,93.8c-9.7-5.4-9.7-14,0-19.4L174.2,3.9C183.9-1.3,199.9-1.3,209.6,3.9L209.6,3.9z"
+                  fill="none"
+                  stroke="#06B6D4"
+                  strokeWidth="8"
+                  opacity={0.2}
+                  initial={{ pathLength: 0, opacity: 0 }}
+                  animate={{ pathLength: 1, opacity: 0.2 }}
+                  transition={{ duration: 2, ease: "easeInOut", delay: 0.5 }}
+                />
+                <motion.path
+                  d="M209.6,3.9l129.1,70.4c9.7,5.4,9.7,14,0,19.4l-129.1,70.5c-9.7,5.3-25.7,5.3-35.4,0L45.2,93.8c-9.7-5.4-9.7-14,0-19.4L174.2,3.9C183.9-1.3,199.9-1.3,209.6,3.9L209.6,3.9z"
+                  fill="#06B6D4"
+                  opacity="1"
+                  initial={{ scale: 0.8, opacity: 0 }}
+                  animate={{ scale: 1, opacity: 1 }}
+                  transition={{ duration: 1, delay: 1.5 }}
+                />
+              </motion.g>
             </svg>
           </div>
         </motion.div>

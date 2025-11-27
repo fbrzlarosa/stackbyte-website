@@ -114,7 +114,7 @@ export default function StatusBadge() {
 
   return (
     <>
-      <div className="relative inline-block mb-8 z-[10000]">
+      <div className="relative inline-block mb-8 z-50">
         <motion.button
           onClick={() => {
             setShowModal(true);

@@ -63,14 +63,14 @@ export default function Navbar() {
         }}
         className={`fixed top-0 left-0 right-0 z-[9999] transition-all duration-500 ${
           isScrolled
-            ? "bg-black/30 backdrop-blur-md h-14 sm:h-16 shadow-lg"
+            ? "bg-black/30 backdrop-blur-md h-20 sm:h-16 shadow-lg"
             : "bg-black/0 backdrop-blur-sm h-20 sm:h-24"
         }`}
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-full flex items-center justify-between">
           <Link
             href="/"
-            className="block w-32 sm:w-44 hover:opacity-80 transition-opacity relative z-50 cursor-pointer"
+            className="block w-36 sm:w-44 hover:opacity-80 transition-opacity relative z-50 cursor-pointer"
             onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
           >
             <Logo className="w-full h-auto" />

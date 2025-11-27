@@ -204,7 +204,7 @@ function SkillCard({ skill, index, smoothProgress }: SkillCardProps) {
 
   return (
     <motion.div
-      className="absolute top-32 md:top-auto w-[95vw] sm:w-[90vw] max-w-6xl h-[55vh] sm:h-[70vh] md:h-[70vh] flex flex-col lg:flex-row overflow-hidden rounded-2xl sm:rounded-3xl bg-[#0D1117] border border-white/10 shadow-2xl origin-center perspective-1000"
+      className="absolute top-32 md:top-auto w-[85vw] sm:w-[90vw] max-w-6xl h-[55vh] sm:h-[70vh] md:h-[70vh] flex flex-col lg:flex-row overflow-hidden rounded-2xl sm:rounded-3xl bg-[#0D1117] border border-white/10 shadow-2xl origin-center perspective-1000"
       style={{
         opacity,
         scale,

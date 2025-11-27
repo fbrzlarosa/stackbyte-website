@@ -62,7 +62,7 @@ export default function Logo({
       className={className}
       initial="hidden"
       animate="visible"
-      whileHover={{ scale: 1.02, transition: { duration: 0.2 } }}
+      whileHover="hover"
     >
       {/* Icon Parts (Blue) */}
       <motion.path
@@ -72,13 +72,25 @@ export default function Logo({
         stroke="#06B6D4"
         strokeWidth="2"
       />
-      <motion.path
-        d="M209.6,3.9l129.1,70.4c9.7,5.4,9.7,14,0,19.4l-129.1,70.5c-9.7,5.3-25.7,5.3-35.4,0L45.2,93.8c-9.7-5.4-9.7-14,0-19.4L174.2,3.9C183.9-1.3,199.9-1.3,209.6,3.9L209.6,3.9z"
-        className="fill-primary"
-        variants={iconVariants}
-        stroke="#06B6D4"
-        strokeWidth="2"
-      />
+      <motion.g
+        variants={{
+          hidden: { y: 0 },
+          visible: { y: 0 },
+          hover: { y: 30 },
+        }}
+        transition={{
+          duration: 0.2,
+          ease: "easeInOut",
+        }}
+      >
+        <motion.path
+          d="M209.6,3.9l129.1,70.4c9.7,5.4,9.7,14,0,19.4l-129.1,70.5c-9.7,5.3-25.7,5.3-35.4,0L45.2,93.8c-9.7-5.4-9.7-14,0-19.4L174.2,3.9C183.9-1.3,199.9-1.3,209.6,3.9L209.6,3.9z"
+          className="fill-primary"
+          variants={iconVariants}
+          stroke="#06B6D4"
+          strokeWidth="2"
+        />
+      </motion.g>
 
       {/* Text Parts (White) */}
       <motion.g variants={textContainerVariants} className="fill-white">
