@@ -32,26 +32,75 @@ export async function POST(request: Request) {
         );
       }
 
+      // Brevo-specific configuration
+      const isBrevo = process.env.SMTP_HOST.includes('brevo.com') ||
+        process.env.SMTP_HOST.includes('sendinblue.com');
+
+      const smtpPort = Number(process.env.SMTP_PORT) || 587;
+      const isSecurePort = smtpPort === 465;
+
       const transporter = nodemailer.createTransport({
         host: process.env.SMTP_HOST,
-        port: Number(process.env.SMTP_PORT) || 587,
-        secure: process.env.SMTP_PORT === '465', // true for 465, false for other ports
+        port: smtpPort,
+        secure: isSecurePort, // true for 465, false for other ports
         auth: {
-          user: process.env.SMTP_USER,
-          pass: process.env.SMTP_PASS,
+          user: process.env.SMTP_USER.trim(), // Remove any whitespace
+          pass: process.env.SMTP_PASS.trim(), // Remove any whitespace
         },
-        // Additional options for better compatibility
-        tls: {
-          rejectUnauthorized: false, // Allow self-signed certificates if needed
-        },
+        // Brevo-specific TLS configuration
+        ...(isBrevo && {
+          tls: {
+            ciphers: 'SSLv3',
+            rejectUnauthorized: false,
+          },
+          requireTLS: !isSecurePort, // Require TLS for port 587
+        }),
+        // General TLS options for other providers
+        ...(!isBrevo && {
+          tls: {
+            rejectUnauthorized: false,
+          },
+        }),
       });
+
+      // Log configuration (without sensitive data)
+      if (process.env.NODE_ENV === 'development') {
+        console.log('SMTP Configuration:', {
+          host: process.env.SMTP_HOST,
+          port: smtpPort,
+          secure: isSecurePort,
+          user: process.env.SMTP_USER,
+          passLength: process.env.SMTP_PASS?.length,
+          isBrevo,
+        });
+      }
 
       // Verify connection configuration
       try {
         await transporter.verify();
+        if (process.env.NODE_ENV === 'development') {
+          console.log('SMTP connection verified successfully');
+        }
       } catch (verifyError: unknown) {
-        const error = verifyError as { code?: string; message?: string };
-        console.error('SMTP connection verification failed:', error);
+        const error = verifyError as { code?: string; message?: string; response?: string; responseCode?: number };
+        console.error('SMTP connection verification failed:', {
+          code: error.code,
+          message: error.message,
+          response: error.response,
+          responseCode: error.responseCode,
+        });
+
+        // More specific error message for Brevo
+        if (isBrevo && error.code === 'EAUTH') {
+          return NextResponse.json(
+            {
+              error: 'Brevo SMTP authentication failed.',
+              details: 'Please verify: 1) SMTP_USER is your full email address, 2) SMTP_PASS is your SMTP key (not API key), 3) Credentials are from Brevo SMTP settings page'
+            },
+            { status: 500 }
+          );
+        }
+
         return NextResponse.json(
           { error: 'Email service authentication failed. Please check your SMTP credentials.' },
           { status: 500 }
