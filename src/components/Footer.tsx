@@ -1,11 +1,39 @@
 "use client";
 
 import { AnimatePresence, motion } from "framer-motion";
-import { Code, ExternalLink, Github, Sparkles, X } from "lucide-react";
+import {
+  Code,
+  ExternalLink,
+  Github,
+  Linkedin,
+  Mail,
+  Sparkles,
+  X,
+} from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
 import { createPortal } from "react-dom";
 import Logo from "./Logo";
+
+function DevToIcon() {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className="lucide lucide-book-open"
+    >
+      <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z" />
+      <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z" />
+    </svg>
+  );
+}
 
 const openSourceLibraries = [
   {
@@ -72,8 +100,9 @@ const openSourceLibraries = [
 
 export default function Footer() {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isPromptModalOpen, setIsPromptModalOpen] = useState(false);
   return (
-    <footer className="pt-12 pb-20 sm:py-16 md:py-20 relative">
+    <footer className="pt-12 pb-20 sm:py-16 md:py-[22px] relative">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-12 mb-12 md:mb-16">
           <div className="col-span-2 md:col-span-2">
@@ -83,13 +112,50 @@ export default function Footer() {
             >
               <Logo className="w-full h-auto" />
             </Link>
-            <p className="text-sm sm:text-base text-gray-400 max-w-sm">
+            <p className="text-sm sm:text-base text-gray-400 max-w-sm mb-4 sm:mb-6">
               Crafting efficient, scalable, and elegant solutions in software &
               web. Based in Lucca, IT.
             </p>
+            {/* Social Icons */}
+            <div className="flex items-center gap-4">
+              <a
+                href={process.env.NEXT_PUBLIC_SOCIAL_GITHUB || "#"}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-gray-400 hover:text-primary cursor-pointer transition-colors transform hover:scale-110"
+                aria-label="GitHub"
+              >
+                <Github className="w-5 h-5" />
+              </a>
+              <a
+                href={process.env.NEXT_PUBLIC_SOCIAL_LINKEDIN || "#"}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-gray-400 hover:text-primary cursor-pointer transition-colors transform hover:scale-110"
+                aria-label="LinkedIn"
+              >
+                <Linkedin className="w-5 h-5" />
+              </a>
+              <a
+                href={process.env.NEXT_PUBLIC_SOCIAL_DEVTO || "#"}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-gray-400 hover:text-primary cursor-pointer transition-colors transform hover:scale-110"
+                aria-label="Dev.to"
+              >
+                <DevToIcon />
+              </a>
+              <a
+                href="#contact"
+                className="text-gray-400 hover:text-primary cursor-pointer transition-colors transform hover:scale-110"
+                aria-label="Contact"
+              >
+                <Mail className="w-5 h-5" />
+              </a>
+            </div>
           </div>
 
-          <div>
+          <div className="col-span-1">
             <h3 className="font-black mb-4 sm:mb-6 text-white text-sm sm:text-base">
               Explore
             </h3>
@@ -133,7 +199,7 @@ export default function Footer() {
             </ul>
           </div>
 
-          <div>
+          <div className="col-span-1">
             <h3 className="font-black mb-4 sm:mb-6 text-white text-sm sm:text-base">
               Connect
             </h3>
@@ -182,36 +248,45 @@ export default function Footer() {
         </div>
 
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center pt-8 border-t border-white/10 text-xs sm:text-sm text-gray-500 gap-6">
-          <p className="text-left">
+          <p className="text-center md:text-left w-full">
             © 2025 Fabrizio La Rosa. All Rights Reserved.
           </p>
 
-          <div className="flex flex-wrap items-center gap-4 sm:gap-6">
-            <button
-              onClick={() => setIsModalOpen(true)}
-              className="flex items-center gap-2 text-xs font-medium bg-gradient-to-r from-primary/20 via-primary-light/20 to-secondary/20 px-4 py-2 rounded-full border border-primary/30 hover:border-primary/50 transition-all hover:scale-105 cursor-pointer group"
-            >
-              <Code className="w-4 h-4 text-primary group-hover:rotate-12 transition-transform" />
-              <span className="gradient-animated-text font-bold">
-                Open Source
-              </span>
-            </button>
+          <div className="flex flex-col sm:flex-row items-center justify-center md:justify-end gap-4 w-full">
+            {/* Buttons */}
+            <div className="flex flex-wrap items-center justify-center md:justify-end gap-3">
+              <button
+                onClick={() => setIsModalOpen(true)}
+                className="flex items-center gap-2 text-xs sm:text-sm font-medium bg-gradient-to-r from-primary/20 via-primary-light/20 to-secondary/20 px-3 sm:px-4 py-1.5 sm:py-2 rounded-full border border-primary/30 hover:border-primary/50 transition-all hover:scale-105 cursor-pointer group"
+              >
+                <Code className="w-4 h-4 text-primary group-hover:rotate-12 transition-transform" />
+                <span className="gradient-animated-text font-bold">
+                  Open Source
+                </span>
+              </button>
 
-            <div className="flex items-center gap-2 text-sm font-medium bg-white/5 px-3 py-1.5 rounded-full border border-white/10 hover:border-white/20 transition-colors">
-              <span className="text-gray-400">100%</span>
-              <span className="gradient-animated-text font-black">
-                Prompt Engineered
-              </span>
-              <Sparkles className="w-3 h-3 text-pink-500 animate-pulse" />
+              <button
+                onClick={() => setIsPromptModalOpen(true)}
+                className="flex items-center gap-2 text-xs sm:text-sm font-medium bg-gradient-to-r from-secondary/20 via-primary/20 to-secondary/20 px-3 sm:px-4 py-1.5 sm:py-2 rounded-full border border-secondary/30 hover:border-secondary/50 transition-all hover:scale-105 cursor-pointer group"
+              >
+                <span className="text-gray-400">100%</span>
+                <span className="gradient-animated-text font-black">
+                  Prompt Engineered
+                </span>
+                <Sparkles className="w-3 h-3 text-pink-500 animate-pulse group-hover:rotate-12 transition-transform" />
+              </button>
             </div>
+          </div>
 
+          {/* Privacy Policy Link */}
+          <div className="flex justify-center w-full md:w-auto whitespace-nowrap">
             <a
               href={`https://www.iubenda.com/privacy-policy/${
                 process.env.NEXT_PUBLIC_IUBENDA_POLICY_ID || ""
               }`}
               target="_blank"
               rel="noopener noreferrer"
-              className="relative group hover:text-primary transition-colors cursor-pointer inline-block"
+              className="relative group hover:text-primary transition-colors cursor-pointer inline-block text-xs sm:text-sm text-gray-500"
             >
               Privacy Policy
               <span className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-0 h-0.5 bg-primary group-hover:w-full transition-all duration-300" />
@@ -395,6 +470,134 @@ export default function Footer() {
                       <p className="text-xs text-gray-500">
                         Made with ❤️ using open source technologies
                       </p>
+                    </motion.div>
+                  </div>
+                </motion.div>
+              </motion.div>
+            )}
+          </AnimatePresence>,
+          document.body
+        )}
+
+      {/* Prompt Engineered Modal */}
+      {typeof window !== "undefined" &&
+        createPortal(
+          <AnimatePresence>
+            {isPromptModalOpen && (
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                onClick={() => setIsPromptModalOpen(false)}
+                className="fixed inset-0 bg-black/80 backdrop-blur-md z-[99999] flex items-center justify-center p-4"
+              >
+                <motion.div
+                  initial={{ opacity: 0, scale: 0.95, y: 20 }}
+                  animate={{ opacity: 1, scale: 1, y: 0 }}
+                  exit={{ opacity: 0, scale: 0.95, y: 20 }}
+                  onClick={(e) => e.stopPropagation()}
+                  className="w-full max-w-2xl max-h-[90vh] bg-[#0D1117] border border-secondary/30 rounded-3xl shadow-2xl overflow-hidden flex flex-col"
+                >
+                  <motion.div
+                    className="absolute inset-0 bg-[linear-gradient(rgba(168,85,247,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(168,85,247,0.03)_1px,transparent_1px)] bg-[size:50px_50px]"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    transition={{
+                      duration: 0.6,
+                      delay: 0.2,
+                      ease: "easeOut",
+                    }}
+                  />
+
+                  {/* Content */}
+                  <div
+                    className="relative z-10 p-6 sm:p-8 md:p-12 overflow-y-auto flex-1 custom-scrollbar"
+                    data-lenis-prevent
+                  >
+                    {/* Header */}
+                    <div className="flex items-center justify-between mb-8">
+                      <div>
+                        <h2 className="text-3xl sm:text-4xl font-black mb-2 gradient-animated-text">
+                          Prompt Engineered
+                        </h2>
+                        <p className="text-gray-400 text-sm sm:text-base">
+                          Built with AI, guided by human vision
+                        </p>
+                      </div>
+                      <button
+                        onClick={() => setIsPromptModalOpen(false)}
+                        className="p-2 rounded-full bg-white/5 hover:bg-white/10 border border-white/10 hover:border-secondary/50 transition-all cursor-pointer group"
+                      >
+                        <X className="w-5 h-5 text-gray-400 group-hover:text-secondary transition-colors" />
+                      </button>
+                    </div>
+
+                    {/* Main Content */}
+                    <motion.div
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: 0.1 }}
+                      className="space-y-6"
+                    >
+                      <div className="p-6 rounded-2xl bg-gradient-to-r from-secondary/10 via-primary/10 to-secondary/10 border border-secondary/20 backdrop-blur-sm">
+                        <div className="flex items-start gap-4">
+                          <div className="w-12 h-12 rounded-xl bg-black/30 flex items-center justify-center border border-secondary/30 flex-shrink-0">
+                            <Sparkles className="w-6 h-6 text-secondary" />
+                          </div>
+                          <div className="flex-1">
+                            <h3 className="text-lg font-black text-white mb-3">
+                              How This Site Was Built
+                            </h3>
+                            <p className="text-gray-300 leading-relaxed mb-4">
+                              Here&apos;s the thing - this entire website was
+                              created 100% by AI, but don&apos;t worry, I was
+                              watching closely the whole time! Think of me as
+                              the director and the AI as the talented crew
+                              bringing the vision to life.
+                            </p>
+                            <p className="text-gray-300 leading-relaxed mb-4">
+                              Every line of code, every design decision, and
+                              every animation you see here was crafted through
+                              careful prompt engineering. I guided the process,
+                              refined the outputs, and made sure everything
+                              aligned with my vision - but the heavy lifting?
+                              That was all AI.
+                            </p>
+                            <p className="text-gray-300 leading-relaxed mb-4">
+                              This whole project was built using{" "}
+                              <span className="text-secondary font-semibold">
+                                vibe coding
+                              </span>
+                              - that flow state where you just go with the
+                              feeling, iterate on the fly, and let the creative
+                              process guide you. No rigid planning, just pure
+                              experimentation and refinement until it feels
+                              right.
+                            </p>
+                            <p className="text-gray-300 leading-relaxed">
+                              It&apos;s pretty wild what&apos;s possible when
+                              you combine human creativity with AI capabilities.
+                              This site is a testament to that collaboration -
+                              showing that with the right prompts, a clear
+                              vision, and a good vibe, you can build something
+                              truly special.
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="p-6 rounded-2xl bg-secondary/5 border border-secondary/10">
+                        <p className="text-sm text-gray-400 text-center">
+                          <span className="text-secondary font-semibold">
+                            100% AI-generated
+                          </span>
+                          {" • "}
+                          <span className="text-primary font-semibold">
+                            100% human-guided
+                          </span>
+                        </p>
+                      </div>
                     </motion.div>
                   </div>
                 </motion.div>

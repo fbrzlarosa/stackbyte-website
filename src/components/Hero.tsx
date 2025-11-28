@@ -12,7 +12,6 @@ import { ArrowRight } from "lucide-react";
 import dynamic from "next/dynamic";
 import { useEffect, useRef, useState } from "react";
 import Button from "./Button";
-import StatusBadge from "./StatusBadge";
 
 const AnimatedOrb = dynamic(() => import("./AnimatedOrb"), {
   loading: () => null,
@@ -195,7 +194,6 @@ export default function Hero() {
             },
           }}
         >
-          <StatusBadge />
 
           <motion.h1
             variants={{

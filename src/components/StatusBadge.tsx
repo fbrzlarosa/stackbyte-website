@@ -5,7 +5,6 @@ import {
   Activity,
   Clock,
   Globe,
-  Info,
   MapPin,
   MessageSquare,
   ShieldCheck,
@@ -118,43 +117,6 @@ export default function StatusBadge() {
   return (
     <>
       <div className="relative inline-block mb-8 z-50">
-        <motion.button
-          onClick={() => {
-            setShowModal(true);
-          }}
-          variants={{
-            hidden: { opacity: 0, y: -20, scale: 0.8 },
-            visible: { 
-              opacity: 1, 
-              y: 0, 
-              scale: 1,
-              transition: {
-                type: "spring",
-                stiffness: 200,
-                damping: 20
-              }
-            },
-          }}
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
-          className={`inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/5 border border-white/10 text-sm backdrop-blur-sm hover:bg-white/10 transition-all cursor-pointer group relative outline-none focus:ring-2 focus:ring-primary/50 ${config.glow} max-md:!opacity-100 max-md:!translate-y-0 max-md:!transform-none`}
-        >
-          <span className="relative flex h-2 w-2">
-            {status === "online" && (
-              <span
-                className={`animate-ping absolute inline-flex h-full w-full rounded-full ${config.color} opacity-75`}
-              ></span>
-            )}
-            <span
-              className={`relative inline-flex rounded-full h-2 w-2 ${config.color}`}
-            ></span>
-          </span>
-          <span className="group-hover:text-primary transition-colors flex items-center gap-2 font-medium">
-            {loading ? "Syncing..." : config.label}
-            <Info className="w-3.5 h-3.5 text-gray-500 group-hover:text-primary transition-colors" />
-          </span>
-        </motion.button>
-
         {/* Floating Notification Pill (Portal) - Persistent Status Indicator */}
         {mounted &&
           !showModal &&
@@ -170,10 +132,10 @@ export default function StatusBadge() {
                   damping: 20,
                   delay: 1,
                 }}
-                className="fixed bottom-3.5 right-16 sm:bottom-18 sm:right-4 z-[9999] cursor-pointer group max-md:!opacity-100 max-md:!translate-y-0 max-md:!transform-none"
+                className="fixed top-6 right-18 sm:top-18 sm:right-5 z-[9999] cursor-pointer group max-md:!opacity-100 max-md:!translate-y-0 max-md:!transform-none"
                 onClick={() => setShowModal(true)}
               >
-                <div className="bg-[#0D1117]/80 backdrop-blur-xl border border-white/10 px-3 py-2 sm:px-4 sm:py-2.5 rounded-full shadow-2xl flex items-center gap-2 sm:gap-3 hover:bg-white/5 transition-colors ring-1 ring-white/5 hover:ring-white/20">
+                <div className="bg-[#0D1117]/80 backdrop-blur-xl border border-white/10 px-3 py-2.5 sm:px-4 sm:py-2.5 rounded-full shadow-2xl flex items-center gap-2 sm:gap-3 hover:bg-white/5 transition-colors ring-1 ring-white/5 hover:ring-white/20">
                   <span className="relative flex h-1.5 w-1.5 sm:h-2 sm:w-2">
                     <span
                       className={`animate-ping absolute inline-flex h-full w-full rounded-full ${config.color} opacity-75`}
@@ -183,9 +145,6 @@ export default function StatusBadge() {
                     ></span>
                   </span>
                   <div className="flex flex-col">
-                    <span className="text-[8px] sm:text-[9px] text-gray-400 uppercase tracking-widest font-semibold leading-none mb-0.5">
-                      Status
-                    </span>
                     <span className="text-[10px] sm:text-xs font-bold text-white leading-none tracking-wide">
                       {config.headline}
                     </span>
