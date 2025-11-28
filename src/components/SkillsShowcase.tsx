@@ -35,7 +35,7 @@ const skills = [
       "WordPress / Elementor",
     ],
     icon: Globe,
-    color: "#06B6D4",
+    color: "var(--primary)",
     gradient: "from-cyan-500 to-blue-600",
   },
   {
@@ -52,7 +52,7 @@ const skills = [
     ],
     icon: Server,
     color: "#8B5CF6",
-    gradient: "from-purple-500 to-indigo-600",
+    gradient: "from-secondary to-secondary-dark",
   },
   {
     id: "web3",
@@ -230,7 +230,7 @@ function SkillCard({ skill, index, smoothProgress, isMobile }: SkillCardProps) {
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2 }}
-          className={`inline-flex self-start items-center gap-2 px-3 sm:px-4 py-1.5 sm:py-2 rounded-full bg-linear-to-r ${skill.gradient} bg-opacity-10 text-white text-xs sm:text-sm font-bold tracking-wider mb-4 sm:mb-6`}
+          className={`inline-flex self-start items-center gap-2 px-3 sm:px-4 py-1.5 sm:py-2 rounded-full bg-gradient-to-r ${skill.gradient} bg-opacity-10 text-white text-xs sm:text-sm font-bold tracking-wider mb-4 sm:mb-6`}
           style={{ translateZ: 20, x: contentParallaxX }}
         >
           <skill.icon className="w-3 h-3 sm:w-4 sm:h-4" />
@@ -238,7 +238,7 @@ function SkillCard({ skill, index, smoothProgress, isMobile }: SkillCardProps) {
         </motion.div>
 
         <motion.h2
-          className="text-2xl sm:text-3xl md:text-4xl lg:text-6xl xl:text-7xl font-black mb-4 sm:mb-6 md:mb-8 tracking-tighter text-white"
+          className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-black mb-4 sm:mb-6 md:mb-8 tracking-tighter text-white"
           style={{ translateZ: 40, x: titleParallaxX }}
         >
           {skill.title}
@@ -261,7 +261,7 @@ function SkillCard({ skill, index, smoothProgress, isMobile }: SkillCardProps) {
               className="flex items-center gap-2 sm:gap-3 text-sm sm:text-base text-gray-300"
             >
               <div
-                className={`w-1.5 h-1.5 rounded-full bg-linear-to-r ${skill.gradient} shrink-0`}
+                className={`w-1.5 h-1.5 rounded-full bg-gradient-to-r ${skill.gradient} shrink-0`}
               />
               <span>{detail}</span>
             </div>
@@ -271,7 +271,7 @@ function SkillCard({ skill, index, smoothProgress, isMobile }: SkillCardProps) {
         <motion.div style={{ translateZ: 35, x: contentParallaxX }}>
           <Link
             href="#contact"
-            className={`inline-flex items-center gap-2 sm:gap-3 text-base sm:text-lg font-bold hover:gap-4 sm:hover:gap-6 transition-all duration-300 bg-linear-to-r ${skill.gradient} bg-clip-text text-transparent group w-fit cursor-pointer`}
+            className={`inline-flex items-center gap-2 sm:gap-3 text-base sm:text-lg font-bold hover:gap-4 sm:hover:gap-6 transition-all duration-300 bg-gradient-to-r ${skill.gradient} bg-clip-text text-transparent group w-fit cursor-pointer`}
           >
             Start Project{" "}
             <ArrowRight
@@ -286,16 +286,17 @@ function SkillCard({ skill, index, smoothProgress, isMobile }: SkillCardProps) {
       <div className="flex-1 relative hidden lg:block overflow-visible">
         {/* Gradient Background */}
         <div
-          className={`absolute inset-0 bg-linear-to-br ${skill.gradient} opacity-20 rounded-2xl sm:rounded-3xl overflow-hidden`}
+          className={`absolute inset-0 bg-gradient-to-br ${skill.gradient} opacity-20 rounded-2xl sm:rounded-3xl overflow-hidden`}
         />
 
         {/* Animated Icon Container */}
         <div className="absolute inset-0 flex items-center justify-center">
           <motion.div
-            animate={{
+            whileInView={{
               rotate: 360,
               scale: [1, 1.1, 1],
             }}
+            viewport={{ once: false }}
             transition={{
               rotate: {
                 duration: 20,
@@ -325,7 +326,7 @@ function SkillCard({ skill, index, smoothProgress, isMobile }: SkillCardProps) {
         </div>
 
         {/* Overlay Gradient for text readability if needed */}
-        <div className="absolute inset-0 bg-linear-to-l from-transparent to-[#0D1117]" />
+        <div className="absolute inset-0 bg-gradient-to-l from-transparent to-[#0D1117]" />
       </div>
     </motion.div>
   );
@@ -393,18 +394,13 @@ export default function SkillsShowcase() {
   });
 
   const smoothProgress = useSpring(scrollYProgress, {
-    stiffness: 150,
-    damping: 25,
-    restDelta: 0.001,
-    mass: 0.1,
+    stiffness: 100,
+    damping: 20,
+    mass: 0.5,
   });
 
   return (
-    <section
-      ref={containerRef}
-      className="relative h-[500vh] bg-[#0D1117]"
-      id="services"
-    >
+    <section ref={containerRef} className="relative h-[500vh]" id="services">
       <div className="sticky top-0 h-screen overflow-visible flex items-center justify-center">
         {/* Navigation Dots / Menu */}
         <div className="absolute bottom-6 sm:bottom-12 left-4 sm:left-1/2 sm:-translate-x-1/2 z-50 flex items-center gap-3 sm:gap-4 bg-black/40 backdrop-blur-md px-4 sm:px-6 py-2 sm:py-3 rounded-full border border-white/10 overflow-x-auto max-w-[calc(100vw-2rem)] sm:max-w-fit no-scrollbar">

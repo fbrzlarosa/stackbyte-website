@@ -214,10 +214,10 @@ export default function ReadyToStart() {
       ignoreOpacity={true}
       ref={sectionRef}
       id="ready"
-      className="py-12 sm:py-32 md:py-40 bg-gradient-to-b from-[#0D1117] via-[#161B22] to-[#0D1117] overflow-hidden relative z-20 pb-0"
+      className="py-12 sm:py-32 md:py-40 overflow-hidden relative z-20 sm:pb-0"
     >
       {/* Animated Background Effects */}
-      <motion.div
+      {/* <motion.div
         className="absolute inset-0"
         style={{
           background:
@@ -236,15 +236,15 @@ export default function ReadyToStart() {
           repeat: Infinity,
           ease: "easeInOut",
         }}
-      />
+      /> */}
 
       {/* Floating Orbs */}
       <motion.div
         className="absolute top-1/4 left-1/4 w-[600px] h-[600px] bg-primary/20 rounded-full blur-[150px]"
         animate={{
-          x: [0, 150, 0],
-          y: [0, -100, 0],
-          scale: [1, 1.3, 1],
+          x: [0, 100, 0],
+          y: [0, -40, 0],
+          scale: [1, 1.2, 1],
           opacity: [0.2, 0.4, 0.2],
         }}
         transition={{
@@ -254,11 +254,11 @@ export default function ReadyToStart() {
         }}
       />
       <motion.div
-        className="absolute bottom-1/4 right-1/4 w-[500px] h-[500px] bg-purple-500/20 rounded-full blur-[120px]"
+        className="absolute bottom-1/4 right-1/4 w-[500px] h-[500px] bg-secondary/20 rounded-full blur-[120px]"
         animate={{
-          x: [0, -120, 0],
-          y: [0, 100, 0],
-          scale: [1, 1.4, 1],
+          x: [0, -80, 0],
+          y: [0, 50, 0],
+          scale: [1, 1.25, 1],
           opacity: [0.2, 0.4, 0.2],
         }}
         transition={{
@@ -388,14 +388,18 @@ export default function ReadyToStart() {
                   y: { duration: 1, ease: "easeOut" },
                   rotateX: { duration: 8, repeat: Infinity, ease: "easeInOut" },
                   rotateY: { duration: 8, repeat: Infinity, ease: "easeInOut" },
-                  translateZ: { duration: 8, repeat: Infinity, ease: "easeInOut" },
+                  translateZ: {
+                    duration: 8,
+                    repeat: Infinity,
+                    ease: "easeInOut",
+                  },
                 }}
               >
-                <span className="relative z-10 text-transparent bg-clip-text bg-linear-to-r from-primary via-purple-400 to-primary bg-[length:200%_auto] animate-gradient">
+                <span className="relative z-10 gradient-animated-text">
                   CODE.
                 </span>
                 <motion.span
-                  className="absolute inset-0 text-transparent bg-clip-text bg-linear-to-r from-primary via-purple-400 to-primary bg-[length:200%_auto] animate-gradient blur-xl opacity-60"
+                  className="absolute inset-0 gradient-animated-text blur-xl opacity-60"
                   animate={{
                     opacity: [0.4, 0.7, 0.4],
                   }}
@@ -433,9 +437,24 @@ export default function ReadyToStart() {
                 transition={{
                   opacity: { duration: 1, delay: 0.2, ease: "easeOut" },
                   y: { duration: 1, delay: 0.2, ease: "easeOut" },
-                  rotateX: { duration: 10, repeat: Infinity, ease: "easeInOut", delay: 1 },
-                  rotateY: { duration: 10, repeat: Infinity, ease: "easeInOut", delay: 1 },
-                  translateZ: { duration: 10, repeat: Infinity, ease: "easeInOut", delay: 1 },
+                  rotateX: {
+                    duration: 10,
+                    repeat: Infinity,
+                    ease: "easeInOut",
+                    delay: 1,
+                  },
+                  rotateY: {
+                    duration: 10,
+                    repeat: Infinity,
+                    ease: "easeInOut",
+                    delay: 1,
+                  },
+                  translateZ: {
+                    duration: 10,
+                    repeat: Infinity,
+                    ease: "easeInOut",
+                    delay: 1,
+                  },
                 }}
               >
                 <span className="relative z-10 text-white">CREATE.</span>
@@ -479,16 +498,31 @@ export default function ReadyToStart() {
                 transition={{
                   opacity: { duration: 1, delay: 0.4, ease: "easeOut" },
                   y: { duration: 1, delay: 0.4, ease: "easeOut" },
-                  rotateX: { duration: 12, repeat: Infinity, ease: "easeInOut", delay: 2 },
-                  rotateY: { duration: 12, repeat: Infinity, ease: "easeInOut", delay: 2 },
-                  translateZ: { duration: 12, repeat: Infinity, ease: "easeInOut", delay: 2 },
+                  rotateX: {
+                    duration: 12,
+                    repeat: Infinity,
+                    ease: "easeInOut",
+                    delay: 2,
+                  },
+                  rotateY: {
+                    duration: 12,
+                    repeat: Infinity,
+                    ease: "easeInOut",
+                    delay: 2,
+                  },
+                  translateZ: {
+                    duration: 12,
+                    repeat: Infinity,
+                    ease: "easeInOut",
+                    delay: 2,
+                  },
                 }}
               >
-                <span className="relative z-10 text-transparent bg-clip-text bg-linear-to-r from-purple-400 via-primary to-purple-400 bg-[length:200%_auto] animate-gradient">
+                <span className="relative z-10 gradient-animated-text">
                   CONQUER.
                 </span>
                 <motion.span
-                  className="absolute inset-0 text-transparent bg-clip-text bg-linear-to-r from-purple-400 via-primary to-purple-400 bg-[length:200%_auto] animate-gradient blur-xl opacity-60"
+                  className="absolute inset-0 gradient-animated-text blur-xl opacity-60"
                   animate={{
                     opacity: [0.4, 0.7, 0.4],
                   }}

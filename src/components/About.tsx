@@ -1,12 +1,12 @@
 "use client";
 
 import {
-    motion,
-    useMotionTemplate,
-    useMotionValue,
-    useScroll,
-    useSpring,
-    useTransform,
+  motion,
+  useMotionTemplate,
+  useMotionValue,
+  useScroll,
+  useSpring,
+  useTransform,
 } from "framer-motion";
 import { Briefcase, GraduationCap, Sparkles, Trophy } from "lucide-react";
 import { MouseEvent, useEffect, useRef, useState } from "react";
@@ -134,7 +134,7 @@ function ExperienceCard({
             className="w-4 h-4 rounded-full border-2 border-white/20 bg-[#0D1117] group-hover:border-primary transition-all duration-500 z-10 relative"
             whileInView={{
               scale: [0, 1.2, 1],
-              borderColor: ["rgba(255,255,255,0.2)", "#06B6D4"],
+              borderColor: ["rgba(255,255,255,0.2)", "var(--primary)"],
             }}
             viewport={{ once: true }}
             transition={{ delay: index * 0.15 + 0.2, duration: 0.5 }}
@@ -201,7 +201,7 @@ function ExperienceCard({
               </motion.div>
             </div>
             <motion.h3
-              className="text-xl font-bold text-white mb-1 group-hover/card:text-primary transition-colors"
+              className="text-xl font-black text-white mb-1 group-hover/card:text-primary transition-colors"
               style={{ transform: isMobile ? "none" : "translateZ(15px)" }}
             >
               {exp.title}
@@ -233,8 +233,8 @@ export default function About() {
   });
 
   const smoothProgress = useSpring(scrollYProgress, {
-    stiffness: 100,
-    damping: 25,
+    stiffness: 200,
+    damping: 30,
     restDelta: 0.001,
     mass: 0.1,
   });
@@ -244,11 +244,7 @@ export default function About() {
   const scale = useTransform(smoothProgress, [0, 0.5, 1], [0.95, 1.02, 0.95]);
 
   // Timeline fill animation
-  const timelineHeight = useTransform(
-    scrollYProgress,
-    [0.1, 0.8],
-    [0, 100]
-  );
+  const timelineHeight = useTransform(scrollYProgress, [0.1, 0.8], [0, 100]);
 
   return (
     <section
@@ -259,37 +255,16 @@ export default function About() {
       {/* Noise Texture Overlay */}
       <div className="absolute inset-0 opacity-[0.015] mix-blend-overlay pointer-events-none bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzMDAiIGhlaWdodD0iMzAwIj48ZmlsdGVyIGlkPSJhIiB4PSIwIiB5PSIwIj48ZmVUdXJidWxlbmNlIGJhc2VGcmVxdWVuY3k9Ii43NSIgc3RpdGNoVGlsZXM9InN0aXRjaCIgdHlwZT0iZnJhY3RhbE5vaXNlIi8+PGZlQ29sb3JNYXRyaXggdHlwZT0ic2F0dXJhdGUiIHZhbHVlcz0iMCIvPjwvZmlsdGVyPjxwYXRoIGQ9Ik0wIDBoMzAwdjMwMEgweiIgZmlsdGVyPSJ1cmwoI2EpIiBvcGFjaXR5PSIuMDUiLz48L3N2Zz4=')] hidden md:block" />
 
-      {/* Animated Gradient Mesh */}
-      <motion.div
-        className="absolute inset-0"
-        style={{
-          background:
-            "radial-gradient(circle at 50% 50%, rgba(6, 182, 212, 0.03) 0%, transparent 50%)",
-        }}
-        animate={{
-          background: [
-            "radial-gradient(circle at 20% 30%, rgba(6, 182, 212, 0.08) 0%, transparent 50%)",
-            "radial-gradient(circle at 80% 70%, rgba(168, 85, 247, 0.08) 0%, transparent 50%)",
-            "radial-gradient(circle at 50% 50%, rgba(6, 182, 212, 0.08) 0%, transparent 50%)",
-            "radial-gradient(circle at 20% 30%, rgba(6, 182, 212, 0.08) 0%, transparent 50%)",
-          ],
-        }}
-        transition={{
-          duration: 15,
-          repeat: Infinity,
-          ease: "easeInOut",
-        }}
-      />
-
       {/* Floating Orbs with Stronger Visibility */}
       <motion.div
-        className="absolute top-1/4 left-1/4 w-[500px] h-[500px] bg-primary/30 rounded-full blur-[120px] hidden md:block"
-        animate={{
+        className="absolute top-1/4 left-1/4 w-[200px] h-[200px] bg-primary/30 rounded-full blur-[120px] hidden md:block"
+        whileInView={{
           x: [0, 100, 0],
           y: [0, -50, 0],
           scale: [1, 1.2, 1],
-          opacity: [0.3, 0.5, 0.3],
+          opacity: [0.2, 0.4, 0.2],
         }}
+        viewport={{ once: false }}
         transition={{
           duration: 8,
           repeat: Infinity,
@@ -297,13 +272,14 @@ export default function About() {
         }}
       />
       <motion.div
-        className="absolute bottom-1/4 right-1/4 w-[400px] h-[400px] bg-purple-500/30 rounded-full blur-[100px] hidden md:block"
-        animate={{
+        className="absolute bottom-1/4 right-1/4 w-[200px] h-[200px] bg-secondary/30 rounded-full blur-[100px] hidden md:block"
+        whileInView={{
           x: [0, -80, 0],
           y: [0, 60, 0],
-          scale: [1, 1.3, 1],
-          opacity: [0.3, 0.5, 0.3],
+          scale: [0.4, 1, 0.4],
+          opacity: [0.2, 0.4, 0.2],
         }}
+        viewport={{ once: false }}
         transition={{
           duration: 10,
           repeat: Infinity,
@@ -318,10 +294,11 @@ export default function About() {
       {/* Spotlight Effect */}
       <motion.div
         className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] bg-gradient-to-b from-primary/10 to-transparent blur-3xl"
-        animate={{
+        whileInView={{
           opacity: [0.2, 0.4, 0.2],
           scale: [1, 1.1, 1],
         }}
+        viewport={{ once: false }}
         transition={{
           duration: 5,
           repeat: Infinity,
@@ -358,7 +335,7 @@ export default function About() {
                 </motion.div>
 
                 <motion.h2
-                  className="text-4xl sm:text-5xl lg:text-6xl font-black mb-8 tracking-tight leading-tight"
+                  className="text-4xl sm:text-5xl  font-black mb-8 tracking-tight leading-tight"
                   initial={{ opacity: 0, y: 30 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
@@ -366,11 +343,9 @@ export default function About() {
                 >
                   Every great{" "}
                   <span className="relative inline-block">
-                    <span className="text-transparent bg-clip-text bg-linear-to-r from-primary via-purple-400 to-primary bg-[length:200%_auto] animate-gradient">
-                      developer
-                    </span>
+                    <span className="gradient-animated-text">developer</span>
                     <motion.span
-                      className="absolute inset-0 text-transparent bg-clip-text bg-linear-to-r from-primary via-purple-400 to-primary bg-[length:200%_auto] animate-gradient blur-xl opacity-60"
+                      className="absolute inset-0 gradient-animated-text blur-xl opacity-60"
                       animate={{
                         opacity: [0.4, 0.7, 0.4],
                       }}
@@ -385,11 +360,9 @@ export default function About() {
                   </span>{" "}
                   begins with an even better{" "}
                   <span className="relative inline-block">
-                    <span className="text-transparent bg-clip-text bg-linear-to-r from-purple-400 via-primary to-purple-400 bg-[length:200%_auto] animate-gradient">
-                      story.
-                    </span>
+                    <span className="gradient-animated-text">story.</span>
                     <motion.span
-                      className="absolute inset-0 text-transparent bg-clip-text bg-linear-to-r from-purple-400 via-primary to-purple-400 bg-[length:200%_auto] animate-gradient blur-xl opacity-60"
+                      className="absolute inset-0 gradient-animated-text blur-xl opacity-60"
                       animate={{
                         opacity: [0.4, 0.7, 0.4],
                       }}
@@ -450,7 +423,7 @@ export default function About() {
                       transition={{ type: "spring", stiffness: 300 }}
                     >
                       <div className="relative z-10">
-                        <div className="text-4xl sm:text-5xl font-bold bg-gradient-to-r from-white to-gray-400 bg-clip-text text-transparent mb-2">
+                        <div className="text-3xl sm:text-4xl md:text-5xl font-black bg-gradient-to-r from-white to-gray-400 bg-clip-text text-transparent mb-2">
                           {stat.value}
                         </div>
                         <div className="text-sm text-gray-500 uppercase tracking-wider">
@@ -476,7 +449,7 @@ export default function About() {
             {/* Animated Timeline Line - Fill */}
             <motion.div
               style={{ height: useTransform(timelineHeight, (v) => `${v}%`) }}
-              className="absolute left-8 top-0 w-px bg-gradient-to-b from-primary via-purple-500 to-primary hidden sm:block origin-top"
+              className="absolute left-8 top-0 w-px bg-gradient-to-b from-primary via-primary-dark to-primary hidden sm:block origin-top"
             />
 
             <div className="space-y-4 sm:space-y-12">

@@ -162,7 +162,7 @@ function ContactStep({
         <div className="w-12 h-12 bg-primary/20 rounded-2xl flex items-center justify-center text-primary mb-4 md:mb-6 group-hover:scale-110 transition-transform duration-300">
           <step.icon className="w-6 h-6" />
         </div>
-        <h3 className="text-lg md:text-xl font-bold mb-2 md:mb-3">
+        <h3 className="text-lg md:text-xl font-black mb-2 md:mb-3">
           {step.title}
         </h3>
         <p className="text-sm md:text-base text-gray-400 leading-relaxed">
@@ -243,7 +243,7 @@ export default function Process() {
       ignoreOpacity={true}
       ref={sectionRef}
       id="process"
-      className="py-16 sm:py-24 md:py-32 bg-[#0D1117] overflow-hidden relative z-20"
+      className="py-16 sm:py-24 md:py-32 overflow-hidden relative z-20"
     >
       <CodeRain />
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
@@ -265,7 +265,7 @@ export default function Process() {
               perspective: "1200px",
               willChange: "transform",
             }}
-            className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-black mb-4 md:mb-6 relative"
+            className="max-w-68 mx-auto sm:mx-0 sm:max-w-none text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-black mb-4 md:mb-6 relative"
           >
             <motion.span
               style={{
@@ -302,11 +302,9 @@ export default function Process() {
               className="relative z-10 text-white"
             >
               <span className="relative inline-block">
-                <span className="text-transparent bg-clip-text bg-linear-to-r from-purple-400 via-primary to-purple-400 bg-size-[200%_auto] animate-gradient">
-                  Real results.
-                </span>
+                <span className="gradient-animated-text">Real results.</span>
                 <motion.span
-                  className="absolute inset-0 text-transparent bg-clip-text bg-linear-to-r from-purple-400 via-primary to-purple-400 bg-size-[200%_auto] animate-gradient blur-xl opacity-60"
+                  className="absolute inset-0 gradient-animated-text blur-xl opacity-60"
                   animate={{
                     opacity: [0.4, 0.7, 0.4],
                   }}
@@ -379,7 +377,7 @@ export default function Process() {
                 <div className="w-12 h-12 bg-primary/20 rounded-2xl flex items-center justify-center text-primary mb-4 md:mb-6 group-hover:scale-110 transition-transform duration-300">
                   <step.icon className="w-6 h-6" />
                 </div>
-                <h3 className="text-lg md:text-xl font-bold mb-2 md:mb-3">
+                <h3 className="text-lg md:text-xl font-black mb-2 md:mb-3">
                   {step.title}
                 </h3>
                 <p className="text-sm md:text-base text-gray-400 leading-relaxed">

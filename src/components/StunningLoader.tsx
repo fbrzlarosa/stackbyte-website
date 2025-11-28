@@ -119,7 +119,7 @@ export default function StunningLoader({
 
           <div className="w-64 h-2 bg-black/50 border border-primary/30 rounded-none overflow-hidden relative mb-4">
             <motion.div
-              className="absolute inset-0 bg-primary shadow-[0_0_10px_#06B6D4]"
+              className="absolute inset-0 bg-primary shadow-[0_0_10px_var(--primary)]"
               initial={{ width: "0%" }}
               animate={{ width: "100%" }}
               transition={{ duration: 1.5, ease: "circOut" }}
@@ -233,7 +233,7 @@ export default function StunningLoader({
 
               <div className="w-64 h-2 bg-black/50 border border-primary/30 rounded-none overflow-hidden relative mb-4">
                 <motion.div
-                  className="absolute inset-0 bg-primary shadow-[0_0_10px_#06B6D4]"
+                  className="absolute inset-0 bg-primary shadow-[0_0_10px_var(--primary)]"
                   initial={{ width: "0%" }}
                   animate={{ width: "100%" }}
                   transition={{ duration: 1.5, ease: "circOut" }}

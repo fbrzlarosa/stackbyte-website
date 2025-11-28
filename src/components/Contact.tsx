@@ -102,10 +102,10 @@ export default function Contact() {
   });
 
   const smoothProgress = useSpring(scrollYProgress, {
-    stiffness: 200,
-    damping: 30,
+    stiffness: isMobile ? 100 : 200,
+    damping: isMobile ? 40 : 30,
     restDelta: 0.002,
-    mass: 0.2,
+    mass: isMobile ? 0.3 : 0.2,
   });
 
   const rotateX = useTransform(smoothProgress, [0, 1], [25, -25]);
@@ -123,6 +123,50 @@ export default function Contact() {
     smoothProgress,
     [0, 0.5, 1],
     [-100, 100, -100]
+  );
+
+  const yMobile = useTransform(smoothProgress, [0, 1], [0, -20]);
+  const opacityMobile = useTransform(
+    smoothProgress,
+    [0, 0.2, 0.8, 1],
+    [0.8, 1, 1, 0.9]
+  );
+  const translateZSpan1 = useTransform(smoothProgress, [0, 1], [0, 50]);
+  const rotateXSpan1 = useTransform(smoothProgress, [0, 1], [10, -10]);
+  const translateZSpan2 = useTransform(smoothProgress, [0, 1], [50, -50]);
+  const rotateYSpan2 = useTransform(smoothProgress, [0, 1], [-15, 15]);
+  const paraRotateX = useTransform(smoothProgress, [0, 1], [15, -15]);
+  const paraRotateY = useTransform(smoothProgress, [0, 1], [-8, 8]);
+  const paraY = useTransform(smoothProgress, [0, 1], [25, -25]);
+  const paraYMobile = useTransform(smoothProgress, [0, 1], [0, -5]);
+  const paraX = useTransform(smoothProgress, [0, 1], [-15, 15]);
+  const paraTranslateZ = useTransform(smoothProgress, [0, 1], [-20, 20]);
+  const paraScale = useTransform(smoothProgress, [0, 0.5, 1], [0.95, 1, 0.95]);
+  const paraOpacity = useTransform(
+    smoothProgress,
+    [0, 0.2, 0.8, 1],
+    [0, 1, 1, 0.8]
+  );
+  const badgesY = useTransform(smoothProgress, [0, 1], [20, -20]);
+  const badgesYMobile = useTransform(smoothProgress, [0, 1], [0, -5]);
+  const badgesRotateX = useTransform(smoothProgress, [0, 1], [8, -8]);
+  const badgesOpacity = useTransform(
+    smoothProgress,
+    [0, 0.3, 0.7, 1],
+    [0, 1, 1, 0.9]
+  );
+  const badge1TranslateZ = useTransform(smoothProgress, [0, 1], [0, 30]);
+  const badge1RotateY = useTransform(smoothProgress, [0, 1], [-5, 5]);
+  const badge2TranslateZ = useTransform(smoothProgress, [0, 1], [0, 30]);
+  const badge2RotateY = useTransform(smoothProgress, [0, 1], [5, -5]);
+  const formRotateX = useTransform(smoothProgress, [0, 1], [5, -5]);
+  const formRotateY = useTransform(smoothProgress, [0, 1], [-3, 3]);
+  const formY = useTransform(smoothProgress, [0, 1], [30, -30]);
+  const formYMobile = useTransform(smoothProgress, [0, 1], [0, -10]);
+  const formTranslateZ = useTransform(
+    smoothProgress,
+    [0, 0.5, 1],
+    [-50, 50, -50]
   );
 
   const onSubmit = async (data: FormData) => {
@@ -150,26 +194,59 @@ export default function Contact() {
       id="contact"
       className="py-16 sm:py-24 md:py-32 relative overflow-hidden -mt-1"
     >
-      {/* Background Elements */}
       <motion.div
-        initial={{ opacity: 0 }}
-        whileInView={{ opacity: 1 }}
+        initial={{ scale: 0.8, opacity: 0 }}
+        whileInView={{ scale: 1, opacity: 1 }}
         viewport={{ once: true }}
-        className="absolute inset-0 bg-linear-to-b from-[#0D1117] via-[#161B22] to-primary/5 -z-10"
+        animate={{
+          x: [0, -100, 0],
+          y: [0, -50, 0],
+          scale: [1, 1.2, 1],
+          opacity: [0.1, 0.2, 0.1],
+        }}
+        transition={{
+          scale: { duration: 1.5 },
+          opacity: { duration: 1.5 },
+          x: {
+            duration: 12,
+            repeat: Infinity,
+            ease: "easeInOut",
+          },
+          y: {
+            duration: 12,
+            repeat: Infinity,
+            ease: "easeInOut",
+          },
+        }}
+        className="absolute right-0 top-96 w-1/3 h-1/3 bg-primary/10 rounded-full blur-[100px] -z-10"
       />
       <motion.div
         initial={{ scale: 0.8, opacity: 0 }}
         whileInView={{ scale: 1, opacity: 1 }}
         viewport={{ once: true }}
-        transition={{ duration: 1.5 }}
-        className="absolute right-0 bottom-0 w-1/3 h-1/3 bg-primary/10 rounded-full blur-[100px] -z-10"
-      />
-      <motion.div
-        initial={{ scale: 0.8, opacity: 0 }}
-        whileInView={{ scale: 1, opacity: 1 }}
-        viewport={{ once: true }}
-        transition={{ duration: 1.5, delay: 0.3 }}
-        className="absolute left-0 top-1/4 w-1/4 h-1/4 bg-purple-500/10 rounded-full blur-[120px] -z-10"
+        animate={{
+          x: [0, -40, 0],
+          y: [0, 40, 0],
+          scale: [1, 1.3, 1],
+          opacity: [0.1, 0.2, 0.1],
+        }}
+        transition={{
+          scale: { duration: 1.5, delay: 0.3 },
+          opacity: { duration: 1.5, delay: 0.3 },
+          x: {
+            duration: 15,
+            repeat: Infinity,
+            ease: "easeInOut",
+            delay: 1,
+          },
+          y: {
+            duration: 15,
+            repeat: Infinity,
+            ease: "easeInOut",
+            delay: 1,
+          },
+        }}
+        className="absolute left-0 top-1/4 w-1/4 h-1/4 bg-secondary/10 rounded-full blur-[120px] -z-10"
       />
 
       <div className="max-w-4xl mx-auto px-6 sm:px-8">
@@ -185,25 +262,25 @@ export default function Contact() {
             >
               <motion.h2
                 style={{
-                  rotateX,
-                  rotateY,
-                  rotateZ,
+                  rotateX: isMobile ? 0 : rotateX,
+                  rotateY: isMobile ? 0 : rotateY,
+                  rotateZ: isMobile ? 0 : rotateZ,
                   x: isMobile ? 0 : x,
-                  y,
-                  scale,
-                  opacity,
-                  translateZ,
-                  transformStyle: "preserve-3d",
-                  perspective: "1500px",
+                  y: isMobile ? yMobile : y,
+                  scale: isMobile ? 1 : scale,
+                  opacity: isMobile ? opacityMobile : opacity,
+                  translateZ: isMobile ? 0 : translateZ,
+                  transformStyle: isMobile ? "flat" : "preserve-3d",
+                  perspective: isMobile ? "none" : "1500px",
                 }}
-                className="text-center text-4xl sm:text-5xl lg:text-7xl xl:text-8xl font-black mb-12 md:mb-16 lg:mb-24 px-4 sm:px-4 mx-auto max-w-full sm:max-w-[90vw] break-words"
+                className="text-center text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-black mb-12 md:mb-16 lg:mb-24 px-4 sm:px-4 mx-auto max-w-full sm:max-w-[90vw] break-words"
               >
                 <motion.span
                   style={{
                     display: "inline-block",
-                    transformStyle: "preserve-3d",
-                    translateZ: useTransform(smoothProgress, [0, 1], [0, 50]),
-                    rotateX: useTransform(smoothProgress, [0, 1], [10, -10]),
+                    transformStyle: isMobile ? "flat" : "preserve-3d",
+                    translateZ: isMobile ? 0 : translateZSpan1,
+                    rotateX: isMobile ? 0 : rotateXSpan1,
                   }}
                   className="px-2"
                 >
@@ -213,20 +290,16 @@ export default function Contact() {
                 <span className="relative inline-block">
                   <motion.span
                     style={{
-                      transformStyle: "preserve-3d",
-                      translateZ: useTransform(
-                        smoothProgress,
-                        [0, 1],
-                        [50, -50]
-                      ),
-                      rotateY: useTransform(smoothProgress, [0, 1], [-15, 15]),
+                      transformStyle: isMobile ? "flat" : "preserve-3d",
+                      translateZ: isMobile ? 0 : translateZSpan2,
+                      rotateY: isMobile ? 0 : rotateYSpan2,
                     }}
-                    className="text-transparent bg-clip-text bg-gradient-to-r from-primary via-purple-400 to-primary bg-[length:200%_auto] animate-gradient"
+                    className="gradient-animated-text"
                   >
                     amazing together.
                   </motion.span>
                   <motion.span
-                    className="absolute -inset-1 bg-gradient-to-r from-primary/20 via-purple-500/20 to-primary/20 blur-xl -z-10"
+                    className="absolute -inset-1 gradient-animated-glow blur-xl -z-10"
                     style={{
                       transform: "translateZ(-50px)",
                       scale: useTransform(smoothProgress, [0, 1], [1, 1.3]),
@@ -245,22 +318,14 @@ export default function Contact() {
               </motion.h2>
               <motion.p
                 style={{
-                  rotateX: useTransform(smoothProgress, [0, 1], [15, -15]),
-                  rotateY: useTransform(smoothProgress, [0, 1], [-8, 8]),
-                  y: useTransform(smoothProgress, [0, 1], [50, -50]),
-                  x: useTransform(smoothProgress, [0, 1], [-20, 20]),
-                  translateZ: useTransform(smoothProgress, [0, 1], [-30, 30]),
-                  opacity: useTransform(
-                    smoothProgress,
-                    [0, 0.2, 0.8, 1],
-                    [0, 1, 1, 0.8]
-                  ),
-                  scale: useTransform(
-                    smoothProgress,
-                    [0, 0.5, 1],
-                    [0.95, 1, 0.95]
-                  ),
-                  transformStyle: "preserve-3d",
+                  rotateX: isMobile ? 0 : paraRotateX,
+                  rotateY: isMobile ? 0 : paraRotateY,
+                  y: isMobile ? paraYMobile : paraY,
+                  x: isMobile ? 0 : paraX,
+                  translateZ: isMobile ? 0 : paraTranslateZ,
+                  opacity: paraOpacity,
+                  scale: isMobile ? 1 : paraScale,
+                  transformStyle: isMobile ? "flat" : "preserve-3d",
                 }}
                 className="text-center text-base sm:text-lg md:text-xl lg:text-2xl text-gray-400 max-w-2xl mx-auto mb-8 md:mb-12 leading-relaxed px-6 sm:px-4"
               >
@@ -270,21 +335,17 @@ export default function Contact() {
 
               <motion.div
                 style={{
-                  y: useTransform(smoothProgress, [0, 1], [40, -40]),
-                  rotateX: useTransform(smoothProgress, [0, 1], [8, -8]),
-                  opacity: useTransform(
-                    smoothProgress,
-                    [0, 0.3, 0.7, 1],
-                    [0, 1, 1, 0.9]
-                  ),
-                  transformStyle: "preserve-3d",
+                  y: isMobile ? badgesYMobile : badgesY,
+                  rotateX: isMobile ? 0 : badgesRotateX,
+                  opacity: badgesOpacity,
+                  transformStyle: isMobile ? "flat" : "preserve-3d",
                 }}
                 className="flex flex-col sm:flex-row items-center justify-center gap-6 text-gray-300"
               >
                 <motion.div
                   style={{
-                    translateZ: useTransform(smoothProgress, [0, 1], [0, 30]),
-                    rotateY: useTransform(smoothProgress, [0, 1], [-5, 5]),
+                    translateZ: isMobile ? 0 : badge1TranslateZ,
+                    rotateY: isMobile ? 0 : badge1RotateY,
                   }}
                   whileHover={{ scale: 1.1, y: -5, rotateZ: 2 }}
                   className="flex items-center gap-3 px-5 py-3 rounded-full bg-green-500/10 border border-green-500/20 backdrop-blur-sm shadow-lg shadow-green-500/20"
@@ -312,8 +373,8 @@ export default function Contact() {
                 </motion.div>
                 <motion.div
                   style={{
-                    translateZ: useTransform(smoothProgress, [0, 1], [0, 30]),
-                    rotateY: useTransform(smoothProgress, [0, 1], [5, -5]),
+                    translateZ: isMobile ? 0 : badge2TranslateZ,
+                    rotateY: isMobile ? 0 : badge2RotateY,
                   }}
                   whileHover={{ scale: 1.1, y: -5, rotateZ: -2 }}
                   className="flex items-center gap-3 px-5 py-3 rounded-full bg-primary/10 border border-primary/20 shadow-lg shadow-primary/20"
@@ -348,21 +409,17 @@ export default function Contact() {
               whileInView="visible"
               viewport={{ once: true, margin: "-100px" }}
               style={{
-                rotateX: useTransform(smoothProgress, [0, 1], [5, -5]),
-                rotateY: useTransform(smoothProgress, [0, 1], [-3, 3]),
-                y: useTransform(smoothProgress, [0, 1], [60, -60]),
-                translateZ: useTransform(
-                  smoothProgress,
-                  [0, 0.5, 1],
-                  [-50, 50, -50]
-                ),
-                transformStyle: "preserve-3d",
+                rotateX: isMobile ? 0 : formRotateX,
+                rotateY: isMobile ? 0 : formRotateY,
+                y: isMobile ? formYMobile : formY,
+                translateZ: isMobile ? 0 : formTranslateZ,
+                transformStyle: isMobile ? "flat" : "preserve-3d",
               }}
               className="w-full max-w-4xl bg-white/5 border border-white/10 p-6 md:p-16 rounded-3xl backdrop-blur-xl shadow-2xl transform-style-3d relative overflow-hidden"
             >
               {/* Animated Background Gradients */}
               <motion.div
-                className="absolute inset-0 bg-gradient-to-br from-primary/10 via-transparent to-purple-500/10"
+                className="absolute inset-0 bg-gradient-to-br from-primary/10 via-transparent to-secondary/10"
                 animate={{
                   opacity: [0.5, 0.8, 0.5],
                 }}
@@ -386,11 +443,11 @@ export default function Contact() {
                 }}
               />
               <motion.div
-                className="absolute bottom-0 left-0 w-96 h-96 bg-purple-500/5 rounded-full blur-3xl"
+                className="absolute bottom-0 left-0 w-96 h-96 bg-secondary/5 rounded-full blur-3xl"
                 animate={{
-                  x: [0, -30, 0],
-                  y: [0, -20, 0],
-                  scale: [1, 1.1, 1],
+                  x: [0, -20, 0],
+                  y: [0, -10, 0],
+                  scale: [1, 1.05, 1],
                 }}
                 transition={{
                   duration: 10,
@@ -435,7 +492,7 @@ export default function Contact() {
                     >
                       <CheckCircle2 className="w-20 h-20 text-green-500 mx-auto mb-6" />
                     </motion.div>
-                    <h3 className="text-3xl font-bold mb-3 bg-gradient-to-r from-green-400 to-emerald-400 bg-clip-text text-transparent">
+                    <h3 className="text-3xl font-black mb-3 bg-gradient-to-r from-green-400 to-emerald-400 bg-clip-text text-transparent">
                       Message Sent!
                     </h3>
                     <p className="text-gray-400 mb-6">

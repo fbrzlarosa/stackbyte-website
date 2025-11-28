@@ -123,12 +123,21 @@ export default function StatusBadge() {
             setShowModal(true);
           }}
           variants={{
-            hidden: { opacity: 0, y: 20 },
-            visible: { opacity: 1, y: 0 },
+            hidden: { opacity: 0, y: -20, scale: 0.8 },
+            visible: { 
+              opacity: 1, 
+              y: 0, 
+              scale: 1,
+              transition: {
+                type: "spring",
+                stiffness: 200,
+                damping: 20
+              }
+            },
           }}
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
-          className={`inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/5 border border-white/10 text-sm backdrop-blur-sm hover:bg-white/10 transition-all cursor-pointer group relative outline-none focus:ring-2 focus:ring-primary/50 ${config.glow}`}
+          className={`inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/5 border border-white/10 text-sm backdrop-blur-sm hover:bg-white/10 transition-all cursor-pointer group relative outline-none focus:ring-2 focus:ring-primary/50 ${config.glow} max-md:!opacity-100 max-md:!translate-y-0 max-md:!transform-none`}
         >
           <span className="relative flex h-2 w-2">
             {status === "online" && (
@@ -161,7 +170,7 @@ export default function StatusBadge() {
                   damping: 20,
                   delay: 1,
                 }}
-                className="fixed bottom-3.5 right-16 sm:bottom-18 sm:right-4 z-[9999] cursor-pointer group"
+                className="fixed bottom-3.5 right-16 sm:bottom-18 sm:right-4 z-[9999] cursor-pointer group max-md:!opacity-100 max-md:!translate-y-0 max-md:!transform-none"
                 onClick={() => setShowModal(true)}
               >
                 <div className="bg-[#0D1117]/80 backdrop-blur-xl border border-white/10 px-3 py-2 sm:px-4 sm:py-2.5 rounded-full shadow-2xl flex items-center gap-2 sm:gap-3 hover:bg-white/5 transition-colors ring-1 ring-white/5 hover:ring-white/20">
@@ -209,7 +218,7 @@ export default function StatusBadge() {
                 >
                   {/* Background Decoration */}
                   <div
-                    className={`absolute top-0 left-0 w-full h-1 bg-linear-to-r from-transparent via-${config.color.replace(
+                    className={`absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-${config.color.replace(
                       "bg-",
                       ""
                     )} to-transparent opacity-50`}
@@ -242,7 +251,7 @@ export default function StatusBadge() {
                       </div>
                       <div>
                         <div className="flex items-center gap-2">
-                          <h3 className="text-xl font-bold text-white tracking-tight">
+                          <h3 className="text-xl font-black text-white tracking-tight">
                             {config.headline}
                           </h3>
                           <span

@@ -53,7 +53,7 @@ export default function CodeRain() {
   return (
     <div className="absolute inset-0 overflow-hidden pointer-events-none select-none">
       {/* Gradient Mask to fade out edges */}
-      <div className="absolute inset-0 bg-linear-to-b from-background via-transparent to-background z-10" />
+      <div className="absolute inset-0 bg-gradient-to-b from-background via-transparent to-background z-10" />
 
       <div className="absolute inset-0 flex justify-between opacity-15 px-2">
         {columns.map((col, i) => (

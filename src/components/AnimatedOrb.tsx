@@ -170,7 +170,7 @@ export default function AnimatedOrb() {
         />
 
         <motion.div
-          className="absolute inset-20 border border-dotted border-purple-500/30 rounded-full"
+          className="absolute inset-20 border border-dotted border-secondary/30 rounded-full"
           style={{
             translateZ: 100,
             x: parallaxMidX,
@@ -251,7 +251,7 @@ export default function AnimatedOrb() {
           >
             {/* Internal Scan Light */}
             {/* <motion.div
-              className="absolute inset-0 bg-linear-to-tr from-transparent via-white/10 to-transparent skew-x-12 translate-x-[-200%]"
+              className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/10 to-transparent skew-x-12 translate-x-[-200%]"
               animate={{ translateX: ["-200%", "200%"] }}
               transition={{
                 duration: 3,
@@ -276,7 +276,7 @@ export default function AnimatedOrb() {
               <motion.path
                 d="M374.7,140.2c12.1,6.7,12.1,17.4,0,24.2L214,252.2c-12.1,6.6-32.1,6.6-44.2,0L9.1,164.4c-12.1-6.9-12.1-17.5,0-24.2l30.8-16.8c-3.8,5-2.1,11,5.3,15.1l129.1,70.4c9.7,5.3,25.7,5.3,35.4,0l129.1-70.4c7.4-4.1,9.1-10.1,5.3-15.1L374.7,140.2z"
                 fill="none"
-                stroke="#06B6D4"
+                stroke="var(--primary)"
                 strokeWidth="8"
                 strokeLinecap="round"
                 strokeLinejoin="round"
@@ -288,7 +288,7 @@ export default function AnimatedOrb() {
               />
               <motion.path
                 d="M374.7,140.2c12.1,6.7,12.1,17.4,0,24.2L214,252.2c-12.1,6.6-32.1,6.6-44.2,0L9.1,164.4c-12.1-6.9-12.1-17.5,0-24.2l30.8-16.8c-3.8,5-2.1,11,5.3,15.1l129.1,70.4c9.7,5.3,25.7,5.3,35.4,0l129.1-70.4c7.4-4.1,9.1-10.1,5.3-15.1L374.7,140.2z"
-                fill="#06B6D4"
+                fill="var(--primary)"
                 opacity="1"
                 style={{ shapeRendering: "geometricPrecision" }}
                 initial={{ scale: 0.8, opacity: 0 }}
@@ -309,7 +309,7 @@ export default function AnimatedOrb() {
                 <motion.path
                   d="M209.6,3.9l129.1,70.4c9.7,5.4,9.7,14,0,19.4l-129.1,70.5c-9.7,5.3-25.7,5.3-35.4,0L45.2,93.8c-9.7-5.4-9.7-14,0-19.4L174.2,3.9C183.9-1.3,199.9-1.3,209.6,3.9L209.6,3.9z"
                   fill="none"
-                  stroke="#06B6D4"
+                  stroke="var(--primary)"
                   strokeWidth="8"
                   strokeLinecap="round"
                   strokeLinejoin="round"
@@ -321,7 +321,7 @@ export default function AnimatedOrb() {
                 />
                 <motion.path
                   d="M209.6,3.9l129.1,70.4c9.7,5.4,9.7,14,0,19.4l-129.1,70.5c-9.7,5.3-25.7,5.3-35.4,0L45.2,93.8c-9.7-5.4-9.7-14,0-19.4L174.2,3.9C183.9-1.3,199.9-1.3,209.6,3.9L209.6,3.9z"
-                  fill="#06B6D4"
+                  fill="var(--primary)"
                   opacity="1"
                   style={{ shapeRendering: "geometricPrecision" }}
                   initial={{ scale: 0.8, opacity: 0 }}
@@ -344,7 +344,7 @@ export default function AnimatedOrb() {
           transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
         >
           <div
-            className="absolute top-0 left-1/2 w-4 h-4 bg-cyan-500 rounded-full shadow-[0_0_20px_#06B6D4]"
+            className="absolute top-0 left-1/2 w-4 h-4 bg-primary rounded-full shadow-[0_0_20px_var(--primary)]"
             style={{
               transform: "translateX(-50%) translateY(-50%) translateZ(200px)",
             }}

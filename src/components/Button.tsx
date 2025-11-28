@@ -17,7 +17,10 @@ interface ButtonProps extends Omit<HTMLMotionProps<"button">, "children"> {
   target?: string;
 }
 
-const Button = React.forwardRef<HTMLButtonElement | HTMLAnchorElement, ButtonProps>(
+const Button = React.forwardRef<
+  HTMLButtonElement | HTMLAnchorElement,
+  ButtonProps
+>(
   (
     {
       className,
@@ -45,7 +48,7 @@ const Button = React.forwardRef<HTMLButtonElement | HTMLAnchorElement, ButtonPro
         "bg-transparent border-2 border-white/20 text-white hover:bg-white/10 hover:border-white/40",
       ghost: "bg-transparent text-white hover:bg-white/5",
       gradient:
-        "bg-linear-to-r from-primary via-purple-400 to-primary bg-size-[200%_auto] animate-gradient text-white shadow-lg shadow-primary/25 hover:shadow-primary/40 hover:-translate-y-0.5",
+        "gradient-animated text-white shadow-lg shadow-primary/25 hover:shadow-primary/40 hover:-translate-y-0.5",
     };
 
     const sizes = {
@@ -65,15 +68,15 @@ const Button = React.forwardRef<HTMLButtonElement | HTMLAnchorElement, ButtonPro
         {isLoading && (
           <Loader2 className="w-4 h-4 mr-2 animate-spin relative z-20" />
         )}
-        
+
         {!isLoading && leftIcon && (
           <span className="relative z-20 transition-transform group-hover:-translate-x-0.5">
             {leftIcon}
           </span>
         )}
-        
+
         <span className="relative z-20">{children}</span>
-        
+
         {!isLoading && rightIcon && (
           <span className="relative z-20 transition-transform group-hover:translate-x-0.5">
             {rightIcon}
@@ -89,7 +92,7 @@ const Button = React.forwardRef<HTMLButtonElement | HTMLAnchorElement, ButtonPro
           ref={ref as React.Ref<HTMLAnchorElement>}
           className={cn(baseStyles, variants[variant], sizes[size], className)}
           whileTap={{ scale: 0.98 }}
-          {...(props as any)}
+          {...(props as HTMLMotionProps<"a">)}
         >
           {content}
         </MotionLink>

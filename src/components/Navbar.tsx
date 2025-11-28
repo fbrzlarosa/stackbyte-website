@@ -36,6 +36,7 @@ const navLinks = [
   { name: "My Story", href: "#about" },
   { name: "How I Work", href: "#process" },
   { name: "Expertise", href: "#services" },
+  { name: "Articles", href: "#posts" },
 ];
 
 export default function Navbar() {
@@ -50,16 +51,15 @@ export default function Navbar() {
   return (
     <>
       <motion.nav
-        initial={{ y: 0, opacity: 1 }}
+        initial={{ y: -100, opacity: 0 }}
         animate={{
           y: 0,
           opacity: 1,
         }}
         transition={{
-          type: "spring",
-          stiffness: 400,
-          damping: 25,
-          mass: 0.5,
+          duration: 0.8,
+          ease: "easeOut",
+          delay: 0.2,
         }}
         className={`fixed top-0 left-0 right-0 z-[9999] transition-all duration-500 ${
           isScrolled
@@ -74,7 +74,7 @@ export default function Navbar() {
             onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
             aria-label="Home"
           >
-            <Logo className="w-full h-auto" />
+            <Logo className="w-full h-auto" delay={1.2} />
           </Link>
 
           {/* Desktop Menu - Minimal & Modern */}
@@ -189,7 +189,7 @@ export default function Navbar() {
                 >
                   <Link
                     href={item.href}
-                    className="text-4xl sm:text-5xl font-black text-transparent bg-clip-text bg-linear-to-r from-white to-gray-400 hover:to-primary transition-all cursor-pointer tracking-tight"
+                    className="text-4xl sm:text-5xl font-black text-transparent bg-clip-text bg-gradient-to-r from-white to-gray-400 hover:to-primary transition-all cursor-pointer tracking-tight"
                     onClick={() => setMobileMenuOpen(false)}
                   >
                     {item.name}

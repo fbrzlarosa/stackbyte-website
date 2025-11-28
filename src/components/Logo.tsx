@@ -4,8 +4,10 @@ import { motion, Variants } from "framer-motion";
 
 export default function Logo({
   className = "w-full h-auto",
+  delay = 0,
 }: {
   className?: string;
+  delay?: number;
 }) {
   const iconVariants: Variants = {
     hidden: {
@@ -18,8 +20,8 @@ export default function Logo({
       opacity: 1,
       fill: "rgba(6, 182, 212, 1)",
       transition: {
-        pathLength: { duration: 1.5, ease: "easeInOut" },
-        fill: { delay: 1, duration: 0.5 },
+        pathLength: { duration: 1.5, ease: "easeInOut", delay },
+        fill: { delay: 1 + delay, duration: 0.5 },
       },
     },
   };
@@ -30,7 +32,7 @@ export default function Logo({
       opacity: 1,
       transition: {
         staggerChildren: 0.1,
-        delayChildren: 0.6,
+        delayChildren: 0.6 + delay,
       },
     },
   };
@@ -48,9 +50,9 @@ export default function Logo({
       fill: "rgba(255, 255, 255, 1)",
       stroke: "rgba(255, 255, 255, 0)",
       transition: {
-        pathLength: { duration: 1, ease: "easeInOut" },
-        fill: { delay: 0.8, duration: 0.4 },
-        stroke: { delay: 0.8, duration: 0.4 },
+        pathLength: { duration: 1, ease: "easeInOut", delay: 0.2 + delay }, // Slight offset from icon if desired, or just delay
+        fill: { delay: 0.8 + delay, duration: 0.4 },
+        stroke: { delay: 0.8 + delay, duration: 0.4 },
       },
     },
   };
@@ -69,7 +71,7 @@ export default function Logo({
         d="M374.7,140.2c12.1,6.7,12.1,17.4,0,24.2L214,252.2c-12.1,6.6-32.1,6.6-44.2,0L9.1,164.4c-12.1-6.9-12.1-17.5,0-24.2l30.8-16.8c-3.8,5-2.1,11,5.3,15.1l129.1,70.4c9.7,5.3,25.7,5.3,35.4,0l129.1-70.4c7.4-4.1,9.1-10.1,5.3-15.1L374.7,140.2z"
         className="fill-primary"
         variants={iconVariants}
-        stroke="#06B6D4"
+        stroke="var(--primary)"
         strokeWidth="2"
       />
       <motion.g
@@ -87,7 +89,7 @@ export default function Logo({
           d="M209.6,3.9l129.1,70.4c9.7,5.4,9.7,14,0,19.4l-129.1,70.5c-9.7,5.3-25.7,5.3-35.4,0L45.2,93.8c-9.7-5.4-9.7-14,0-19.4L174.2,3.9C183.9-1.3,199.9-1.3,209.6,3.9L209.6,3.9z"
           className="fill-primary"
           variants={iconVariants}
-          stroke="#06B6D4"
+          stroke="var(--primary)"
           strokeWidth="2"
         />
       </motion.g>

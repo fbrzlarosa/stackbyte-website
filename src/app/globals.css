@@ -1,33 +1,40 @@
 @import "tailwindcss";
 
 :root {
-  --background: #0D1117;
-  --foreground: #F3F4F6;
-  --primary: #06B6D4;
+  --background: #0d1117;
+  --foreground: #f3f4f6;
+  --primary: #06b6d4;
+  --primary-light: #22d3ee;
+  --primary-dark: #0891b2;
+  --secondary: #818cf8;
+  --secondary-light: #a5b4fc;
+  --secondary-dark: #6366f1;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-primary: var(--primary);
+  --color-primary-light: var(--primary-light);
+  --color-primary-dark: var(--primary-dark);
+  --color-secondary: var(--secondary);
+  --color-secondary-light: var(--secondary-light);
+  --color-secondary-dark: var(--secondary-dark);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
-  
-  --animate-gradient: gradient 8s ease-in-out infinite;
+
+  --animate-gradient: gradient 8s linear infinite;
   --animate-code-rain: code-rain linear infinite;
-  
+
   @keyframes gradient {
     0% {
       background-position: 0% 50%;
     }
-    50% {
-      background-position: 100% 50%;
-    }
     100% {
-      background-position: 0% 50%;
+      background-position: 300% 50%;
     }
   }
-  
+
   @keyframes code-rain {
     0% {
       transform: translateY(-100vh);
@@ -123,17 +130,23 @@ html {
 }
 
 *::-webkit-scrollbar-thumb {
-  background: linear-gradient(180deg, #06B6D4 0%, #A855F7 100%);
+  background: linear-gradient(180deg, var(--primary) 0%, var(--secondary) 100%);
   border-radius: 10px;
   border: 1px solid rgba(6, 182, 212, 0.2);
 }
 
 *::-webkit-scrollbar-thumb:hover {
-  background: linear-gradient(180deg, #06B6D4 0%, #A855F7 50%, #06B6D4 100%);
+  background: linear-gradient(
+    180deg,
+    var(--primary) 0%,
+    var(--secondary) 50%,
+    var(--primary) 100%
+  );
   box-shadow: 0 0 10px rgba(6, 182, 212, 0.5);
 }
 
-html.lenis, html.lenis body {
+html.lenis,
+html.lenis body {
   height: auto;
 }
 
@@ -160,6 +173,47 @@ html.lenis, html.lenis body {
 
 /* Hide scrollbar for IE, Edge and Firefox */
 .no-scrollbar {
-  -ms-overflow-style: none;  /* IE and Edge */
-  scrollbar-width: none;  /* Firefox */
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+}
+
+/* Animated Gradient Utility Classes */
+.gradient-animated {
+  background: linear-gradient(
+    to right,
+    var(--secondary) 0%,
+    var(--primary) 25%,
+    var(--primary-light) 75%,
+    var(--secondary) 100%
+  );
+  background-size: 300% auto;
+  animation: gradient 8s linear infinite;
+}
+
+.gradient-animated-text {
+  background: linear-gradient(
+    to right,
+    var(--secondary) 0%,
+    var(--primary) 25%,
+    var(--primary-light) 75%,
+    var(--secondary) 100%
+  );
+  background-size: 300% auto;
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+  animation: gradient 8s linear infinite;
+}
+
+.gradient-animated-glow {
+  background: linear-gradient(
+    to right,
+    rgba(129, 140, 248, 0.3) 0%,
+    rgba(6, 182, 212, 0.3) 25%,
+    rgba(34, 211, 238, 0.3) 75%,
+    rgba(129, 140, 248, 0.3) 100%
+  );
+  background-size: 300% auto;
+  animation: gradient 8s linear infinite;
 }

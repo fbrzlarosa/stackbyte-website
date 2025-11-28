@@ -23,7 +23,7 @@ export default function IubendaScript() {
           position: "bottom",
           textColor: "#F3F4F6",
           backgroundColor: "#0D1117",
-          acceptButtonColor: "#06B6D4",
+          acceptButtonColor: "var(--primary)",
           acceptButtonCaptionColor: "white",
           customizeButtonColor: "#161B22",
           customizeButtonCaptionColor: "#F3F4F6",
