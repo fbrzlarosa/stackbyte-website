@@ -41,7 +41,7 @@ export default function IubendaScript() {
       <Script
         id="iubenda-cs"
         src="https://cdn.iubenda.com/cs/iubenda_cs.js"
-        strategy="lazyOnload"
+        strategy="worker"
       />
     </>
   );

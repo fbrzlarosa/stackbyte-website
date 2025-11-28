@@ -18,7 +18,7 @@ import {
   Server,
 } from "lucide-react";
 import Link from "next/link";
-import { MouseEvent, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import ScrollingBackgroundText from "./ScrollingBackgroundText";
 
 const skills = [
@@ -176,40 +176,18 @@ function SkillCard({ skill, index, smoothProgress, isMobile }: SkillCardProps) {
   const contentParallaxX = useTransform(
     smoothProgress,
     [enterStart, exitEnd],
-    isMobile ? [0, 0] : [144, -144]
+    isMobile ? [0, 0] : [100, -100]
+  );
+
+  const titleParallaxX = useTransform(
+    smoothProgress,
+    [enterStart, exitEnd],
+    isMobile ? [0, 0] : [200, -200]
   );
 
   const mouseX = useMotionValue(0);
   const mouseY = useMotionValue(0);
-  const rafId = useRef<number | null>(null);
-  const lastUpdate = useRef(0);
   const cardRef = useRef<HTMLDivElement>(null);
-
-  const handleMouseMove = (e: MouseEvent<HTMLDivElement>) => {
-    if (isMobile) return;
-
-    const now = performance.now();
-    if (now - lastUpdate.current < 32) return;
-    lastUpdate.current = now;
-
-    const clientX = e.clientX;
-    const clientY = e.clientY;
-
-    if (rafId.current) cancelAnimationFrame(rafId.current);
-    rafId.current = requestAnimationFrame(() => {
-      if (!cardRef.current) return;
-      const rect = cardRef.current.getBoundingClientRect();
-      const xPos = clientX - rect.left - rect.width / 2;
-      const yPos = clientY - rect.top - rect.height / 2;
-      mouseX.set(xPos);
-      mouseY.set(yPos);
-    });
-  };
-
-  const handleMouseLeave = () => {
-    mouseX.set(0);
-    mouseY.set(0);
-  };
 
   const contentRotateX = useSpring(useTransform(mouseY, [-300, 300], [5, -5]), {
     stiffness: 200,
@@ -225,7 +203,7 @@ function SkillCard({ skill, index, smoothProgress, isMobile }: SkillCardProps) {
   return (
     <motion.div
       ref={cardRef}
-      className="absolute top-32 md:top-auto w-[85vw] sm:w-[90vw] max-w-6xl h-[70vh] sm:h-[70vh] md:h-[70vh] flex flex-col lg:flex-row overflow-hidden rounded-2xl sm:rounded-3xl bg-[#0D1117] border border-white/10 shadow-2xl origin-center perspective-1000 overflow-visible"
+      className="absolute top-32 md:top-auto w-[85vw] sm:w-[90vw] max-w-6xl h-[70vh] sm:h-[70vh] md:h-[70vh] flex flex-col lg:flex-row overflow-visible rounded-2xl sm:rounded-3xl bg-[#0D1117] border border-white/10 shadow-2xl origin-center perspective-1000"
       style={{
         opacity,
         scale,
@@ -238,8 +216,6 @@ function SkillCard({ skill, index, smoothProgress, isMobile }: SkillCardProps) {
         willChange: "transform, opacity",
         transformStyle: "preserve-3d",
       }}
-      onMouseMove={handleMouseMove}
-      onMouseLeave={handleMouseLeave}
     >
       {/* Left Content Side */}
       <motion.div
@@ -263,7 +239,7 @@ function SkillCard({ skill, index, smoothProgress, isMobile }: SkillCardProps) {
 
         <motion.h2
           className="text-2xl sm:text-3xl md:text-4xl lg:text-6xl xl:text-7xl font-black mb-4 sm:mb-6 md:mb-8 tracking-tighter text-white"
-          style={{ translateZ: 40, x: contentParallaxX }}
+          style={{ translateZ: 40, x: titleParallaxX }}
         >
           {skill.title}
         </motion.h2>
@@ -307,10 +283,10 @@ function SkillCard({ skill, index, smoothProgress, isMobile }: SkillCardProps) {
       </motion.div>
 
       {/* Right Visual Side */}
-      <div className="flex-1 relative hidden lg:block overflow-hidden">
+      <div className="flex-1 relative hidden lg:block overflow-visible">
         {/* Gradient Background */}
         <div
-          className={`absolute inset-0 bg-linear-to-br ${skill.gradient} opacity-20`}
+          className={`absolute inset-0 bg-linear-to-br ${skill.gradient} opacity-20 rounded-2xl sm:rounded-3xl overflow-hidden`}
         />
 
         {/* Animated Icon Container */}
@@ -413,7 +389,7 @@ export default function SkillsShowcase() {
 
   const { scrollYProgress } = useScroll({
     target: containerRef,
-    offset: ["start 50vh", "end end"],
+    offset: ["start end", "end end"],
   });
 
   const smoothProgress = useSpring(scrollYProgress, {
@@ -426,10 +402,10 @@ export default function SkillsShowcase() {
   return (
     <section
       ref={containerRef}
-      className="relative h-[600vh] bg-[#0D1117]"
+      className="relative h-[500vh] bg-[#0D1117]"
       id="services"
     >
-      <div className="sticky top-0 h-screen overflow-hidden flex items-center justify-center">
+      <div className="sticky top-0 h-screen overflow-visible flex items-center justify-center">
         {/* Navigation Dots / Menu */}
         <div className="absolute bottom-6 sm:bottom-12 left-4 sm:left-1/2 sm:-translate-x-1/2 z-50 flex items-center gap-3 sm:gap-4 bg-black/40 backdrop-blur-md px-4 sm:px-6 py-2 sm:py-3 rounded-full border border-white/10 overflow-x-auto max-w-[calc(100vw-2rem)] sm:max-w-fit no-scrollbar">
           {skills.map((skill, index) => (

@@ -348,7 +348,7 @@ export default function Hero() {
                 <div className="text-3xl font-bold mb-1 bg-linear-to-r from-white to-gray-400 bg-clip-text text-transparent">
                   {stat.value}
                 </div>
-                <div className="text-sm text-gray-500">{stat.label}</div>
+                <div className="text-sm text-gray-400">{stat.label}</div>
               </motion.div>
             ))}
           </motion.div>

@@ -72,6 +72,7 @@ export default function Navbar() {
             href="/"
             className="block w-36 sm:w-44 hover:opacity-80 transition-opacity relative z-50 cursor-pointer"
             onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+            aria-label="Home"
           >
             <Logo className="w-full h-auto" />
           </Link>
@@ -104,6 +105,7 @@ export default function Navbar() {
           <button
             className="md:hidden text-white relative z-50 p-2 cursor-pointer focus:outline-none"
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            aria-label="Toggle mobile menu"
           >
             <motion.div
               animate={mobileMenuOpen ? "open" : "closed"}

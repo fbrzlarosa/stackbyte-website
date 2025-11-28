@@ -77,7 +77,7 @@ export default function StatusBadge() {
           message:
             "I'm currently active at my desk. It's a great time to reach out for a quick response.",
           color: "bg-emerald-500",
-          textColor: "text-emerald-500",
+          textColor: "text-emerald-400",
           borderColor: "border-emerald-500/30",
           bgColor: "bg-emerald-500/10",
           glow: "shadow-[0_0_30px_-10px_rgba(16,185,129,0.3)]",
@@ -90,7 +90,7 @@ export default function StatusBadge() {
           message:
             "I'm currently away taking some time off. I'll get back to you as soon as I return.",
           color: "bg-amber-500",
-          textColor: "text-amber-500",
+          textColor: "text-amber-400",
           borderColor: "border-amber-500/30",
           bgColor: "bg-amber-500/10",
           glow: "shadow-[0_0_30px_-10px_rgba(245,158,11,0.3)]",
@@ -174,7 +174,7 @@ export default function StatusBadge() {
                     ></span>
                   </span>
                   <div className="flex flex-col">
-                    <span className="text-[8px] sm:text-[9px] text-gray-500 uppercase tracking-widest font-semibold leading-none mb-0.5">
+                    <span className="text-[8px] sm:text-[9px] text-gray-400 uppercase tracking-widest font-semibold leading-none mb-0.5">
                       Status
                     </span>
                     <span className="text-[10px] sm:text-xs font-bold text-white leading-none tracking-wide">

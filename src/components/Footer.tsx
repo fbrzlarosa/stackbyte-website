@@ -142,9 +142,9 @@ export default function Footer() {
           </div>
 
           <div>
-            <h4 className="font-bold mb-4 sm:mb-6 text-white text-sm sm:text-base">
+            <h3 className="font-bold mb-4 sm:mb-6 text-white text-sm sm:text-base">
               Explore
-            </h4>
+            </h3>
             <ul className="space-y-3 sm:space-y-4 text-sm sm:text-base text-gray-400">
               <li>
                 <Link
@@ -177,9 +177,9 @@ export default function Footer() {
           </div>
 
           <div>
-            <h4 className="font-bold mb-4 sm:mb-6 text-white text-sm sm:text-base">
+            <h3 className="font-bold mb-4 sm:mb-6 text-white text-sm sm:text-base">
               Connect
-            </h4>
+            </h3>
             <ul className="space-y-3 sm:space-y-4 text-sm sm:text-base text-gray-400">
               <li>
                 <Link
