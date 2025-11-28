@@ -13,21 +13,24 @@
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
   
-  --animate-gradient: gradient 8s linear infinite;
+  --animate-gradient: gradient 8s ease-in-out infinite;
   --animate-code-rain: code-rain linear infinite;
   
   @keyframes gradient {
-    0%, 100% {
+    0% {
       background-position: 0% 50%;
     }
     50% {
       background-position: 100% 50%;
     }
+    100% {
+      background-position: 0% 50%;
+    }
   }
   
   @keyframes code-rain {
     0% {
-      transform: translateY(-100%);
+      transform: translateY(-100vh);
       opacity: 0;
     }
     10% {
@@ -57,14 +60,11 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* Optimize animations */
-[data-animate],
-[style*="transform"],
-[style*="opacity"] {
+/* Optimize animations - Applied specifically, not globally to avoid memory overhead */
+.optimize-gpu {
   will-change: transform, opacity;
   backface-visibility: hidden;
   transform: translate3d(0, 0, 0);
-  perspective: 1000px;
 }
 
 /* Reduce layout shifts for animated elements */
@@ -151,4 +151,15 @@ html.lenis, html.lenis body {
 
 .lenis.lenis-scrolling iframe {
   pointer-events: none;
+}
+
+/* Hide scrollbar for Chrome, Safari and Opera */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+/* Hide scrollbar for IE, Edge and Firefox */
+.no-scrollbar {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
 }

@@ -10,7 +10,7 @@ import {
 } from "framer-motion";
 import { Code2, MessageSquare, PenTool, Rocket } from "lucide-react";
 import dynamic from "next/dynamic";
-import { MouseEvent, useRef } from "react";
+import { MouseEvent, useEffect, useRef, useState } from "react";
 import FullScreenSection from "./FullScreenSection";
 
 const CodeRain = dynamic(() => import("./CodeRain"), {
@@ -47,9 +47,11 @@ const steps = [
 function ContactStep({
   step,
   index,
+  isMobile,
 }: {
   step: (typeof steps)[0];
   index: number;
+  isMobile: boolean;
 }) {
   const mouseX = useMotionValue(0.5);
   const mouseY = useMotionValue(0.5);
@@ -57,18 +59,20 @@ function ContactStep({
   const rafId = useRef<number | null>(null);
   const lastUpdate = useRef(0);
 
-  const rotateX = useTransform(mouseY, [0, 1], [8, -8]);
-  const rotateY = useTransform(mouseX, [0, 1], [-8, 8]);
-  const translateZ = useTransform(mouseY, [0, 1], [0, 20]);
+  const rotateX = useTransform(mouseY, [0, 1], isMobile ? [0, 0] : [8, -8]);
+  const rotateY = useTransform(mouseX, [0, 1], isMobile ? [0, 0] : [-8, 8]);
+  const translateZ = useTransform(mouseY, [0, 1], isMobile ? [0, 0] : [0, 20]);
 
-  const mouseXPercent = useTransform(mouseX, [0, 1], ["0%", "100%"]);
-  const mouseYPercent = useTransform(mouseY, [0, 1], ["0%", "100%"]);
+  const mouseXPixels = useTransform(mouseX, [0, 1], [0, 100]);
+  const mouseYPixels = useTransform(mouseY, [0, 1], [0, 100]);
 
   function handleMouseMove({
     currentTarget,
     clientX,
     clientY,
   }: MouseEvent<HTMLDivElement>) {
+    if (isMobile) return;
+
     const now = performance.now();
     if (now - lastUpdate.current < 32) return;
     lastUpdate.current = now;
@@ -128,7 +132,7 @@ function ContactStep({
         style={{
           background: useMotionTemplate`
             radial-gradient(
-              400px circle at ${mouseXPercent} ${mouseYPercent},
+              400px circle at ${mouseXPixels}% ${mouseYPixels}%,
               rgba(6, 182, 212, 0.2),
               transparent 70%
             )
@@ -142,7 +146,7 @@ function ContactStep({
         style={{
           background: useMotionTemplate`
             radial-gradient(
-              300px circle at ${mouseXPercent} ${mouseYPercent},
+              300px circle at ${mouseXPixels}% ${mouseYPixels}%,
               rgba(6, 182, 212, 0.15),
               transparent 60%
             )
@@ -171,31 +175,68 @@ function ContactStep({
 
 export default function Process() {
   const sectionRef = useRef<HTMLElement>(null);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth < 768);
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+    return () => window.removeEventListener("resize", checkMobile);
+  }, []);
+
   const { scrollYProgress } = useScroll({
     target: sectionRef,
     offset: ["start end", "end start"],
   });
 
   const smoothProgress = useSpring(scrollYProgress, {
-    stiffness: 200,
-    damping: 30,
-    restDelta: 0.002,
-    mass: 0.2,
+    stiffness: 150,
+    damping: 25,
+    restDelta: 0.001,
+    mass: 0.1,
   });
 
-  const titleRotateX = useTransform(smoothProgress, [0, 1], [18, -18]);
-  const titleRotateY = useTransform(smoothProgress, [0, 1], [-12, 12]);
-  const titleY = useTransform(smoothProgress, [0, 1], [60, -60]);
-  const titleTranslateZ = useTransform(smoothProgress, [0, 1], [-60, 60]);
+  const titleRotateX = useTransform(
+    smoothProgress,
+    [0, 1],
+    isMobile ? [0, 0] : [18, -18]
+  );
+  const titleRotateY = useTransform(
+    smoothProgress,
+    [0, 1],
+    isMobile ? [0, 0] : [-12, 12]
+  );
+  const titleY = useTransform(
+    smoothProgress,
+    [0, 1],
+    isMobile ? [0, 0] : [60, -60]
+  );
+  const titleTranslateZ = useTransform(
+    smoothProgress,
+    [0, 1],
+    isMobile ? [0, 0] : [-60, 60]
+  );
   const titleScale = useTransform(
     smoothProgress,
     [0, 0.5, 1],
-    [0.92, 1.03, 0.92]
+    isMobile ? [1, 1, 1] : [0.92, 1.03, 0.92]
   );
 
-  const paraRotateX = useTransform(smoothProgress, [0, 1], [10, -10]);
-  const paraY = useTransform(smoothProgress, [0, 1], [30, -30]);
-  const paraTranslateZ = useTransform(smoothProgress, [0, 1], [-30, 30]);
+  const paraRotateX = useTransform(
+    smoothProgress,
+    [0, 1],
+    isMobile ? [0, 0] : [10, -10]
+  );
+  const paraY = useTransform(
+    smoothProgress,
+    [0, 1],
+    isMobile ? [0, 0] : [30, -30]
+  );
+  const paraTranslateZ = useTransform(
+    smoothProgress,
+    [0, 1],
+    isMobile ? [0, 0] : [-30, 30]
+  );
 
   return (
     <FullScreenSection
@@ -229,8 +270,12 @@ export default function Process() {
             <motion.span
               style={{
                 display: "inline-block",
-                transformStyle: "preserve-3d",
-                translateZ: useTransform(smoothProgress, [0, 1], [0, 40]),
+                transformStyle: isMobile ? "flat" : "preserve-3d",
+                translateZ: useTransform(
+                  smoothProgress,
+                  [0, 1],
+                  isMobile ? [0, 0] : [0, 40]
+                ),
                 willChange: "transform",
               }}
               className="relative z-10 text-white"
@@ -241,19 +286,27 @@ export default function Process() {
             <motion.span
               style={{
                 display: "inline-block",
-                transformStyle: "preserve-3d",
-                translateZ: useTransform(smoothProgress, [0, 1], [40, -40]),
-                rotateY: useTransform(smoothProgress, [0, 1], [-8, 8]),
+                transformStyle: isMobile ? "flat" : "preserve-3d",
+                translateZ: useTransform(
+                  smoothProgress,
+                  [0, 1],
+                  isMobile ? [0, 0] : [40, -40]
+                ),
+                rotateY: useTransform(
+                  smoothProgress,
+                  [0, 1],
+                  isMobile ? [0, 0] : [-8, 8]
+                ),
                 willChange: "transform",
               }}
               className="relative z-10 text-white"
             >
               <span className="relative inline-block">
-                <span className="text-transparent bg-clip-text bg-linear-to-r from-purple-400 via-primary to-purple-400 bg-[length:200%_auto] animate-gradient">
+                <span className="text-transparent bg-clip-text bg-linear-to-r from-purple-400 via-primary to-purple-400 bg-size-[200%_auto] animate-gradient">
                   Real results.
                 </span>
                 <motion.span
-                  className="absolute inset-0 text-transparent bg-clip-text bg-linear-to-r from-purple-400 via-primary to-purple-400 bg-[length:200%_auto] animate-gradient blur-xl opacity-60"
+                  className="absolute inset-0 text-transparent bg-clip-text bg-linear-to-r from-purple-400 via-primary to-purple-400 bg-size-[200%_auto] animate-gradient blur-xl opacity-60"
                   animate={{
                     opacity: [0.4, 0.7, 0.4],
                   }}
@@ -293,12 +346,20 @@ export default function Process() {
               viewport={{ once: true }}
               transition={{ duration: 1.5, ease: "easeInOut" }}
               className="h-full bg-primary/30"
+              style={{ width: "100%" }}
             />
           </div>
 
           {steps.map((step, index) => {
             if (step.title === "Contact") {
-              return <ContactStep key={index} step={step} index={index} />;
+              return (
+                <ContactStep
+                  key={index}
+                  step={step}
+                  index={index}
+                  isMobile={isMobile}
+                />
+              );
             }
 
             return (

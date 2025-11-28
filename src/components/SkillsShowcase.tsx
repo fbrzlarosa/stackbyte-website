@@ -18,7 +18,8 @@ import {
   Server,
 } from "lucide-react";
 import Link from "next/link";
-import { MouseEvent, useRef } from "react";
+import { MouseEvent, useEffect, useRef, useState } from "react";
+import ScrollingBackgroundText from "./ScrollingBackgroundText";
 
 const skills = [
   {
@@ -116,9 +117,10 @@ interface SkillCardProps {
   };
   index: number;
   smoothProgress: MotionValue<number>;
+  isMobile: boolean;
 }
 
-function SkillCard({ skill, index, smoothProgress }: SkillCardProps) {
+function SkillCard({ skill, index, smoothProgress, isMobile }: SkillCardProps) {
   const rangeStart = index * 0.2 + 0.1;
   const rangeEnd = (index + 1) * 0.2 + 0.1;
 
@@ -127,6 +129,7 @@ function SkillCard({ skill, index, smoothProgress }: SkillCardProps) {
   const exitStart = rangeEnd - 0.05;
   const exitEnd = rangeEnd + 0.1;
 
+  // Simplified transforms for mobile: just opacity and slight scale/y
   const opacity = useTransform(
     smoothProgress,
     [enterStart, enterEnd, exitStart, exitEnd],
@@ -136,61 +139,68 @@ function SkillCard({ skill, index, smoothProgress }: SkillCardProps) {
   const x = useTransform(
     smoothProgress,
     [enterStart, enterEnd, exitStart, exitEnd],
-    ["100%", "5%", "-5%", "-100%"]
+    isMobile ? [0, 0, 0, 0] : [1920, 96, -96, -1920]
   );
 
   const y = useTransform(
     smoothProgress,
     [enterStart, enterEnd, exitStart, exitEnd],
-    ["50%", "2%", "-2%", "-50%"]
+    isMobile ? [100, 0, 0, -100] : [540, 22, -22, -540]
   );
 
   const rotateY = useTransform(
     smoothProgress,
     [enterStart, enterEnd, exitStart, exitEnd],
-    [45, 5, -5, -45]
+    isMobile ? [0, 0, 0, 0] : [45, 5, -5, -45]
   );
 
   const rotateZ = useTransform(
     smoothProgress,
     [enterStart, enterEnd, exitStart, exitEnd],
-    [10, 2, -2, -10]
+    isMobile ? [0, 0, 0, 0] : [10, 2, -2, -10]
   );
 
   const z = useTransform(
     smoothProgress,
     [enterStart, enterEnd, exitStart, exitEnd],
-    [-1200, 0, 100, -1200]
+    isMobile ? [0, 0, 0, 0] : [-1200, 0, 100, -1200]
   );
 
   const scale = useTransform(
     smoothProgress,
     [enterStart, enterEnd, exitStart, exitEnd],
-    [0.6, 1, 1.05, 0.6]
+    isMobile ? [0.9, 1, 1, 0.9] : [0.6, 1, 1.05, 0.6]
   );
 
-  // Parallax effect for internal content based on scroll
+  // Parallax effect for internal content based on scroll - disabled on mobile
   const contentParallaxX = useTransform(
     smoothProgress,
     [enterStart, exitEnd],
-    ["15%", "-15%"]
+    isMobile ? [0, 0] : [144, -144]
   );
 
   const mouseX = useMotionValue(0);
   const mouseY = useMotionValue(0);
   const rafId = useRef<number | null>(null);
   const lastUpdate = useRef(0);
+  const cardRef = useRef<HTMLDivElement>(null);
 
   const handleMouseMove = (e: MouseEvent<HTMLDivElement>) => {
+    if (isMobile) return;
+
     const now = performance.now();
     if (now - lastUpdate.current < 32) return;
     lastUpdate.current = now;
 
+    const clientX = e.clientX;
+    const clientY = e.clientY;
+
     if (rafId.current) cancelAnimationFrame(rafId.current);
     rafId.current = requestAnimationFrame(() => {
-      const rect = e.currentTarget.getBoundingClientRect();
-      const xPos = e.clientX - rect.left - rect.width / 2;
-      const yPos = e.clientY - rect.top - rect.height / 2;
+      if (!cardRef.current) return;
+      const rect = cardRef.current.getBoundingClientRect();
+      const xPos = clientX - rect.left - rect.width / 2;
+      const yPos = clientY - rect.top - rect.height / 2;
       mouseX.set(xPos);
       mouseY.set(yPos);
     });
@@ -214,7 +224,8 @@ function SkillCard({ skill, index, smoothProgress }: SkillCardProps) {
 
   return (
     <motion.div
-      className="absolute top-32 md:top-auto w-[85vw] sm:w-[90vw] max-w-6xl h-[70vh] sm:h-[70vh] md:h-[70vh] flex flex-col lg:flex-row overflow-hidden rounded-2xl sm:rounded-3xl bg-[#0D1117] border border-white/10 shadow-2xl origin-center perspective-1000"
+      ref={cardRef}
+      className="absolute top-32 md:top-auto w-[85vw] sm:w-[90vw] max-w-6xl h-[70vh] sm:h-[70vh] md:h-[70vh] flex flex-col lg:flex-row overflow-hidden rounded-2xl sm:rounded-3xl bg-[#0D1117] border border-white/10 shadow-2xl origin-center perspective-1000 overflow-visible"
       style={{
         opacity,
         scale,
@@ -224,8 +235,8 @@ function SkillCard({ skill, index, smoothProgress }: SkillCardProps) {
         rotateZ,
         z,
         zIndex: 10 - index,
-        willChange: 'transform, opacity',
-        transformStyle: 'preserve-3d',
+        willChange: "transform, opacity",
+        transformStyle: "preserve-3d",
       }}
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
@@ -234,8 +245,8 @@ function SkillCard({ skill, index, smoothProgress }: SkillCardProps) {
       <motion.div
         className="flex-1 p-6 sm:p-8 md:p-12 lg:p-16 flex flex-col justify-center relative z-10"
         style={{
-          rotateX: contentRotateX,
-          rotateY: contentRotateY,
+          rotateX: isMobile ? 0 : contentRotateX,
+          rotateY: isMobile ? 0 : contentRotateY,
           transformStyle: "preserve-3d",
         }}
       >
@@ -391,16 +402,25 @@ function NavigationDot({ skill, index, smoothProgress }: NavigationDotProps) {
 
 export default function SkillsShowcase() {
   const containerRef = useRef<HTMLDivElement>(null);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth < 768);
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+    return () => window.removeEventListener("resize", checkMobile);
+  }, []);
+
   const { scrollYProgress } = useScroll({
     target: containerRef,
     offset: ["start 50vh", "end end"],
   });
 
   const smoothProgress = useSpring(scrollYProgress, {
-    stiffness: 200,
-    damping: 30,
-    restDelta: 0.002,
-    mass: 0.2,
+    stiffness: 150,
+    damping: 25,
+    restDelta: 0.001,
+    mass: 0.1,
   });
 
   return (
@@ -411,7 +431,7 @@ export default function SkillsShowcase() {
     >
       <div className="sticky top-0 h-screen overflow-hidden flex items-center justify-center">
         {/* Navigation Dots / Menu */}
-        <div className="absolute bottom-6 sm:bottom-12 left-4 sm:left-1/2 sm:-translate-x-1/2 z-50 flex items-center gap-4 sm:gap-4 bg-black/40 backdrop-blur-md px-3 sm:px-6 py-2 sm:py-3 rounded-full border border-white/10">
+        <div className="absolute bottom-6 sm:bottom-12 left-4 sm:left-1/2 sm:-translate-x-1/2 z-50 flex items-center gap-3 sm:gap-4 bg-black/40 backdrop-blur-md px-4 sm:px-6 py-2 sm:py-3 rounded-full border border-white/10 overflow-x-auto max-w-[calc(100vw-2rem)] sm:max-w-fit no-scrollbar">
           {skills.map((skill, index) => (
             <NavigationDot
               key={skill.id}
@@ -423,10 +443,10 @@ export default function SkillsShowcase() {
         </div>
 
         {/* Giant Background Text - UPDATED */}
-        <motion.div
+        <ScrollingBackgroundText
+          progress={smoothProgress}
           className="absolute bottom-8 sm:bottom-auto sm:-top-52 whitespace-nowrap text-[15vh] sm:text-[30vw] md:text-[40vw] font-black text-transparent stroke-text select-none pointer-events-none left-0 opacity-50 sm:opacity-100"
           style={{
-            x: useTransform(smoothProgress, [0, 1], ["10%", "-100%"]),
             WebkitTextStroke: "2px rgba(255,255,255,0.08)",
           }}
         >
@@ -438,7 +458,7 @@ export default function SkillsShowcase() {
           <span className="text-primary/10" style={{ WebkitTextStroke: "0px" }}>
             PASSION &bull;
           </span>{" "}
-        </motion.div>
+        </ScrollingBackgroundText>
 
         {/* Cards Container - UPDATED ANIMATION */}
         <div className="relative w-full h-full flex items-center justify-center perspective-distant">
@@ -448,6 +468,7 @@ export default function SkillsShowcase() {
               skill={skill}
               index={index}
               smoothProgress={smoothProgress}
+              isMobile={isMobile}
             />
           ))}
         </div>

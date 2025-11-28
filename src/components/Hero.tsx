@@ -2,6 +2,7 @@
 
 import {
   motion,
+  useMotionValue,
   useReducedMotion,
   useScroll,
   useSpring,
@@ -19,21 +20,38 @@ const AnimatedOrb = dynamic(() => import("./AnimatedOrb"), {
 
 export default function Hero() {
   const ref = useRef(null);
-  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const [isMobile, setIsMobile] = useState(false);
   const prefersReducedMotion = useReducedMotion();
+
+  // Optimized mouse movement with MotionValues instead of State
+  const mouseX = useMotionValue(0);
+  const mouseY = useMotionValue(0);
+
+  const springConfig = { damping: 25, stiffness: 150, mass: 0.1 };
+  const smoothMouseX = useSpring(mouseX, springConfig);
+  const smoothMouseXNegative = useTransform(smoothMouseX, (val) => -val);
 
   useEffect(() => {
     let timeoutId: NodeJS.Timeout;
     const checkMobile = () => {
       clearTimeout(timeoutId);
       timeoutId = setTimeout(() => {
-        setIsMobile(window.innerWidth < 768);
+        const mobile = window.innerWidth < 768;
+        setIsMobile(mobile);
+        if (mobile) {
+          mouseX.set(0);
+          mouseY.set(0);
+        }
       }, 150);
     };
 
     requestAnimationFrame(() => {
-      setIsMobile(window.innerWidth < 768);
+      const mobile = window.innerWidth < 768;
+      setIsMobile(mobile);
+      if (mobile) {
+        mouseX.set(0);
+        mouseY.set(0);
+      }
     });
 
     window.addEventListener("resize", checkMobile, { passive: true });
@@ -41,7 +59,24 @@ export default function Hero() {
       window.removeEventListener("resize", checkMobile);
       clearTimeout(timeoutId);
     };
-  }, []);
+  }, [mouseX, mouseY]);
+
+  useEffect(() => {
+    if (isMobile) return;
+
+    const handleMouseMove = (e: MouseEvent) => {
+      const { clientX, clientY } = e;
+      const x = (clientX / window.innerWidth - 0.5) * 20;
+      const y = (clientY / window.innerHeight - 0.5) * 20;
+      mouseX.set(x);
+      mouseY.set(y);
+    };
+
+    window.addEventListener("mousemove", handleMouseMove, { passive: true });
+    return () => {
+      window.removeEventListener("mousemove", handleMouseMove);
+    };
+  }, [isMobile, mouseX, mouseY]);
 
   const { scrollYProgress } = useScroll({
     target: ref,
@@ -49,10 +84,10 @@ export default function Hero() {
   });
 
   const smoothProgress = useSpring(scrollYProgress, {
-    stiffness: isMobile ? 300 : 200,
-    damping: isMobile ? 35 : 30,
-    restDelta: 0.002,
-    mass: 0.2,
+    stiffness: isMobile ? 300 : 150,
+    damping: isMobile ? 35 : 25,
+    restDelta: 0.001,
+    mass: 0.1,
   });
 
   const backgroundY = useTransform(
@@ -60,7 +95,7 @@ export default function Hero() {
     [0, 1],
     [0, isMobile ? 0 : 250]
   );
-  const textY = useTransform(scrollYProgress, [0, 1], [0, isMobile ? 0 : 400]);
+  const textY = useTransform(scrollYProgress, [0, 1], [0, isMobile ? 0 : 200]);
 
   // 3D transforms for text - reduced on mobile for better performance
   const rotateX = useTransform(
@@ -105,32 +140,6 @@ export default function Hero() {
     [0, isMobile || prefersReducedMotion ? 0 : 40]
   );
 
-  useEffect(() => {
-    let rafId: number;
-    let lastUpdate = 0;
-    const throttleMs = 32;
-
-    const handleMouseMove = (e: MouseEvent) => {
-      const now = performance.now();
-      if (now - lastUpdate < throttleMs) return;
-      lastUpdate = now;
-
-      if (rafId) cancelAnimationFrame(rafId);
-      rafId = requestAnimationFrame(() => {
-        const { clientX, clientY } = e;
-        const x = (clientX / window.innerWidth - 0.5) * 20;
-        const y = (clientY / window.innerHeight - 0.5) * 20;
-        setMousePosition({ x, y });
-      });
-    };
-
-    window.addEventListener("mousemove", handleMouseMove, { passive: true });
-    return () => {
-      window.removeEventListener("mousemove", handleMouseMove);
-      if (rafId) cancelAnimationFrame(rafId);
-    };
-  }, []);
-
   return (
     <section
       ref={ref}
@@ -140,7 +149,7 @@ export default function Hero() {
       <motion.div
         style={{
           y: backgroundY,
-          x: isMobile ? 0 : mousePosition.x,
+          x: smoothMouseX,
           willChange: "transform",
         }}
         className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] md:w-[1000px] h-[300px] md:h-[500px] bg-primary/20 rounded-full blur-[80px] md:blur-[120px] -z-10"
@@ -148,7 +157,7 @@ export default function Hero() {
       <motion.div
         style={{
           y: backgroundY,
-          x: isMobile ? 0 : -mousePosition.x,
+          x: smoothMouseXNegative,
           willChange: "transform",
         }}
         className="absolute bottom-0 right-0 w-[400px] md:w-[800px] h-[400px] md:h-[600px] bg-purple-500/10 rounded-full blur-[60px] md:blur-[100px] -z-10"
@@ -160,7 +169,7 @@ export default function Hero() {
             y: textY,
             willChange: "transform",
           }}
-          className="max-w-4xl relative z-10 max-md:!opacity-100 max-md:!translate-y-0 max-md:!transform-none"
+          className="max-w-4xl relative z-10 max-md:opacity-100! max-md:translate-y-0! max-md:transform-none!"
           initial="hidden"
           animate="visible"
           variants={{
@@ -190,7 +199,7 @@ export default function Hero() {
               perspective: isMobile ? "none" : "1500px",
               willChange: "transform",
             }}
-            className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight leading-[1.1] mb-6 md:mb-8 max-md:!opacity-100 max-md:!translate-y-0 max-md:!transform-none"
+            className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight leading-[1.1] mb-6 md:mb-8 max-md:opacity-100! max-md:translate-y-0! max-md:transform-none!"
           >
             <motion.span
               style={{
@@ -292,7 +301,7 @@ export default function Hero() {
               transformStyle: isMobile ? "flat" : "preserve-3d",
               willChange: "transform",
             }}
-            className="text-base sm:text-lg md:text-xl text-gray-400 max-w-2xl mb-8 md:mb-10 leading-relaxed max-md:!opacity-100 max-md:!translate-y-0 max-md:!transform-none"
+            className="text-base sm:text-lg md:text-xl text-gray-400 max-w-2xl mb-8 md:mb-10 leading-relaxed max-md:opacity-100! max-md:translate-y-0! max-md:transform-none!"
           >
             I&apos;m Fabrizio La Rosa — full-stack engineer, code artisan,
             digital problem solver. Turning complex problems into elegant,
@@ -304,7 +313,7 @@ export default function Hero() {
               hidden: { opacity: 0, y: 20 },
               visible: { opacity: 1, y: 0 },
             }}
-            className="flex flex-col sm:flex-row gap-3 sm:gap-4 mb-12 md:mb-16 max-md:!opacity-100 max-md:!translate-y-0"
+            className="flex flex-col sm:flex-row gap-3 sm:gap-4 mb-12 md:mb-16 max-md:opacity-100! max-md:translate-y-0!"
           >
             <Button
               href="#contact"

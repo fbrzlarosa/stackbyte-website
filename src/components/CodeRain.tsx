@@ -24,17 +24,21 @@ const codeSnippets = [
 
 export default function CodeRain() {
   const [columns, setColumns] = useState<
-    { delay: string; duration: string; opacity: number }[]
+    { delay: string; duration: string; opacity: number; snippets: string[] }[]
   >([]);
 
   useEffect(() => {
     // Use a timeout to push the state update to the next tick
     // avoiding synchronous setState warning in useEffect
     const timer = setTimeout(() => {
-      const cols = Array.from({ length: 30 }).map(() => ({
+      const isMobile = window.innerWidth < 768;
+      // Reduced number of columns for performance
+      const cols = Array.from({ length: isMobile ? 5 : 12 }).map(() => ({
         delay: `${Math.random() * -30}s`,
         duration: `${30 + Math.random() * 20}s`,
         opacity: Math.random() * 0.5 + 0.3,
+        // Pre-shuffle snippets for each column to avoid doing it in render
+        snippets: [...codeSnippets].sort(() => Math.random() - 0.5),
       }));
       setColumns(cols);
     }, 0);
@@ -60,18 +64,17 @@ export default function CodeRain() {
               animationDelay: col.delay,
               animationDuration: col.duration,
               opacity: col.opacity,
+              willChange: "transform", // Hint for browser optimization
             }}
           >
-            {/* Repeat snippets enough times to fill vertical space seamlessly */}
-            {Array.from({ length: 10 }).map((_, k) => (
+            {/* Reduced repetitions to minimize DOM nodes (was 10, now 4) */}
+            {Array.from({ length: 4 }).map((_, k) => (
               <div key={k}>
-                {[...codeSnippets, ...codeSnippets]
-                  .sort(() => Math.random() - 0.5)
-                  .map((snippet, j) => (
-                    <div key={j} className="transform rotate-0 mb-4">
-                      {snippet}
-                    </div>
-                  ))}
+                {col.snippets.map((snippet, j) => (
+                  <div key={j} className="transform rotate-0 mb-4">
+                    {snippet}
+                  </div>
+                ))}
               </div>
             ))}
           </div>

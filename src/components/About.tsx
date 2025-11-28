@@ -75,12 +75,12 @@ function ExperienceCard({
   const rotateXRaw = useTransform(mouseY, [0, 1], [8, -8]);
   const rotateYRaw = useTransform(mouseX, [0, 1], [-8, 8]);
 
-  const mouseXPercent = useTransform(mouseX, [0, 1], ["0%", "100%"]);
-  const mouseYPercent = useTransform(mouseY, [0, 1], ["0%", "100%"]);
+  const mouseXPixels = useTransform(mouseX, [0, 1], [0, 100]);
+  const mouseYPixels = useTransform(mouseY, [0, 1], [0, 100]);
 
   const spotlightBackground = useMotionTemplate`
     radial-gradient(
-      650px circle at ${mouseXPercent} ${mouseYPercent},
+      650px circle at ${mouseXPixels}% ${mouseYPixels}%,
       rgba(6, 182, 212, 0.15),
       transparent 80%
     )
@@ -88,7 +88,7 @@ function ExperienceCard({
 
   const glowBackground = useMotionTemplate`
     radial-gradient(
-      400px circle at ${mouseXPercent} ${mouseYPercent},
+      400px circle at ${mouseXPixels}% ${mouseYPixels}%,
       rgba(6, 182, 212, 0.2),
       transparent 70%
     )
@@ -234,8 +234,9 @@ export default function About() {
 
   const smoothProgress = useSpring(scrollYProgress, {
     stiffness: 100,
-    damping: 30,
+    damping: 25,
     restDelta: 0.001,
+    mass: 0.1,
   });
 
   const rotateX = useTransform(smoothProgress, [0, 1], [15, -15]);
@@ -246,7 +247,7 @@ export default function About() {
   const timelineHeight = useTransform(
     scrollYProgress,
     [0.1, 0.8],
-    ["0%", "100%"]
+    [0, 100]
   );
 
   return (
@@ -474,7 +475,7 @@ export default function About() {
 
             {/* Animated Timeline Line - Fill */}
             <motion.div
-              style={{ height: timelineHeight }}
+              style={{ height: useTransform(timelineHeight, (v) => `${v}%`) }}
               className="absolute left-8 top-0 w-px bg-gradient-to-b from-primary via-purple-500 to-primary hidden sm:block origin-top"
             />
 

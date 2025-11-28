@@ -13,14 +13,14 @@ export default function ScrollReveal({ children, className = "" }: ScrollRevealP
   
   const { scrollYProgress } = useScroll({
     target: ref,
-    offset: ["start end", "end start"]
+    offset: ["start end", "end start"],
   });
 
   const smoothProgress = useSpring(scrollYProgress, {
-    damping: 30,
-    stiffness: 200,
-    mass: 0.2,
-    restDelta: 0.002,
+    damping: 25,
+    stiffness: 150,
+    mass: 0.1,
+    restDelta: 0.001,
   });
 
   const opacity = useTransform(smoothProgress, [0, 0.15], [0, 1]);

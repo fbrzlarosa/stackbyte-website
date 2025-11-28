@@ -39,7 +39,7 @@ const FullScreenSection = forwardRef<HTMLElement, FullScreenSectionProps>(
     );
 
     // Spring smoothing
-    const springConfig = { stiffness: 200, damping: 30, mass: 1 };
+    const springConfig = { stiffness: 150, damping: 25, mass: 0.1 };
     const smoothTilt = useSpring(tiltX, springConfig);
     const smoothScale = useSpring(scale, springConfig);
     const smoothOpacity = useSpring(opacity, springConfig);

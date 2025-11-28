@@ -21,12 +21,8 @@ export default function SmoothScroll({ children }: { children: ReactNode }) {
 
     lenisRef.current = lenis;
 
-    let lastTime = 0;
     function raf(time: number) {
-      if (time - lastTime >= 16) {
-        lenis.raf(time);
-        lastTime = time;
-      }
+      lenis.raf(time);
       rafIdRef.current = requestAnimationFrame(raf);
     }
 
