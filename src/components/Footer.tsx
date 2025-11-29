@@ -249,7 +249,7 @@ export default function Footer() {
 
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center pt-8 border-t border-white/10 text-xs sm:text-sm text-gray-500 gap-6">
           <p className="text-center md:text-left w-full">
-            © 2025 Fabrizio La Rosa. All Rights Reserved.
+            © {new Date().getFullYear()} Fabrizio La Rosa. All Rights Reserved.
           </p>
 
           <div className="flex flex-col sm:flex-row items-center justify-center md:justify-end gap-4 w-full">
