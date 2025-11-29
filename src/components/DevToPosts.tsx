@@ -186,12 +186,6 @@ function PostCard({ post, index, containerRef, isMobile }: PostCardProps) {
                 <span>{post.readTime} min read</span>
               </>
             )}
-            {post.reactions && (
-              <>
-                <span className="text-white/20">•</span>
-                <span>{post.reactions} reactions</span>
-              </>
-            )}
           </motion.div>
 
           {post.tags && post.tags.length > 0 && (

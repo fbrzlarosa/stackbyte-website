@@ -52,7 +52,7 @@ const navLinks = [
   { name: "My Story", href: "#about" },
   { name: "How I Work", href: "#process" },
   { name: "Expertise", href: "#services" },
-  { name: "Articles", href: "#posts" },
+  { name: "Posts", href: "#posts" },
 ];
 
 export default function Navbar() {

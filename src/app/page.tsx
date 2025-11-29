@@ -8,7 +8,7 @@ async function getDevToPosts() {
     }
 
     const response = await fetch(
-      `https://dev.to/api/articles?username=${devToUsername}&per_page=6`,
+      `https://dev.to/api/articles?username=${devToUsername}&per_page=6&page=1`,
       {
         headers: {
           Accept: "application/json",

@@ -192,7 +192,7 @@ export default function Footer() {
                   href="#posts"
                   className="relative group hover:text-primary transition-colors cursor-pointer inline-block"
                 >
-                  Articles
+                  Posts
                   <span className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-0 h-0.5 bg-primary group-hover:w-full transition-all duration-300" />
                 </Link>
               </li>
