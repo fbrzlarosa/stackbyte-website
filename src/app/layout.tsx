@@ -1,3 +1,4 @@
+import GoogleAnalytics from "@/components/GoogleAnalytics";
 import IubendaScript from "@/components/IubendaScript";
 import SmoothScroll from "@/components/SmoothScroll";
 import type { Metadata, Viewport } from "next";
@@ -100,6 +101,7 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased bg-background text-foreground overflow-x-hidden w-full`}
       >
         <IubendaScript />
+        <GoogleAnalytics />
         <SmoothScroll>{children}</SmoothScroll>
       </body>
     </html>

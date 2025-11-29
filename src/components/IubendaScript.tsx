@@ -1,5 +1,6 @@
 "use client";
 
+import type { IubendaConfig } from "@/types/iubenda";
 import Script from "next/script";
 import { useEffect } from "react";
 
@@ -7,12 +8,10 @@ export default function IubendaScript() {
   const policyId = process.env.NEXT_PUBLIC_IUBENDA_POLICY_ID;
 
   useEffect(() => {
-    // Initialize Iubenda configuration
     if (typeof window !== "undefined" && policyId) {
-      (window as any)._iub = (window as any)._iub || [];
-      (window as any)._iub.csConfiguration = {
+      window._iub = window._iub || [];
+      const config: IubendaConfig = {
         cookiePolicyId: policyId,
-        siteId: policyId,
         lang: "en",
         storage: {
           useSiteId: true,
@@ -28,7 +27,18 @@ export default function IubendaScript() {
           customizeButtonColor: "#161B22",
           customizeButtonCaptionColor: "#F3F4F6",
         },
+        callback: {
+          onConsentGiven: () => {
+            const event = new CustomEvent("iubendaConsentGiven");
+            window.dispatchEvent(event);
+          },
+          onConsentRejected: () => {
+            const event = new CustomEvent("iubendaConsentRejected");
+            window.dispatchEvent(event);
+          },
+        },
       };
+      window._iub.csConfiguration = config;
     }
   }, [policyId]);
 
@@ -37,12 +47,15 @@ export default function IubendaScript() {
   }
 
   return (
-    <>
-      <Script
-        id="iubenda-cs"
-        src="https://cdn.iubenda.com/cs/iubenda_cs.js"
-        strategy="worker"
-      />
-    </>
+    <Script
+      id="iubenda-cs"
+      src="https://cdn.iubenda.com/cs/iubenda_cs.js"
+      strategy="afterInteractive"
+      onLoad={() => {
+        if (typeof window !== "undefined" && window._iub) {
+          window._iub.consentGiven = window._iub.consentGiven || false;
+        }
+      }}
+    />
   );
 }
