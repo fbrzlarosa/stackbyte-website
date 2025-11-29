@@ -94,23 +94,31 @@ function PostCard({ post, index, containerRef, isMobile }: PostCardProps) {
     <motion.div
       ref={cardRef}
       className="relative w-full max-w-md mx-auto"
-      style={{
-        opacity,
-        y,
-        rotateX,
-        rotateY,
-        rotateZ,
-        scale,
-        translateZ,
-        transformStyle: "preserve-3d",
-        zIndex: index === 2 ? 10 : 1,
-      }}
+      style={
+        isMobile
+          ? { zIndex: index === 2 ? 10 : 1 }
+          : {
+              opacity,
+              y,
+              rotateX,
+              rotateY,
+              rotateZ,
+              scale,
+              translateZ,
+              transformStyle: "preserve-3d",
+              zIndex: index === 2 ? 10 : 1,
+            }
+      }
+      initial={isMobile ? { opacity: 0, y: 50 } : undefined}
+      whileInView={isMobile ? { opacity: 1, y: 0 } : undefined}
+      viewport={isMobile ? { once: true, margin: "-50px" } : undefined}
+      transition={isMobile ? { duration: 0.5, delay: index * 0.1 } : undefined}
     >
       <motion.a
         href={post.url}
         target="_blank"
         rel="noopener noreferrer"
-        className="relative group bg-[#0D1117] border border-white/10 rounded-2xl overflow-hidden backdrop-blur-sm hover:border-primary/50 transition-all duration-500 block cursor-pointer w-full h-full"
+        className="relative group bg-[#0D1117] border border-white/10 rounded-2xl overflow-hidden md:backdrop-blur-sm hover:border-primary/50 transition-all duration-500 block cursor-pointer w-full h-full"
         whileHover={
           isMobile
             ? {}
@@ -143,7 +151,7 @@ function PostCard({ post, index, containerRef, isMobile }: PostCardProps) {
               transition={{ delay: staggerDelay + 0.2 }}
               className="absolute top-4 left-4 pointer-events-none"
             >
-              <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-black/60 backdrop-blur-sm border border-white/20 text-white text-xs font-bold">
+              <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-black/60 md:backdrop-blur-sm border border-white/20 text-white text-xs font-bold">
                 <TrendingUp className="w-3 h-3" />
                 dev.to
               </div>
@@ -272,7 +280,7 @@ export default function DevToPosts({ posts }: DevToPostsProps) {
 
         <div className="absolute inset-0 overflow-hidden pointer-events-none -z-10">
           <motion.div
-            className="absolute top-1/4 left-1/4 w-[500px] h-[500px] bg-primary/15 rounded-full blur-[120px]"
+            className="absolute top-1/4 left-1/4 w-[500px] h-[500px] bg-primary/15 rounded-full blur-[120px] hidden md:block"
             animate={{
               x: [0, 80, 0],
               y: [0, -30, 0],
@@ -286,7 +294,7 @@ export default function DevToPosts({ posts }: DevToPostsProps) {
             }}
           />
           <motion.div
-            className="absolute bottom-1/4 right-1/4 w-[450px] h-[450px] bg-secondary/15 rounded-full blur-[100px]"
+            className="absolute bottom-1/4 right-1/4 w-[450px] h-[450px] bg-secondary/15 rounded-full blur-[100px] hidden md:block"
             animate={{
               x: [0, -60, 0],
               y: [0, 40, 0],
@@ -301,7 +309,7 @@ export default function DevToPosts({ posts }: DevToPostsProps) {
             }}
           />
           <motion.div
-            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] h-[400px] bg-primary/10 rounded-full blur-[150px]"
+            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] h-[400px] bg-primary/10 rounded-full blur-[150px] hidden md:block"
             animate={{
               scale: [1, 1.4, 1],
               opacity: [0.1, 0.2, 0.1],
