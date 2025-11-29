@@ -15,7 +15,18 @@ let currentStatus: StatusData = {
   lastUpdated: Date.now(),
 };
 
-export const getStatus = () => currentStatus;
+const TIMEOUT_MS = 70000; // 70 seconds (slightly more than 2x tracker interval)
+
+export const getStatus = () => {
+  // If status is online but we haven't heard from the tracker in a while, assume offline
+  if (currentStatus.status === 'online' && Date.now() - currentStatus.lastUpdated > TIMEOUT_MS) {
+    return {
+      status: 'offline' as StatusType,
+      lastUpdated: currentStatus.lastUpdated
+    };
+  }
+  return currentStatus;
+};
 
 export const setStatus = (status: StatusType) => {
   currentStatus = {

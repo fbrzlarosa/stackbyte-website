@@ -14,8 +14,7 @@ const path = require('path');
 const fs = require('fs');
 require('dotenv').config({ path: path.join(__dirname, '..', '.env') });
 
-// CONFIGURAZIONE
-// Se non trovi le variabili d'ambiente, usa valori di fallback o lancia errore
+// CONFIGURATION
 const API_URL = process.env.TRACKER_API_URL || 'http://localhost:3000/api/status';
 const SECRET = process.env.STATUS_API_SECRET || 'dev_secret';
 const IDLE_THRESHOLD_SECONDS = 60; // 1 minute
@@ -40,11 +39,11 @@ async function updateStatus() {
     }
 }
 
-console.log("🚀 Tracker avviato...");
+console.log("🚀 Tracker started...");
 console.log(`Target API: ${API_URL}`);
 console.log(`Idle Threshold: ${IDLE_THRESHOLD_SECONDS}s`);
 
-// Esegui subito e poi ogni 30 secondi
+// Run immediately and then every 30 seconds
 updateStatus();
 setInterval(updateStatus, 30000);
 
