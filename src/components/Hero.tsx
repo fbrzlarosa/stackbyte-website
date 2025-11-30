@@ -1,12 +1,12 @@
 "use client";
 
 import {
-    motion,
-    useMotionValue,
-    useReducedMotion,
-    useScroll,
-    useSpring,
-    useTransform,
+  motion,
+  useMotionValue,
+  useReducedMotion,
+  useScroll,
+  useSpring,
+  useTransform,
 } from "framer-motion";
 import { ArrowRight } from "lucide-react";
 import dynamic from "next/dynamic";
@@ -15,6 +15,7 @@ import Button from "./Button";
 
 const AnimatedOrb = dynamic(() => import("./AnimatedOrb"), {
   loading: () => null,
+  ssr: false,
 });
 
 export default function Hero() {
@@ -27,8 +28,6 @@ export default function Hero() {
 
   const springConfig = { damping: 25, stiffness: 150, mass: 0.1 };
   const smoothMouseX = useSpring(mouseX, springConfig);
-  const smoothMouseXNegative = useTransform(smoothMouseX, (val) => -val);
-  const smoothMouseY = useSpring(mouseY, springConfig);
 
   useEffect(() => {
     let timeoutId: NodeJS.Timeout;
@@ -89,12 +88,7 @@ export default function Hero() {
     mass: 0.1,
   });
 
-  const backgroundY = useTransform(
-    scrollYProgress,
-    [0, 1],
-    [0, isMobile ? 0 : 250]
-  );
-  const textY = useTransform(scrollYProgress, [0, 1], [0, isMobile ? 0 : 200]);
+  const textY = useTransform(scrollYProgress, [0, 1], [0, isMobile ? 0 : -200]);
 
   const rotateX = useTransform(
     smoothProgress,
@@ -144,35 +138,10 @@ export default function Hero() {
       animate={{ opacity: 1 }}
       transition={{ duration: 0.5, delay: 0.5 }}
       ref={ref}
-      className="relative min-h-screen flex items-center pt-24 sm:pt-28 md:pt-32 pb-16 sm:pb-20 md:pb-24 overflow-hidden perspective-1000"
+      className="relative min-h-screen flex items-center pt-24 sm:pt-28 md:pt-32 pb-16 sm:pb-20 md:pb-6 perspective-1000"
     >
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 0.4 }}
-        transition={{ duration: 1.5, ease: "easeOut" }}
-        style={{
-          y: backgroundY,
-          x: smoothMouseX,
-          scale: 1.2,
-          willChange: "transform",
-        }}
-        className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] md:w-[1000px] h-[300px] md:h-[500px] bg-primary/20 rounded-full blur-[80px] md:blur-[120px] -z-10"
-      />
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 0.3 }}
-        transition={{ duration: 1.5, ease: "easeOut", delay: 0.2 }}
-        style={{
-          y: backgroundY,
-          x: smoothMouseXNegative,
-          scale: 1.2,
-          willChange: "transform",
-        }}
-        className="absolute bottom-0 right-0 w-[400px] md:w-[800px] h-[400px] md:h-[600px] bg-secondary/10 rounded-full blur-[60px] md:blur-[100px] -z-10"
-      />
-
       <div
-        className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full"
+        className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full grid lg:grid-cols-[80%_20%] gap-8 items-center"
         style={{ perspective: "1200px" }}
       >
         <motion.div
@@ -221,7 +190,7 @@ export default function Hero() {
               perspective: isMobile ? "none" : "1500px",
               willChange: "transform",
             }}
-            className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-black tracking-tight leading-[1.1] mb-6 md:mb-8 max-md:opacity-100! max-md:translate-y-0! max-md:transform-none!"
+            className="text-4xl sm:text-5xl md:text-6xl lg:text-6xl 2xl:text-8xl font-black tracking-tight leading-[1.1] mb-6 md:mb-8 max-md:opacity-100! max-md:translate-y-0! max-md:transform-none!"
           >
             <motion.span
               style={{
@@ -288,26 +257,6 @@ export default function Hero() {
               >
                 software & web.
               </motion.span>
-              <motion.span
-                className="absolute -inset-1 bg-gradient-to-r from-primary/20 via-primary-light/20 to-secondary/20 blur-xl -z-10"
-                style={{
-                  transform: isMobile ? "none" : "translateZ(-30px)",
-                  scale: useTransform(
-                    smoothProgress,
-                    [0, 1],
-                    [1, isMobile ? 1.1 : 1.2]
-                  ),
-                  willChange: "transform, opacity",
-                }}
-                animate={{
-                  opacity: [0.5, 0.9, 0.5],
-                }}
-                transition={{
-                  duration: 2,
-                  repeat: Infinity,
-                  ease: "easeInOut",
-                }}
-              />
             </span>
           </motion.h1>
 
@@ -354,7 +303,7 @@ export default function Hero() {
                 },
               },
             }}
-            className="flex flex-col sm:flex-row gap-3 sm:gap-4 mb-12 md:mb-16 max-md:opacity-100! max-md:translate-y-0!"
+            className="flex flex-col sm:flex-row gap-3 sm:gap-4 mb-12 max-md:opacity-100! max-md:translate-y-0!"
           >
             <Button
               href="#contact"
@@ -403,15 +352,17 @@ export default function Hero() {
             ))}
           </motion.div>
         </motion.div>
-      </div>
-      <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 w-full absolute top-0 right-0 h-full hidden lg:flex items-center justify-center pointer-events-none">
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 1, delay: 0.5 }}
-        >
-          <AnimatedOrb />
-        </motion.div>
+
+        <div className="hidden lg:flex items-center justify-end relative z-0">
+          <motion.div
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 1, delay: 0.5 }}
+            className="w-full h-full flex items-center justify-end"
+          >
+            <AnimatedOrb />
+          </motion.div>
+        </div>
       </div>
     </motion.section>
   );

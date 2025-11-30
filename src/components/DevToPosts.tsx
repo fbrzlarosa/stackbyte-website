@@ -294,21 +294,6 @@ export default function DevToPosts({ posts }: DevToPostsProps) {
             }}
           />
           <motion.div
-            className="absolute bottom-1/4 right-1/4 w-[450px] h-[450px] bg-secondary/15 rounded-full blur-[100px] hidden md:block"
-            animate={{
-              x: [0, -60, 0],
-              y: [0, 40, 0],
-              scale: [1, 1.2, 1],
-              opacity: [0.15, 0.25, 0.15],
-            }}
-            transition={{
-              duration: 12,
-              repeat: Infinity,
-              ease: "easeInOut",
-              delay: 1,
-            }}
-          />
-          <motion.div
             className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] h-[400px] bg-primary/10 rounded-full blur-[150px] hidden md:block"
             animate={{
               scale: [1, 1.4, 1],

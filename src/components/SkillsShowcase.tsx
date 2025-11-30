@@ -35,7 +35,7 @@ const skills = [
       "WordPress / Elementor",
     ],
     icon: Globe,
-    color: "var(--primary)",
+    color: "#06b6d4",
     gradient: "from-cyan-500 to-blue-600",
   },
   {
@@ -52,7 +52,7 @@ const skills = [
     ],
     icon: Server,
     color: "#8B5CF6",
-    gradient: "from-secondary to-secondary-dark",
+    gradient: "from-violet-500 to-purple-600",
   },
   {
     id: "web3",
@@ -271,11 +271,12 @@ function SkillCard({ skill, index, smoothProgress, isMobile }: SkillCardProps) {
         <motion.div style={{ translateZ: 35, x: contentParallaxX }}>
           <Link
             href="#contact"
-            className={`inline-flex items-center gap-2 sm:gap-3 text-base sm:text-lg font-bold hover:gap-4 sm:hover:gap-6 transition-all duration-300 bg-gradient-to-r ${skill.gradient} bg-clip-text text-transparent group w-fit cursor-pointer`}
+            className="inline-flex items-center gap-2 sm:gap-3 text-base sm:text-lg font-bold hover:gap-4 sm:hover:gap-6 transition-all duration-300 group w-fit cursor-pointer"
+            style={{ color: skill.color }}
           >
             Start Project{" "}
             <ArrowRight
-              className={`w-6 h-6 text-${skill.color}`}
+              className="w-6 h-6"
               style={{ color: skill.color }}
             />
           </Link>
@@ -417,17 +418,17 @@ export default function SkillsShowcase() {
         {/* Giant Background Text - UPDATED */}
         <ScrollingBackgroundText
           progress={smoothProgress}
-          className="absolute bottom-8 sm:bottom-auto sm:-top-52 whitespace-nowrap text-[15vh] sm:text-[30vw] md:text-[40vw] font-black text-transparent stroke-text select-none pointer-events-none left-0 opacity-50 sm:opacity-100"
+          className="absolute bottom-8 sm:bottom-auto sm:-top-0 whitespace-nowrap text-[15vh] sm:text-[30vw] md:text-[40vw] font-black text-transparent stroke-text select-none pointer-events-none left-0 opacity-50 sm:opacity-100"
           style={{
             WebkitTextStroke: "2px rgba(255,255,255,0.08)",
           }}
         >
           CODE &bull; COFFEE &bull;{" "}
-          <span className="text-primary/10" style={{ WebkitTextStroke: "0px" }}>
+          <span className="text-primary/1" style={{ WebkitTextStroke: "0px" }}>
             INNOVATION
           </span>{" "}
           &bull; CREATIVITY &bull;{" "}
-          <span className="text-primary/10" style={{ WebkitTextStroke: "0px" }}>
+          <span className="text-primary/1" style={{ WebkitTextStroke: "0px" }}>
             PASSION &bull;
           </span>{" "}
         </ScrollingBackgroundText>

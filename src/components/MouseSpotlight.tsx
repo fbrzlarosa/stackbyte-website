@@ -20,7 +20,7 @@ export default function MouseSpotlight() {
       lastUpdate = now;
 
       if (ref.current) {
-        ref.current.style.background = `radial-gradient(600px circle at ${mousePosition.current.x}px ${mousePosition.current.y}px, rgba(6, 182, 212, 0.08), transparent 40%)`;
+        ref.current.style.background = `radial-gradient(600px circle at ${mousePosition.current.x}px ${mousePosition.current.y}px, rgba(var(--primary-rgb), 0.03), rgba(var(--primary-rgb), 0) 120px)`;
       }
       rafId.current = requestAnimationFrame(updateBackground);
     };

@@ -50,7 +50,7 @@ export default function ReadyToStart() {
   }, []);
 
   useEffect(() => {
-    const newParticles = Array.from({ length: 25 }).map((_, i) => {
+    const newParticles = Array.from({ length: 15 }).map((_, i) => {
       const waypoints = 6;
       const pathX: number[] = [];
       const pathY: number[] = [];

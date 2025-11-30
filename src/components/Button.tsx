@@ -4,7 +4,7 @@ import { Loader2 } from "lucide-react";
 import Link from "next/link";
 import React from "react";
 
-const MotionLink = motion(Link);
+const MotionLink = motion.create(Link);
 
 interface ButtonProps extends Omit<HTMLMotionProps<"button">, "children"> {
   children: React.ReactNode;

@@ -57,7 +57,7 @@ export default function FloatingElements() {
       return x - Math.floor(x);
     };
 
-    return Array.from({ length: 12 }, (_, i) => {
+    return Array.from({ length: 5 }, (_, i) => {
       const baseSeed = i * 200;
       return {
         id: i,

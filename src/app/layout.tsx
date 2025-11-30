@@ -1,6 +1,8 @@
+import Background3D from "@/components/Background3D";
 import GoogleAnalytics from "@/components/GoogleAnalytics";
 import IubendaScript from "@/components/IubendaScript";
 import SmoothScroll from "@/components/SmoothScroll";
+import { BackgroundProvider } from "@/context/BackgroundContext";
 import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
@@ -100,9 +102,12 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased bg-background text-foreground overflow-x-hidden w-full`}
       >
-        <IubendaScript />
-        <GoogleAnalytics />
-        <SmoothScroll>{children}</SmoothScroll>
+        <BackgroundProvider>
+          <IubendaScript />
+          <GoogleAnalytics />
+          <Background3D />
+          <SmoothScroll>{children}</SmoothScroll>
+        </BackgroundProvider>
       </body>
     </html>
   );

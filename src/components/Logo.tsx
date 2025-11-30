@@ -1,14 +1,29 @@
 "use client";
 
 import { motion, Variants } from "framer-motion";
+import { useState } from "react";
 
 export default function Logo({
   className = "w-full h-auto",
   delay = 0,
+  onIconClick,
 }: {
   className?: string;
   delay?: number;
+  onIconClick?: (e: React.MouseEvent) => void;
 }) {
+  const [isPressed, setIsPressed] = useState(false);
+
+  const handlePressStart = () => {
+    setIsPressed(true);
+  };
+
+  const handlePressEnd = () => {
+    setTimeout(() => {
+      setIsPressed(false);
+    }, 150);
+  };
+
   const iconVariants: Variants = {
     hidden: {
       pathLength: 0,
@@ -65,33 +80,44 @@ export default function Logo({
       initial="hidden"
       animate="visible"
       whileHover="hover"
+      onMouseDown={handlePressStart}
+      onMouseUp={handlePressEnd}
+      onMouseLeave={() => setIsPressed(false)}
+      onClick={onIconClick}
     >
       {/* Icon Parts (Blue) */}
-      <motion.path
-        d="M374.7,140.2c12.1,6.7,12.1,17.4,0,24.2L214,252.2c-12.1,6.6-32.1,6.6-44.2,0L9.1,164.4c-12.1-6.9-12.1-17.5,0-24.2l30.8-16.8c-3.8,5-2.1,11,5.3,15.1l129.1,70.4c9.7,5.3,25.7,5.3,35.4,0l129.1-70.4c7.4-4.1,9.1-10.1,5.3-15.1L374.7,140.2z"
-        className="fill-primary"
-        variants={iconVariants}
-        stroke="var(--primary)"
-        strokeWidth="2"
-      />
-      <motion.g
-        variants={{
-          hidden: { y: 0 },
-          visible: { y: 0 },
-          hover: { y: 30 },
-        }}
-        transition={{
-          duration: 0.2,
-          ease: "easeInOut",
-        }}
+      <motion.g 
+        
+        className="cursor-pointer"
+        style={{ pointerEvents: "all" }}
       >
         <motion.path
-          d="M209.6,3.9l129.1,70.4c9.7,5.4,9.7,14,0,19.4l-129.1,70.5c-9.7,5.3-25.7,5.3-35.4,0L45.2,93.8c-9.7-5.4-9.7-14,0-19.4L174.2,3.9C183.9-1.3,199.9-1.3,209.6,3.9L209.6,3.9z"
+          d="M374.7,140.2c12.1,6.7,12.1,17.4,0,24.2L214,252.2c-12.1,6.6-32.1,6.6-44.2,0L9.1,164.4c-12.1-6.9-12.1-17.5,0-24.2l30.8-16.8c-3.8,5-2.1,11,5.3,15.1l129.1,70.4c9.7,5.3,25.7,5.3,35.4,0l129.1-70.4c7.4-4.1,9.1-10.1,5.3-15.1L374.7,140.2z"
           className="fill-primary"
           variants={iconVariants}
           stroke="var(--primary)"
           strokeWidth="2"
         />
+        <motion.g
+          animate={isPressed ? "pressed" : "visible"}
+          variants={{
+            hidden: { y: 0 },
+            visible: { y: 0 },
+            pressed: { y: 30 },
+          }}
+          transition={{
+            duration: 0.2,
+            ease: "easeInOut",
+          }}
+        >
+          <motion.path
+            d="M209.6,3.9l129.1,70.4c9.7,5.4,9.7,14,0,19.4l-129.1,70.5c-9.7,5.3-25.7,5.3-35.4,0L45.2,93.8c-9.7-5.4-9.7-14,0-19.4L174.2,3.9C183.9-1.3,199.9-1.3,209.6,3.9L209.6,3.9z"
+            className="fill-primary"
+            variants={iconVariants}
+            stroke="var(--primary)"
+            strokeWidth="2"
+          />
+        </motion.g>
       </motion.g>
 
       {/* Text Parts (White) */}

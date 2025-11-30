@@ -194,60 +194,6 @@ export default function Contact() {
       id="contact"
       className="py-16 sm:py-24 md:py-32 relative overflow-hidden -mt-1"
     >
-      <motion.div
-        initial={{ scale: 0.8, opacity: 0 }}
-        whileInView={{ scale: 1, opacity: 1 }}
-        viewport={{ once: true }}
-        animate={{
-          x: [0, -100, 0],
-          y: [0, -50, 0],
-          scale: [1, 1.2, 1],
-          opacity: [0.1, 0.2, 0.1],
-        }}
-        transition={{
-          scale: { duration: 1.5 },
-          opacity: { duration: 1.5 },
-          x: {
-            duration: 12,
-            repeat: Infinity,
-            ease: "easeInOut",
-          },
-          y: {
-            duration: 12,
-            repeat: Infinity,
-            ease: "easeInOut",
-          },
-        }}
-        className="absolute right-0 top-96 w-1/3 h-1/3 bg-primary/10 rounded-full blur-[100px] -z-10"
-      />
-      <motion.div
-        initial={{ scale: 0.8, opacity: 0 }}
-        whileInView={{ scale: 1, opacity: 1 }}
-        viewport={{ once: true }}
-        animate={{
-          x: [0, -40, 0],
-          y: [0, 40, 0],
-          scale: [1, 1.3, 1],
-          opacity: [0.1, 0.2, 0.1],
-        }}
-        transition={{
-          scale: { duration: 1.5, delay: 0.3 },
-          opacity: { duration: 1.5, delay: 0.3 },
-          x: {
-            duration: 15,
-            repeat: Infinity,
-            ease: "easeInOut",
-            delay: 1,
-          },
-          y: {
-            duration: 15,
-            repeat: Infinity,
-            ease: "easeInOut",
-            delay: 1,
-          },
-        }}
-        className="absolute left-0 top-1/4 w-1/4 h-1/4 bg-secondary/10 rounded-full blur-[120px] -z-10"
-      />
 
       <div className="max-w-4xl mx-auto px-6 sm:px-8">
 

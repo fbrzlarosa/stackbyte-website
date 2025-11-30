@@ -87,10 +87,10 @@ export default function CustomCursor() {
           initial="default"
           animate={isHovering ? hoveredElementType : "default"}
           variants={{
-            default: { x: -2, color: "#ffffff" },
-            link: { x: -16, color: "#ffffff" },
-            text: { x: -6, color: "#ffffff", opacity: 0.5 },
-            image: { x: -24, color: "#ffffff" },
+            default: { x: -2, color: "var(--primary)" },
+            link: { x: -16, color: "var(--primary)" },
+            text: { x: -6, color: "var(--primary)", opacity: 0.5 },
+            image: { x: -24, color: "var(--primary)" },
           }}
           transition={{ type: "spring", stiffness: 400, damping: 25 }}
         >
@@ -101,7 +101,8 @@ export default function CustomCursor() {
         <div className="relative flex items-center justify-center h-5">
           {/* I-Beam (Default/Text) */}
           <motion.div
-            className="bg-white w-[2px] rounded-full absolute"
+            className="w-[2px] rounded-full absolute"
+            style={{ backgroundColor: "var(--primary)" }}
             animate={{
               height:
                 hoveredElementType === "text"
@@ -119,7 +120,8 @@ export default function CustomCursor() {
 
           {/* Action Dot (Link) */}
           <motion.div
-            className="bg-white rounded-full absolute"
+            className="rounded-full absolute"
+            style={{ backgroundColor: "var(--primary)" }}
             animate={{
               width: hoveredElementType === "link" ? 8 : 0,
               height: hoveredElementType === "link" ? 8 : 0,
@@ -129,7 +131,8 @@ export default function CustomCursor() {
 
           {/* Scan Frame (Image) */}
           <motion.div
-            className="border border-white absolute rounded-sm"
+            className="border border-primary absolute rounded-sm"
+            style={{ borderColor: "var(--primary)" }}
             animate={{
               width: hoveredElementType === "image" ? 24 : 0,
               height: hoveredElementType === "image" ? 24 : 0,
@@ -145,10 +148,10 @@ export default function CustomCursor() {
           initial="default"
           animate={isHovering ? hoveredElementType : "default"}
           variants={{
-            default: { x: 2, color: "#ffffff" },
-            link: { x: 16, color: "#ffffff" },
-            text: { x: 6, color: "#ffffff", opacity: 0.5 },
-            image: { x: 24, color: "#ffffff" },
+            default: { x: 2, color: "var(--primary)" },
+            link: { x: 16, color: "var(--primary)" },
+            text: { x: 6, color: "var(--primary)", opacity: 0.5 },
+            image: { x: 24, color: "var(--primary)" },
           }}
           transition={{ type: "spring", stiffness: 400, damping: 25 }}
         >
@@ -162,7 +165,7 @@ export default function CustomCursor() {
           animate={{
             opacity: isHovering && hoveredElementType !== "text" ? 1 : 0,
             y: isHovering ? 0 : -5,
-            color: "#ffffff",
+            color: "var(--primary)",
           }}
         >
           {hoveredElementType === "link" && "OPEN"}

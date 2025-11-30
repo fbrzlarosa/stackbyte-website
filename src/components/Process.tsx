@@ -133,7 +133,7 @@ function ContactStep({
           background: useMotionTemplate`
             radial-gradient(
               400px circle at ${mouseXPixels}% ${mouseYPixels}%,
-              rgba(6, 182, 212, 0.2),
+              rgba(var(--primary-rgb), 0.2),
               transparent 70%
             )
           `,
@@ -147,7 +147,7 @@ function ContactStep({
           background: useMotionTemplate`
             radial-gradient(
               300px circle at ${mouseXPixels}% ${mouseYPixels}%,
-              rgba(6, 182, 212, 0.15),
+              rgba(var(--primary-rgb), 0.15),
               transparent 60%
             )
           `,

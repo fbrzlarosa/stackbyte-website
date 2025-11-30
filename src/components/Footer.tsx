@@ -1,5 +1,6 @@
 "use client";
 
+import { useBackground } from "@/context/BackgroundContext";
 import { AnimatePresence, motion } from "framer-motion";
 import {
   Code,
@@ -101,6 +102,7 @@ const openSourceLibraries = [
 export default function Footer() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isPromptModalOpen, setIsPromptModalOpen] = useState(false);
+  const { cycleTheme } = useBackground();
   return (
     <footer className="pt-12 pb-20 sm:py-16 md:py-[22px] relative">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
@@ -110,7 +112,7 @@ export default function Footer() {
               href="/"
               className="mb-4 sm:mb-6 block w-32 sm:w-44 hover:opacity-80 transition-opacity cursor-pointer"
             >
-              <Logo className="w-full h-auto" />
+              <Logo className="w-full h-auto"  onIconClick={cycleTheme}/>
             </Link>
             <p className="text-sm sm:text-base text-gray-400 max-w-sm mb-4 sm:mb-6">
               Crafting efficient, scalable, and elegant solutions in software &

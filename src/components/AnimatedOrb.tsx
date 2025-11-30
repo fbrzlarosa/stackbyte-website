@@ -1,7 +1,8 @@
 "use client";
 
+import { useBackground } from "@/context/BackgroundContext";
 import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 // Define a type for particle properties
 interface Particle {
@@ -14,9 +15,12 @@ interface Particle {
 }
 
 export default function AnimatedOrb() {
+  const containerRef = useRef<HTMLDivElement>(null);
   const mouseX = useMotionValue(0);
   const mouseY = useMotionValue(0);
   const [isHovered, setIsHovered] = useState(false);
+  const { cycleTheme, currentTheme } = useBackground();
+  const [isPressed, setIsPressed] = useState(false);
 
   // State for stable random values
   const [particles, setParticles] = useState<Particle[]>([]);
@@ -25,25 +29,21 @@ export default function AnimatedOrb() {
   const springX = useSpring(mouseX, springConfig);
   const springY = useSpring(mouseY, springConfig);
 
-  // 3D Rotation based on mouse - reduced
-  const rotateX = useTransform(springY, [-500, 500], [25, -25]);
-  const rotateY = useTransform(springX, [-500, 500], [-25, 25]);
+  // 3D Rotation based on mouse
+  const rotateX = useTransform(springY, [-1000, 1000], [25, -25]);
+  const rotateY = useTransform(springX, [-1000, 1000], [-25, 25]);
 
-  // Parallax layers with different speeds for depth effect - increased
-  const parallaxBackX = useTransform(springX, [-500, 500], [-120, 120]); // Furthest back - fastest
-  const parallaxBackY = useTransform(springY, [-500, 500], [-120, 120]);
+  const parallaxMidX = useTransform(springX, [-1000, 1000], [-80, 80]); // Middle layer
+  const parallaxMidY = useTransform(springY, [-1000, 1000], [-80, 80]);
 
-  const parallaxMidX = useTransform(springX, [-500, 500], [-80, 80]); // Middle layer
-  const parallaxMidY = useTransform(springY, [-500, 500], [-80, 80]);
+  const parallaxFrontX = useTransform(springX, [-1000, 1000], [-40, 40]); // Front layer - slowest
+  const parallaxFrontY = useTransform(springY, [-1000, 1000], [-40, 40]);
 
-  const parallaxFrontX = useTransform(springX, [-500, 500], [-40, 40]); // Front layer - slowest
-  const parallaxFrontY = useTransform(springY, [-500, 500], [-40, 40]);
+  const parallaxLogoX = useTransform(springX, [-1000, 1000], [-25, 25]); // Logo - very slow
+  const parallaxLogoY = useTransform(springY, [-1000, 1000], [-25, 25]);
 
-  const parallaxLogoX = useTransform(springX, [-500, 500], [-25, 25]); // Logo - very slow
-  const parallaxLogoY = useTransform(springY, [-500, 500], [-25, 25]);
-
-  const parallaxParticlesX = useTransform(springX, [-500, 500], [-90, 90]); // Particles parallax
-  const parallaxParticlesY = useTransform(springY, [-500, 500], [-90, 90]);
+  const parallaxParticlesX = useTransform(springX, [-1000, 1000], [-90, 90]); // Particles parallax
+  const parallaxParticlesY = useTransform(springY, [-1000, 1000], [-90, 90]);
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -80,7 +80,7 @@ export default function AnimatedOrb() {
   useEffect(() => {
     let rafId: number;
     let lastUpdate = 0;
-    const throttleMs = 32;
+    const throttleMs = 16; // Smoother 60fps
 
     const handleMouseMove = (e: MouseEvent) => {
       const now = performance.now();
@@ -89,10 +89,13 @@ export default function AnimatedOrb() {
 
       if (rafId) cancelAnimationFrame(rafId);
       rafId = requestAnimationFrame(() => {
-        const centerX = window.innerWidth / 2;
-        const centerY = window.innerHeight / 2;
-        mouseX.set(e.clientX - centerX);
-        mouseY.set(e.clientY - centerY);
+        if (containerRef.current) {
+          const rect = containerRef.current.getBoundingClientRect();
+          const centerX = rect.left + rect.width / 2;
+          const centerY = rect.top + rect.height / 2;
+          mouseX.set(e.clientX - centerX);
+          mouseY.set(e.clientY - centerY);
+        }
       });
     };
 
@@ -103,15 +106,27 @@ export default function AnimatedOrb() {
     };
   }, [mouseX, mouseY]);
 
+  const handlePressStart = () => {
+    setIsPressed(true);
+  };
+
+  const handlePressEnd = () => {
+    // Ensure it stays down for at least a short duration to be visible
+    setTimeout(() => {
+      setIsPressed(false);
+    }, 150);
+  };
+
   return (
     <motion.div
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
+      ref={containerRef}
+      
+      className="pointer-events-auto"
       style={{ willChange: 'transform' }}
     >
       {/* 3D Container */}
       <motion.div
-        className="relative w-[400px] h-[400px] transform-style-3d cursor-none"
+        className="relative w-[400px] h-[400px] transform-style-3d"
         style={{
           rotateX,
           rotateY,
@@ -121,11 +136,12 @@ export default function AnimatedOrb() {
       >
         {/* Core Glow - Parallax Background */}
         <motion.div
-          className="absolute inset-0 bg-cyan-500/20 rounded-full blur-[80px]"
+          className="absolute inset-0 bg-primary/5 rounded-full blur-[80px]"
           style={{
-            x: parallaxBackX,
-            y: parallaxBackY,
+            x: parallaxLogoX, // Move with logo to keep glow centered
+            y: parallaxLogoY,
             translateZ: -100,
+            backgroundColor: currentTheme.primary + "10", // 10 is roughly 5-6% opacity in hex
           }}
           animate={{
             scale: [0.8, 1.2, 0.8],
@@ -134,36 +150,14 @@ export default function AnimatedOrb() {
           transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
         />
 
-        {/* Outer Hexagon Grid - Rotating with Parallax */}
-        <motion.div
-          className="absolute inset-0 border border-cyan-500/10 rounded-full"
-          style={{
-            translateZ: 50,
-            rotateZ: 0,
-            x: parallaxBackX,
-            y: parallaxBackY,
-          }}
-          animate={{ rotateZ: 360 }}
-          transition={{ duration: 30, repeat: Infinity, ease: "linear" }}
-        >
-          {[...Array(6)].map((_, i) => (
-            <div
-              key={i}
-              className="absolute top-1/2 left-1/2 w-full h-px bg-cyan-500/10 -translate-x-1/2 -translate-y-1/2"
-              style={{
-                transform: `translate(-50%, -50%) rotate(${i * 30}deg)`,
-              }}
-            />
-          ))}
-        </motion.div>
-
         {/* Dynamic Rings with Parallax */}
         <motion.div
-          className="absolute inset-10 border-2 border-dashed border-cyan-500/20 rounded-full"
+          className="absolute inset-10 border-2 border-dashed border-primary/20 rounded-full opacity-50"
           style={{
             translateZ: 80,
             x: parallaxMidX,
             y: parallaxMidY,
+            borderColor: currentTheme.primary + "33", // 20% opacity
           }}
           animate={{ rotateZ: -360, scale: isHovered ? 1.1 : 1 }}
           transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
@@ -175,6 +169,7 @@ export default function AnimatedOrb() {
             translateZ: 100,
             x: parallaxMidX,
             y: parallaxMidY,
+            borderColor: currentTheme.secondary + "4D", // 30% opacity
           }}
           animate={{ rotateZ: 360, scale: isHovered ? 0.9 : 1 }}
           transition={{ duration: 15, repeat: Infinity, ease: "linear" }}
@@ -224,6 +219,9 @@ export default function AnimatedOrb() {
                   duration: p.duration * 1.2,
                   repeat: Infinity,
                   ease: "easeInOut",
+                  times: p.scaleVariations.map(
+                    (_, idx) => idx / (p.scaleVariations.length - 1)
+                  ),
                 },
                 delay: i * 0.3,
               }}
@@ -239,7 +237,6 @@ export default function AnimatedOrb() {
             x: parallaxLogoX,
             y: parallaxLogoY,
           }}
-          whileHover={{ scale: 1.1 }}
         >
           <div 
             className="relative w-48 h-48 flex items-center justify-center overflow-hidden group"
@@ -249,34 +246,34 @@ export default function AnimatedOrb() {
               WebkitFontSmoothing: "antialiased",
             }}
           >
-            {/* Internal Scan Light */}
-            {/* <motion.div
-              className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/10 to-transparent skew-x-12 translate-x-[-200%]"
-              animate={{ translateX: ["-200%", "200%"] }}
-              transition={{
-                duration: 3,
-                repeat: Infinity,
-                ease: "easeInOut",
-                delay: 1,
-              }}
-            /> */}
-
             <svg
               viewBox="-4 0 400 300"
-              className="w-40 h-40 drop-shadow-[0_0_20px_rgba(6,182,212,0.5)]"
+              className="w-40 h-40 cursor-pointer pointer-events-auto"
+              onMouseEnter={() => setIsHovered(true)}
+              onMouseLeave={() => {
+                setIsHovered(false);
+                setIsPressed(false);
+              }}
+              onMouseDown={handlePressStart}
+              onMouseUp={handlePressEnd}
+              onClick={cycleTheme}
               style={{
                 shapeRendering: "geometricPrecision",
                 imageRendering: "auto",
                 transform: "translateZ(0)",
                 backfaceVisibility: "hidden",
                 WebkitFontSmoothing: "antialiased",
+                filter: isHovered 
+                  ? `drop-shadow(0 0 2px ${currentTheme.primary}80) drop-shadow(0 0 5px ${currentTheme.primary}99)` 
+                  : `drop-shadow(0 0 20px ${currentTheme.primary}33)`,
+                transition: "filter 0.3s ease",
               }}
               preserveAspectRatio="xMidYMid meet"
             >
               <motion.path
                 d="M374.7,140.2c12.1,6.7,12.1,17.4,0,24.2L214,252.2c-12.1,6.6-32.1,6.6-44.2,0L9.1,164.4c-12.1-6.9-12.1-17.5,0-24.2l30.8-16.8c-3.8,5-2.1,11,5.3,15.1l129.1,70.4c9.7,5.3,25.7,5.3,35.4,0l129.1-70.4c7.4-4.1,9.1-10.1,5.3-15.1L374.7,140.2z"
                 fill="none"
-                stroke="var(--primary)"
+                stroke={currentTheme.primary}
                 strokeWidth="8"
                 strokeLinecap="round"
                 strokeLinejoin="round"
@@ -288,7 +285,7 @@ export default function AnimatedOrb() {
               />
               <motion.path
                 d="M374.7,140.2c12.1,6.7,12.1,17.4,0,24.2L214,252.2c-12.1,6.6-32.1,6.6-44.2,0L9.1,164.4c-12.1-6.9-12.1-17.5,0-24.2l30.8-16.8c-3.8,5-2.1,11,5.3,15.1l129.1,70.4c9.7,5.3,25.7,5.3,35.4,0l129.1-70.4c7.4-4.1,9.1-10.1,5.3-15.1L374.7,140.2z"
-                fill="var(--primary)"
+                fill={currentTheme.primary}
                 opacity="1"
                 style={{ shapeRendering: "geometricPrecision" }}
                 initial={{ scale: 0.8, opacity: 0 }}
@@ -298,18 +295,18 @@ export default function AnimatedOrb() {
 
               {/* Path 2: Top Part */}
               <motion.g
-                animate={{ y: [0, 0, 0, 30, 0] }}
+                animate={{ 
+                  y: isPressed ? 30 : 0,
+                }}
                 transition={{
-                  duration: 4,
-                  repeat: Infinity,
+                  duration: 0.2,
                   ease: "easeInOut",
-                  times: [0, 0.1, 0.9, 0.95, 1],
                 }}
               >
                 <motion.path
                   d="M209.6,3.9l129.1,70.4c9.7,5.4,9.7,14,0,19.4l-129.1,70.5c-9.7,5.3-25.7,5.3-35.4,0L45.2,93.8c-9.7-5.4-9.7-14,0-19.4L174.2,3.9C183.9-1.3,199.9-1.3,209.6,3.9L209.6,3.9z"
                   fill="none"
-                  stroke="var(--primary)"
+                  stroke={currentTheme.primary}
                   strokeWidth="8"
                   strokeLinecap="round"
                   strokeLinejoin="round"
@@ -321,7 +318,7 @@ export default function AnimatedOrb() {
                 />
                 <motion.path
                   d="M209.6,3.9l129.1,70.4c9.7,5.4,9.7,14,0,19.4l-129.1,70.5c-9.7,5.3-25.7,5.3-35.4,0L45.2,93.8c-9.7-5.4-9.7-14,0-19.4L174.2,3.9C183.9-1.3,199.9-1.3,209.6,3.9L209.6,3.9z"
-                  fill="var(--primary)"
+                  fill={currentTheme.primary}
                   opacity="1"
                   style={{ shapeRendering: "geometricPrecision" }}
                   initial={{ scale: 0.8, opacity: 0 }}
@@ -344,8 +341,10 @@ export default function AnimatedOrb() {
           transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
         >
           <div
-            className="absolute top-0 left-1/2 w-4 h-4 bg-primary rounded-full shadow-[0_0_20px_var(--primary)]"
+            className="absolute top-0 left-1/2 w-4 h-4 rounded-full"
             style={{
+              backgroundColor: currentTheme.primary,
+              boxShadow: `0 0 20px ${currentTheme.primary}`,
               transform: "translateX(-50%) translateY(-50%) translateZ(200px)",
             }}
           />

@@ -6,7 +6,7 @@ import {
   useMotionValue,
   useScroll,
   useSpring,
-  useTransform,
+  useTransform
 } from "framer-motion";
 import { Briefcase, GraduationCap, Trophy } from "lucide-react";
 import { MouseEvent, useEffect, useRef, useState } from "react";
@@ -81,7 +81,7 @@ function ExperienceCard({
   const spotlightBackground = useMotionTemplate`
     radial-gradient(
       650px circle at ${mouseXPixels}% ${mouseYPixels}%,
-      rgba(6, 182, 212, 0.15),
+      rgba(var(--primary-rgb), 0.15),
       transparent 80%
     )
   `;
@@ -89,7 +89,7 @@ function ExperienceCard({
   const glowBackground = useMotionTemplate`
     radial-gradient(
       400px circle at ${mouseXPixels}% ${mouseYPixels}%,
-      rgba(6, 182, 212, 0.2),
+      rgba(var(--primary-rgb), 0.2),
       transparent 70%
     )
   `;
@@ -221,12 +221,20 @@ function ExperienceCard({
           </div>
         </motion.div>
       </motion.div>
-
   );
 }
 
 export default function About() {
   const containerRef = useRef<HTMLElement>(null);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth < 768);
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+    return () => window.removeEventListener("resize", checkMobile);
+  }, []);
+
   const { scrollYProgress } = useScroll({
     target: containerRef,
     offset: ["start end", "end start"],
@@ -250,7 +258,7 @@ export default function About() {
     <section
       ref={containerRef}
       id="about"
-      className="py-24 z-10 sm:py-32 relative overflow-hidden bg-gradient-to-b from-[#0D1117] via-[#161B22] to-[#0D1117]"
+      className="py-24 sm:py-32 relative overflow-hidden"
     >
       {/* Noise Texture Overlay */}
       <div className="absolute inset-0 opacity-[0.015] mix-blend-overlay pointer-events-none bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzMDAiIGhlaWdodD0iMzAwIj48ZmlsdGVyIGlkPSJhIiB4PSIwIiB5PSIwIj48ZmVUdXJidWxlbmNlIGJhc2VGcmVxdWVuY3k9Ii43NSIgc3RpdGNoVGlsZXM9InN0aXRjaCIgdHlwZT0iZnJhY3RhbE5vaXNlIi8+PGZlQ29sb3JNYXRyaXggdHlwZT0ic2F0dXJhdGUiIHZhbHVlcz0iMCIvPjwvZmlsdGVyPjxwYXRoIGQ9Ik0wIDBoMzAwdjMwMEgweiIgZmlsdGVyPSJ1cmwoI2EpIiBvcGFjaXR5PSIuMDUiLz48L3N2Zz4=')] hidden md:block" />
@@ -291,21 +299,6 @@ export default function About() {
       {/* Grid Pattern Overlay - More Visible */}
       <div className="absolute inset-0 bg-[linear-gradient(rgba(6,182,212,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(6,182,212,0.03)_1px,transparent_1px)] bg-[size:50px_50px] [mask-image:radial-gradient(ellipse_80%_50%_at_50%_50%,black,transparent)]" />
 
-      {/* Spotlight Effect */}
-      <motion.div
-        className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] bg-gradient-to-b from-primary/10 to-transparent blur-3xl"
-        whileInView={{
-          opacity: [0.2, 0.4, 0.2],
-          scale: [1, 1.1, 1],
-        }}
-        viewport={{ once: false }}
-        transition={{
-          duration: 5,
-          repeat: Infinity,
-          ease: "easeInOut",
-        }}
-      />
-
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div className="grid lg:grid-cols-2 gap-16 lg:gap-24 items-start">
           {/* Story Side */}
@@ -314,11 +307,11 @@ export default function About() {
               <motion.div
                 className="relative z-10 transform-none md:transform"
                 style={{
-                  rotateX,
-                  rotateY,
-                  scale,
-                  transformStyle: "preserve-3d",
-                  perspective: "1000px",
+                  rotateX: isMobile ? 0 : rotateX,
+                  rotateY: isMobile ? 0 : rotateY,
+                  scale: isMobile ? 1 : scale,
+                  transformStyle: isMobile ? "flat" : "preserve-3d",
+                  perspective: isMobile ? "none" : "1000px",
                 }}
               >
                 
@@ -451,3 +444,5 @@ export default function About() {
     </section>
   );
 }
+
+

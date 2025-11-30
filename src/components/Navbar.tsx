@@ -23,6 +23,7 @@ import {
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
+import { useBackground } from "../context/BackgroundContext";
 import Button from "./Button";
 import Logo from "./Logo";
 
@@ -64,6 +65,7 @@ export default function Navbar() {
   const [time, setTime] = useState("");
   const [mounted, setMounted] = useState(false);
   const { scrollY } = useScroll();
+  const { cycleTheme } = useBackground();
 
   useMotionValueEvent(scrollY, "change", (latest) => {
     setIsScrolled(latest > 50);
@@ -181,11 +183,11 @@ export default function Navbar() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-full flex items-center justify-between">
           <Link
             href="/"
-            className="block w-36 sm:w-44 hover:opacity-80 transition-opacity relative z-50 cursor-pointer"
+            className="block w-36 sm:w-44 transition-opacity relative z-50 cursor-pointer"
             onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
             aria-label="Home"
           >
-            <Logo className="w-full h-auto" delay={1.2} />
+            <Logo className="w-full h-auto" delay={1.2} onIconClick={cycleTheme} />
           </Link>
 
           {/* Desktop Menu - Minimal & Modern */}
