@@ -13,7 +13,7 @@ import dynamic from "next/dynamic";
 import { useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import Button from "./Button";
-import ScrollReveal from "./ScrollReveal";
+
 
 const Turnstile = dynamic(() => import("react-turnstile"), {
   ssr: false,
@@ -250,7 +250,7 @@ export default function Contact() {
       />
 
       <div className="max-w-4xl mx-auto px-6 sm:px-8">
-        <ScrollReveal>
+
           <div className="flex flex-col items-center gap-8 md:gap-12">
             {/* Text Content */}
             <motion.div
@@ -681,7 +681,7 @@ export default function Contact() {
               </div>
             </motion.div>
           </div>
-        </ScrollReveal>
+
       </div>
     </section>
   );

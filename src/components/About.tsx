@@ -8,9 +8,9 @@ import {
   useSpring,
   useTransform,
 } from "framer-motion";
-import { Briefcase, GraduationCap, Sparkles, Trophy } from "lucide-react";
+import { Briefcase, GraduationCap, Trophy } from "lucide-react";
 import { MouseEvent, useEffect, useRef, useState } from "react";
-import ScrollReveal from "./ScrollReveal";
+
 
 const experiences = [
   {
@@ -114,7 +114,7 @@ function ExperienceCard({
   }
 
   return (
-    <ScrollReveal>
+
       <motion.div
         className="relative flex gap-6 sm:gap-10 group"
         initial={{ opacity: 0, x: 50, rotateY: 20 }}
@@ -221,7 +221,7 @@ function ExperienceCard({
           </div>
         </motion.div>
       </motion.div>
-    </ScrollReveal>
+
   );
 }
 
@@ -310,7 +310,7 @@ export default function About() {
         <div className="grid lg:grid-cols-2 gap-16 lg:gap-24 items-start">
           {/* Story Side */}
           <div className="relative">
-            <ScrollReveal>
+
               <motion.div
                 className="relative z-10 transform-none md:transform"
                 style={{
@@ -321,19 +321,7 @@ export default function About() {
                   perspective: "1000px",
                 }}
               >
-                {/* Decorative Badge */}
-                <motion.div
-                  initial={{ opacity: 0, y: -20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 border border-primary/20 mb-8"
-                >
-                  <Sparkles className="w-4 h-4 text-primary" />
-                  <span className="text-sm font-semibold text-primary">
-                    My Story
-                  </span>
-                </motion.div>
-
+                
                 <motion.h2
                   className="text-4xl sm:text-5xl  font-black mb-8 tracking-tight leading-tight"
                   initial={{ opacity: 0, y: 30 }}
@@ -438,7 +426,7 @@ export default function About() {
                   ))}
                 </motion.div>
               </motion.div>
-            </ScrollReveal>
+
           </div>
 
           {/* Timeline Side */}
