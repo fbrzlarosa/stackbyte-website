@@ -1,4 +1,3 @@
-import Background3D from "@/components/Background3D";
 import GoogleAnalytics from "@/components/GoogleAnalytics";
 import IubendaScript from "@/components/IubendaScript";
 import SmoothScroll from "@/components/SmoothScroll";
@@ -105,7 +104,6 @@ export default function RootLayout({
         <BackgroundProvider>
           <IubendaScript />
           <GoogleAnalytics />
-          <Background3D />
           <SmoothScroll>{children}</SmoothScroll>
         </BackgroundProvider>
       </body>
