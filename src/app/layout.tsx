@@ -1,5 +1,6 @@
 import GoogleAnalytics from "@/components/GoogleAnalytics";
 import IubendaScript from "@/components/IubendaScript";
+import ResourceHints from "@/components/ResourceHints";
 import SmoothScroll from "@/components/SmoothScroll";
 import { BackgroundProvider } from "@/context/BackgroundContext";
 import type { Metadata, Viewport } from "next";
@@ -11,6 +12,8 @@ const geistSans = Geist({
   subsets: ["latin"],
   display: "swap",
   preload: true,
+  fallback: ["system-ui", "arial"],
+  adjustFontFallback: true,
 });
 
 const geistMono = Geist_Mono({
@@ -18,6 +21,8 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
   display: "swap",
   preload: true,
+  fallback: ["monospace"],
+  adjustFontFallback: true,
 });
 
 export const viewport: Viewport = {
@@ -98,6 +103,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className="scroll-smooth">
+      <head>
+        <ResourceHints />
+      </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased bg-background text-foreground overflow-x-hidden w-full`}
       >

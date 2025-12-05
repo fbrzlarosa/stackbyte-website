@@ -3,6 +3,7 @@
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { Calendar, ExternalLink, TrendingUp } from "lucide-react";
+import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 
 gsap.registerPlugin(ScrollTrigger);
@@ -27,7 +28,7 @@ interface PostCardProps {
 
 function PostCard({ post, index, isMobile }: PostCardProps) {
   const cardRef = useRef<HTMLDivElement>(null);
-  const imageRef = useRef<HTMLImageElement>(null);
+  const imageRef = useRef<HTMLDivElement>(null);
   const badgeRef = useRef<HTMLDivElement>(null);
   const titleRef = useRef<HTMLHeadingElement>(null);
   const descRef = useRef<HTMLParagraphElement>(null);
@@ -94,21 +95,24 @@ function PostCard({ post, index, isMobile }: PostCardProps) {
       });
 
       if (imageRef.current) {
-        gsap.fromTo(
-          imageRef.current,
-          { scale: 1.1, opacity: 0.8 },
-          {
-            scale: 1,
-            opacity: 1,
-            duration: 0.6,
-            delay: staggerDelay + 0.1,
-            scrollTrigger: {
-              trigger: imageRef.current,
-              start: "top bottom-=50px",
-              toggleActions: "play none none none",
-            },
-          }
-        );
+        const imgElement = imageRef.current.querySelector("img");
+        if (imgElement) {
+          gsap.fromTo(
+            imgElement,
+            { scale: 1.1, opacity: 0.8 },
+            {
+              scale: 1,
+              opacity: 1,
+              duration: 0.6,
+              delay: staggerDelay + 0.1,
+              scrollTrigger: {
+                trigger: imageRef.current,
+                start: "top bottom-=50px",
+                toggleActions: "play none none none",
+              },
+            }
+          );
+        }
       }
 
       if (badgeRef.current) {
@@ -256,17 +260,23 @@ function PostCard({ post, index, isMobile }: PostCardProps) {
         className="relative group bg-[#0D1117] border border-white/10 rounded-2xl overflow-hidden md:backdrop-blur-sm hover:border-primary/50 transition-all duration-300 block cursor-pointer w-full h-full"
         style={{ transformStyle: "preserve-3d" }}
       >
-        <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-secondary/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
+        <div className="absolute inset-0 bg-linear-to-br from-primary/5 via-transparent to-secondary/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
 
         {post.image && (
           <div className="relative h-48 overflow-hidden pointer-events-none">
-            <img
-              ref={imageRef}
-              src={post.image}
-              alt={post.title}
-              className="w-full h-full object-cover pointer-events-none"
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-[#0D1117] to-transparent pointer-events-none" />
+            <div ref={imageRef} className="relative w-full h-full">
+              <Image
+                src={post.image}
+                alt={post.title}
+                fill
+                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                className="object-cover pointer-events-none"
+                loading={index < 3 ? "eager" : "lazy"}
+                quality={85}
+                fetchPriority={index < 3 ? "high" : "auto"}
+              />
+            </div>
+            <div className="absolute inset-0 bg-linear-to-t from-[#0D1117] to-transparent pointer-events-none" />
             <div
               ref={badgeRef}
               className="absolute top-4 left-4 pointer-events-none"

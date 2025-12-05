@@ -50,7 +50,7 @@ export default function IubendaScript() {
     <Script
       id="iubenda-cs"
       src="https://cdn.iubenda.com/cs/iubenda_cs.js"
-      strategy="afterInteractive"
+      strategy="lazyOnload"
       onLoad={() => {
         if (typeof window !== "undefined" && window._iub) {
           window._iub.consentGiven = window._iub.consentGiven || false;

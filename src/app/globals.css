@@ -88,14 +88,8 @@ body {
 
 /* Optimize animations - Applied specifically, not globally to avoid memory overhead */
 .optimize-gpu {
-  will-change: transform, opacity;
   backface-visibility: hidden;
   transform: translate3d(0, 0, 0);
-}
-
-/* Reduce layout shifts for animated elements */
-.motion-safe\:will-change-transform {
-  will-change: transform;
 }
 
 /* Optimize rendering for off-screen content */
@@ -115,21 +109,14 @@ html {
 .motion-div,
 [class*="motion"],
 [data-framer-component] {
-  transform: translate3d(0, 0, 0);
-  will-change: transform;
-}
-
-/* Reduce layout thrashing for animated elements */
-.motion-div,
-[class*="motion"] {
   backface-visibility: hidden;
-  transform: translateZ(0);
+  transform: translate3d(0, 0, 0);
 }
 
 /* Custom Scrollbar Styles - Global */
 * {
   scrollbar-width: thin;
-  scrollbar-color: rgba(var(--primary-rgb), 0.5) rgba(var(--primary-rgb), 0.1);
+  scrollbar-color: rgba(6, 182, 212, 0.5) rgba(6, 182, 212, 0.1);
 }
 
 *::-webkit-scrollbar {
@@ -138,14 +125,14 @@ html {
 }
 
 *::-webkit-scrollbar-track {
-  background: rgba(var(--primary-rgb), 0.1);
+  background: rgba(6, 182, 212, 0.1);
   border-radius: 10px;
 }
 
 *::-webkit-scrollbar-thumb {
   background: linear-gradient(180deg, var(--primary) 0%, var(--secondary) 100%);
   border-radius: 10px;
-  border: 1px solid rgba(var(--primary-rgb), 0.2);
+  border: 1px solid rgba(6, 182, 212, 0.2);
 }
 
 *::-webkit-scrollbar-thumb:hover {
@@ -155,7 +142,7 @@ html {
     var(--secondary) 50%,
     var(--primary) 100%
   );
-  box-shadow: 0 0 10px rgba(var(--primary-rgb), 0.5);
+  box-shadow: 0 0 10px rgba(6, 182, 212, 0.5);
 }
 
 html.lenis,
@@ -222,10 +209,10 @@ html.lenis body {
 .gradient-animated-glow {
   background: linear-gradient(
     to right,
-    rgba(var(--secondary-rgb), 0.3) 0%,
-    rgba(var(--primary-rgb), 0.3) 25%,
-    rgba(var(--primary-light-rgb), 0.3) 75%,
-    rgba(var(--secondary-rgb), 0.3) 100%
+    rgba(129, 140, 248, 0.3) 0%,
+    rgba(6, 182, 212, 0.3) 25%,
+    rgba(34, 211, 238, 0.3) 75%,
+    rgba(129, 140, 248, 0.3) 100%
   );
   background-size: 300% auto;
   animation: gradient 8s linear infinite;

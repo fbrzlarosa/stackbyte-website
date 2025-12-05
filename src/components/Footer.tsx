@@ -1,6 +1,7 @@
 "use client";
 
 import { useBackground } from "@/context/BackgroundContext";
+import { gsap } from "gsap";
 import {
   Code,
   ExternalLink,
@@ -13,7 +14,6 @@ import {
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
-import { gsap } from "gsap";
 import Logo from "./Logo";
 
 function DevToIcon() {
@@ -103,7 +103,7 @@ export default function Footer() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isPromptModalOpen, setIsPromptModalOpen] = useState(false);
   const { cycleTheme } = useBackground();
-  
+
   const modalOverlayRef = useRef<HTMLDivElement>(null);
   const modalContentRef = useRef<HTMLDivElement>(null);
   const promptModalOverlayRef = useRef<HTMLDivElement>(null);
@@ -125,7 +125,11 @@ export default function Footer() {
   }, [isModalOpen]);
 
   useEffect(() => {
-    if (isPromptModalOpen && promptModalOverlayRef.current && promptModalContentRef.current) {
+    if (
+      isPromptModalOpen &&
+      promptModalOverlayRef.current &&
+      promptModalContentRef.current
+    ) {
       gsap.fromTo(
         promptModalOverlayRef.current,
         { opacity: 0 },
@@ -178,6 +182,7 @@ export default function Footer() {
           <div className="col-span-2 md:col-span-2">
             <Link
               href="/"
+              aria-label="Go to home"
               className="mb-4 sm:mb-6 block w-32 sm:w-44 hover:opacity-80 transition-opacity cursor-pointer"
             >
               <Logo className="w-full h-auto" onIconClick={cycleTheme} />
@@ -316,7 +321,7 @@ export default function Footer() {
           </div>
         </div>
 
-        <div className="flex flex-col md:flex-row justify-between items-start md:items-center pt-8 border-t border-white/10 text-xs sm:text-sm text-gray-500 gap-6">
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-center pt-8 border-t border-white/10 text-xs sm:text-sm text-gray-300 gap-6">
           <p className="text-center md:text-left w-full">
             © {new Date().getFullYear()} Fabrizio La Rosa. All Rights Reserved.
           </p>
@@ -353,7 +358,7 @@ export default function Footer() {
               }`}
               target="_blank"
               rel="noopener noreferrer"
-              className="relative group hover:text-primary transition-colors cursor-pointer inline-block text-xs sm:text-sm text-gray-500"
+              className="relative group hover:text-primary transition-colors cursor-pointer inline-block text-xs sm:text-sm text-gray-300"
             >
               Privacy Policy
               <span className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-0 h-0.5 bg-primary group-hover:w-full transition-all duration-300" />
@@ -362,7 +367,8 @@ export default function Footer() {
         </div>
       </div>
 
-      {typeof window !== "undefined" && isModalOpen &&
+      {typeof window !== "undefined" &&
+        isModalOpen &&
         createPortal(
           <div
             ref={modalOverlayRef}
@@ -501,7 +507,8 @@ export default function Footer() {
           document.body
         )}
 
-      {typeof window !== "undefined" && isPromptModalOpen &&
+      {typeof window !== "undefined" &&
+        isPromptModalOpen &&
         createPortal(
           <div
             ref={promptModalOverlayRef}
@@ -547,11 +554,11 @@ export default function Footer() {
                           How This Site Was Built
                         </h3>
                         <p className="text-gray-300 leading-relaxed mb-4">
-                          Here&apos;s the thing - this entire website was created
-                          100% by AI, but don&apos;t worry, I was watching
-                          closely the whole time! Think of me as the director and
-                          the AI as the talented crew bringing the vision to
-                          life.
+                          Here&apos;s the thing - this entire website was
+                          created 100% by AI, but don&apos;t worry, I was
+                          watching closely the whole time! Think of me as the
+                          director and the AI as the talented crew bringing the
+                          vision to life.
                         </p>
                         <p className="text-gray-300 leading-relaxed mb-4">
                           Every line of code, every design decision, and every
@@ -574,8 +581,8 @@ export default function Footer() {
                           It&apos;s pretty wild what&apos;s possible when you
                           combine human creativity with AI capabilities. This
                           site is a testament to that collaboration - showing
-                          that with the right prompts, a clear vision, and a good
-                          vibe, you can build something truly special.
+                          that with the right prompts, a clear vision, and a
+                          good vibe, you can build something truly special.
                         </p>
                       </div>
                     </div>
