@@ -53,7 +53,8 @@
   }
 
   @keyframes gradient-shift {
-    0%, 100% {
+    0%,
+    100% {
       background-position: 0% 50%;
     }
     50% {
@@ -115,12 +116,6 @@ html {
 [class*="motion"],
 [data-framer-component] {
   transform: translate3d(0, 0, 0);
-  will-change: transform;
-}
-
-/* Optimize framer-motion components */
-[data-framer-component] {
-  contain: layout style paint;
   will-change: transform;
 }
 

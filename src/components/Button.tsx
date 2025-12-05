@@ -1,12 +1,14 @@
 import { cn } from "@/lib/utils";
-import { HTMLMotionProps, motion } from "framer-motion";
+import { gsap } from "gsap";
 import { Loader2 } from "lucide-react";
 import Link from "next/link";
-import React from "react";
+import React, { useRef } from "react";
 
-const MotionLink = motion.create(Link);
-
-interface ButtonProps extends Omit<HTMLMotionProps<"button">, "children"> {
+interface ButtonProps
+  extends Omit<
+    React.HTMLAttributes<HTMLButtonElement | HTMLAnchorElement>,
+    "children"
+  > {
   children: React.ReactNode;
   variant?: "primary" | "secondary" | "outline" | "ghost" | "gradient";
   size?: "sm" | "md" | "lg" | "xl";
@@ -15,6 +17,8 @@ interface ButtonProps extends Omit<HTMLMotionProps<"button">, "children"> {
   rightIcon?: React.ReactNode;
   href?: string;
   target?: string;
+  disabled?: boolean;
+  type?: "button" | "submit" | "reset";
 }
 
 const Button = React.forwardRef<
@@ -32,10 +36,16 @@ const Button = React.forwardRef<
       children,
       disabled,
       href,
+      type,
       ...props
     },
     ref
   ) => {
+    const internalRef = useRef<HTMLButtonElement | HTMLAnchorElement>(null);
+    const elementRef =
+      (ref as React.RefObject<HTMLButtonElement | HTMLAnchorElement>) ||
+      internalRef;
+
     const baseStyles =
       "inline-flex items-center justify-center rounded-full font-bold transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary disabled:opacity-50 disabled:cursor-not-allowed relative overflow-hidden group cursor-pointer";
 
@@ -58,9 +68,28 @@ const Button = React.forwardRef<
       xl: "text-lg px-10 py-5 gap-3",
     };
 
+    const handleMouseDown = () => {
+      if (elementRef.current) {
+        gsap.to(elementRef.current, {
+          scale: 0.98,
+          duration: 0.1,
+          ease: "power2.out",
+        });
+      }
+    };
+
+    const handleMouseUp = () => {
+      if (elementRef.current) {
+        gsap.to(elementRef.current, {
+          scale: 1,
+          duration: 0.2,
+          ease: "power2.out",
+        });
+      }
+    };
+
     const content = (
       <>
-        {/* Gradient overlay for primary/gradient buttons */}
         {(variant === "primary" || variant === "gradient") && (
           <div className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/20 to-white/0 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700 ease-in-out z-10" />
         )}
@@ -87,28 +116,33 @@ const Button = React.forwardRef<
 
     if (href) {
       return (
-        <MotionLink
+        <Link
           href={href}
-          ref={ref as React.Ref<HTMLAnchorElement>}
+          ref={elementRef as React.Ref<HTMLAnchorElement>}
           className={cn(baseStyles, variants[variant], sizes[size], className)}
-          whileTap={{ scale: 0.98 }}
-          {...(props as HTMLMotionProps<"a">)}
+          onMouseDown={handleMouseDown}
+          onMouseUp={handleMouseUp}
+          onMouseLeave={handleMouseUp}
+          {...(props as React.AnchorHTMLAttributes<HTMLAnchorElement>)}
         >
           {content}
-        </MotionLink>
+        </Link>
       );
     }
 
     return (
-      <motion.button
-        ref={ref as React.Ref<HTMLButtonElement>}
+      <button
+        ref={elementRef as React.Ref<HTMLButtonElement>}
+        type={type || "button"}
         className={cn(baseStyles, variants[variant], sizes[size], className)}
-        whileTap={{ scale: 0.98 }}
+        onMouseDown={handleMouseDown}
+        onMouseUp={handleMouseUp}
+        onMouseLeave={handleMouseUp}
         disabled={isLoading || disabled}
-        {...props}
+        {...(props as React.ButtonHTMLAttributes<HTMLButtonElement>)}
       >
         {content}
-      </motion.button>
+      </button>
     );
   }
 );

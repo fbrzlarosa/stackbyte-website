@@ -1,17 +1,13 @@
 "use client";
 
-import {
-  motion,
-  useMotionTemplate,
-  useMotionValue,
-  useScroll,
-  useSpring,
-  useTransform,
-} from "framer-motion";
+import { gsap } from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { Code2, MessageSquare, PenTool, Rocket } from "lucide-react";
 import dynamic from "next/dynamic";
 import { MouseEvent, useEffect, useRef, useState } from "react";
 import FullScreenSection from "./FullScreenSection";
+
+gsap.registerPlugin(ScrollTrigger);
 
 const CodeRain = dynamic(() => import("./CodeRain"), {
   loading: () => null,
@@ -53,25 +49,84 @@ function ContactStep({
   index: number;
   isMobile: boolean;
 }) {
-  const mouseX = useMotionValue(0.5);
-  const mouseY = useMotionValue(0.5);
   const cardRef = useRef<HTMLDivElement>(null);
+  const spotlightRef = useRef<HTMLDivElement>(null);
+  const glowRef = useRef<HTMLDivElement>(null);
   const rafId = useRef<number | null>(null);
   const lastUpdate = useRef(0);
+  const mousePos = useRef({ x: 0.5, y: 0.5 });
 
-  const rotateX = useTransform(mouseY, [0, 1], isMobile ? [0, 0] : [8, -8]);
-  const rotateY = useTransform(mouseX, [0, 1], isMobile ? [0, 0] : [-8, 8]);
-  const translateZ = useTransform(mouseY, [0, 1], isMobile ? [0, 0] : [0, 20]);
+  useEffect(() => {
+    if (!cardRef.current || isMobile) return;
 
-  const mouseXPixels = useTransform(mouseX, [0, 1], [0, 100]);
-  const mouseYPixels = useTransform(mouseY, [0, 1], [0, 100]);
+    const ctx = gsap.context(() => {
+      gsap.set(cardRef.current, {
+        opacity: 0,
+        y: 50,
+        rotateY: 30,
+      });
+
+      ScrollTrigger.create({
+        trigger: cardRef.current,
+        start: "top bottom-=100px",
+        onEnter: () => {
+          gsap.to(cardRef.current, {
+            opacity: 1,
+            y: 0,
+            rotateY: 0,
+            duration: 0.8,
+            delay: index * 0.2,
+            ease: "back.out(1.7)",
+          });
+        },
+      });
+
+      const card = cardRef.current;
+      if (!card) return;
+
+      const handleMouseEnter = () => {
+        gsap.to(card, {
+          scale: 1.05,
+          duration: 0.3,
+          ease: "power2.out",
+        });
+        if (spotlightRef.current) {
+          gsap.to(spotlightRef.current, { opacity: 1, duration: 0.3 });
+        }
+        if (glowRef.current) {
+          gsap.to(glowRef.current, { opacity: 1, duration: 0.3 });
+        }
+      };
+
+      const handleMouseLeave = () => {
+        gsap.to(card, {
+          scale: 1,
+          rotateX: 0,
+          rotateY: 0,
+          duration: 0.3,
+          ease: "power2.out",
+        });
+        if (spotlightRef.current) {
+          gsap.to(spotlightRef.current, { opacity: 0, duration: 0.3 });
+        }
+        if (glowRef.current) {
+          gsap.to(glowRef.current, { opacity: 0, duration: 0.3 });
+        }
+      };
+
+      card.addEventListener("mouseenter", handleMouseEnter);
+      card.addEventListener("mouseleave", handleMouseLeave);
+    }, cardRef);
+
+    return () => ctx.revert();
+  }, [index, isMobile]);
 
   function handleMouseMove({
     currentTarget,
     clientX,
     clientY,
   }: MouseEvent<HTMLDivElement>) {
-    if (isMobile) return;
+    if (isMobile || !cardRef.current) return;
 
     const now = performance.now();
     if (now - lastUpdate.current < 32) return;
@@ -83,14 +138,43 @@ function ContactStep({
         currentTarget.getBoundingClientRect();
       const x = (clientX - left) / width;
       const y = (clientY - top) / height;
-      mouseX.set(x);
-      mouseY.set(y);
+
+      mousePos.current = { x, y };
+
+      if (cardRef.current) {
+        const rotateX = (y - 0.5) * -16;
+        const rotateY = (x - 0.5) * 16;
+
+        gsap.to(cardRef.current, {
+          rotateX,
+          rotateY,
+          translateZ: (y - 0.5) * 40,
+          duration: 0.3,
+          ease: "power2.out",
+          transformPerspective: 1000,
+        });
+      }
+
+      if (spotlightRef.current) {
+        gsap.set(spotlightRef.current, {
+          background: `radial-gradient(400px circle at ${x * 100}% ${
+            y * 100
+          }%, rgba(var(--primary-rgb), 0.2), transparent 70%)`,
+        });
+      }
+
+      if (glowRef.current) {
+        gsap.set(glowRef.current, {
+          background: `radial-gradient(300px circle at ${x * 100}% ${
+            y * 100
+          }%, rgba(var(--primary-rgb), 0.15), transparent 60%)`,
+        });
+      }
     });
   }
 
   function handleMouseLeave() {
-    mouseX.set(0.5);
-    mouseY.set(0.5);
+    mousePos.current = { x: 0.5, y: 0.5 };
   }
 
   function handleClick() {
@@ -101,58 +185,26 @@ function ContactStep({
   }
 
   return (
-    <motion.div
+    <div
       ref={cardRef}
-      initial={{ opacity: 0, y: 50, rotateY: 30 }}
-      whileInView={{ opacity: 1, y: 0, rotateY: 0 }}
-      viewport={{ once: true }}
-      transition={{
-        delay: index * 0.2,
-        duration: 0.8,
-        type: "spring",
-        bounce: 0.4,
-      }}
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
       onClick={handleClick}
       style={{
-        rotateX,
-        rotateY,
-        translateZ,
         transformStyle: "preserve-3d",
         perspective: "1000px",
-        willChange: "transform",
       }}
       className="group p-6 md:p-8 rounded-2xl md:rounded-3xl bg-white/5 border border-white/10 hover:bg-white/10 transition-colors backdrop-blur-sm perspective-1000 cursor-pointer transform-none md:transform"
-      whileHover={{ scale: 1.05 }}
     >
-      {/* Spotlight Effect */}
-      <motion.div
-        className="pointer-events-none absolute -inset-px opacity-0 transition duration-300 group-hover:opacity-100 rounded-2xl md:rounded-3xl"
-        style={{
-          background: useMotionTemplate`
-            radial-gradient(
-              400px circle at ${mouseXPixels}% ${mouseYPixels}%,
-              rgba(var(--primary-rgb), 0.2),
-              transparent 70%
-            )
-          `,
-        }}
+      <div
+        ref={spotlightRef}
+        className="pointer-events-none absolute -inset-px opacity-0 rounded-2xl md:rounded-3xl"
       />
 
-      {/* 3D Glow Effect */}
-      <motion.div
-        className="pointer-events-none absolute -inset-1 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-2xl md:rounded-3xl"
-        style={{
-          background: useMotionTemplate`
-            radial-gradient(
-              300px circle at ${mouseXPixels}% ${mouseYPixels}%,
-              rgba(var(--primary-rgb), 0.15),
-              transparent 60%
-            )
-          `,
-          transform: "translateZ(-10px)",
-        }}
+      <div
+        ref={glowRef}
+        className="pointer-events-none absolute -inset-1 opacity-0 rounded-2xl md:rounded-3xl"
+        style={{ transform: "translateZ(-10px)" }}
       />
 
       <div
@@ -169,12 +221,76 @@ function ContactStep({
           {step.description}
         </p>
       </div>
-    </motion.div>
+    </div>
+  );
+}
+
+function ProcessCard({
+  step,
+  index,
+}: {
+  step: (typeof steps)[0];
+  index: number;
+}) {
+  const cardRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!cardRef.current) return;
+
+    const ctx = gsap.context(() => {
+      gsap.set(cardRef.current, {
+        opacity: 0,
+        y: 50,
+        rotateY: 30,
+      });
+
+      ScrollTrigger.create({
+        trigger: cardRef.current,
+        start: "top bottom-=100px",
+        onEnter: () => {
+          gsap.to(cardRef.current, {
+            opacity: 1,
+            y: 0,
+            rotateY: 0,
+            duration: 0.8,
+            delay: index * 0.2,
+            ease: "back.out(1.7)",
+          });
+        },
+      });
+    }, cardRef);
+
+    return () => ctx.revert();
+  }, [index]);
+
+  return (
+    <div
+      ref={cardRef}
+      className="group p-6 md:p-8 rounded-2xl md:rounded-3xl bg-white/5 border border-white/10 hover:bg-white/10 transition-colors backdrop-blur-sm perspective-1000"
+    >
+      <div className="w-12 h-12 bg-primary/20 rounded-2xl flex items-center justify-center text-primary mb-4 md:mb-6 group-hover:scale-110 transition-transform duration-300">
+        <step.icon className="w-6 h-6" />
+      </div>
+      <h3 className="text-lg md:text-xl font-black mb-2 md:mb-3">
+        {step.title}
+      </h3>
+      <p className="text-sm md:text-base text-gray-400 leading-relaxed">
+        {step.description}
+      </p>
+    </div>
   );
 }
 
 export default function Process() {
   const sectionRef = useRef<HTMLElement>(null);
+  const headerRef = useRef<HTMLDivElement>(null);
+  const titleRef = useRef<HTMLHeadingElement>(null);
+  const span1Ref = useRef<HTMLSpanElement>(null);
+  const span2Ref = useRef<HTMLSpanElement>(null);
+  const glowRef = useRef<HTMLSpanElement>(null);
+  const paraRef = useRef<HTMLParagraphElement>(null);
+  const lineRef = useRef<HTMLDivElement>(null);
+
   const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
@@ -184,59 +300,157 @@ export default function Process() {
     return () => window.removeEventListener("resize", checkMobile);
   }, []);
 
-  const { scrollYProgress } = useScroll({
-    target: sectionRef,
-    offset: ["start end", "end start"],
-  });
+  useEffect(() => {
+    if (!sectionRef.current || isMobile) return;
 
-  const smoothProgress = useSpring(scrollYProgress, {
-    stiffness: 150,
-    damping: 25,
-    restDelta: 0.001,
-    mass: 0.1,
-  });
+    const ctx = gsap.context(() => {
+      if (headerRef.current) {
+        gsap.fromTo(
+          headerRef.current,
+          { opacity: 0, y: 20 },
+          {
+            opacity: 1,
+            y: 0,
+            duration: 0.6,
+            scrollTrigger: {
+              trigger: headerRef.current,
+              start: "top bottom-=100px",
+              toggleActions: "play none none none",
+            },
+          }
+        );
+      }
 
-  const titleRotateX = useTransform(
-    smoothProgress,
-    [0, 1],
-    isMobile ? [0, 0] : [18, -18]
-  );
-  const titleRotateY = useTransform(
-    smoothProgress,
-    [0, 1],
-    isMobile ? [0, 0] : [-12, 12]
-  );
-  const titleY = useTransform(
-    smoothProgress,
-    [0, 1],
-    isMobile ? [0, 0] : [60, -60]
-  );
-  const titleTranslateZ = useTransform(
-    smoothProgress,
-    [0, 1],
-    isMobile ? [0, 0] : [-60, 60]
-  );
-  const titleScale = useTransform(
-    smoothProgress,
-    [0, 0.5, 1],
-    isMobile ? [1, 1, 1] : [0.92, 1.03, 0.92]
-  );
+      ScrollTrigger.create({
+        trigger: sectionRef.current,
+        start: "top bottom",
+        end: "bottom top",
+        scrub: 1,
+        onUpdate: (self) => {
+          const progress = self.progress;
 
-  const paraRotateX = useTransform(
-    smoothProgress,
-    [0, 1],
-    isMobile ? [0, 0] : [10, -10]
-  );
-  const paraY = useTransform(
-    smoothProgress,
-    [0, 1],
-    isMobile ? [0, 0] : [30, -30]
-  );
-  const paraTranslateZ = useTransform(
-    smoothProgress,
-    [0, 1],
-    isMobile ? [0, 0] : [-30, 30]
-  );
+          if (titleRef.current) {
+            gsap.set(titleRef.current, {
+              rotateX: 18 - progress * 36,
+              rotateY: -12 + progress * 24,
+              y: 60 - progress * 120,
+              translateZ: -60 + progress * 120,
+              scale:
+                0.92 +
+                (progress < 0.5 ? progress * 0.22 : (1 - progress) * 0.22),
+              transformPerspective: 1200,
+            });
+          }
+
+          if (span1Ref.current) {
+            gsap.set(span1Ref.current, {
+              translateZ: progress * 40,
+            });
+          }
+
+          if (span2Ref.current) {
+            gsap.set(span2Ref.current, {
+              translateZ: 40 - progress * 80,
+              rotateY: -8 + progress * 16,
+            });
+          }
+
+          if (paraRef.current) {
+            gsap.set(paraRef.current, {
+              rotateX: 10 - progress * 20,
+              y: 30 - progress * 60,
+              translateZ: -30 + progress * 60,
+            });
+          }
+        },
+      });
+
+      if (lineRef.current) {
+        gsap.fromTo(
+          lineRef.current,
+          { width: 0 },
+          {
+            width: "100%",
+            duration: 1.5,
+            ease: "power2.inOut",
+            scrollTrigger: {
+              trigger: lineRef.current,
+              start: "top bottom-=100px",
+              toggleActions: "play none none none",
+            },
+          }
+        );
+      }
+
+      if (glowRef.current) {
+        gsap.fromTo(
+          glowRef.current,
+          { opacity: 0.4 },
+          {
+            opacity: 0.7,
+            duration: 1.5,
+            delay: 0.5,
+            yoyo: true,
+            repeat: -1,
+            ease: "sine.inOut",
+          }
+        );
+      }
+    }, sectionRef);
+
+    return () => ctx.revert();
+  }, [isMobile]);
+
+  useEffect(() => {
+    if (isMobile && headerRef.current) {
+      gsap.fromTo(
+        headerRef.current,
+        { opacity: 0, y: 20 },
+        {
+          opacity: 1,
+          y: 0,
+          duration: 0.6,
+          scrollTrigger: {
+            trigger: headerRef.current,
+            start: "top bottom-=100px",
+            toggleActions: "play none none none",
+          },
+        }
+      );
+
+      if (lineRef.current) {
+        gsap.fromTo(
+          lineRef.current,
+          { width: 0 },
+          {
+            width: "100%",
+            duration: 1.5,
+            ease: "power2.inOut",
+            scrollTrigger: {
+              trigger: lineRef.current,
+              start: "top bottom-=100px",
+              toggleActions: "play none none none",
+            },
+          }
+        );
+      }
+
+      if (glowRef.current) {
+        gsap.fromTo(
+          glowRef.current,
+          { opacity: 0.4 },
+          {
+            opacity: 0.7,
+            duration: 1.5,
+            delay: 0.5,
+            yoyo: true,
+            repeat: -1,
+            ease: "sine.inOut",
+          }
+        );
+      }
+    }
+  }, [isMobile]);
 
   return (
     <FullScreenSection
@@ -247,105 +461,60 @@ export default function Process() {
     >
       <CodeRain />
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-          className="mb-12 md:mb-16 lg:mb-20 text-center"
-        >
-          <motion.h2
+        <div ref={headerRef} className="mb-12 md:mb-16 lg:mb-20 text-center">
+          <h2
+            ref={titleRef}
             style={{
-              rotateX: titleRotateX,
-              rotateY: titleRotateY,
-              y: titleY,
-              translateZ: titleTranslateZ,
-              scale: titleScale,
-              transformStyle: "preserve-3d",
-              perspective: "1200px",
-              willChange: "transform",
+              transformStyle: isMobile ? "flat" : "preserve-3d",
+              perspective: isMobile ? "none" : "1200px",
             }}
             className="max-w-68 mx-auto sm:mx-0 sm:max-w-none text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-black mb-4 md:mb-6 relative"
           >
-            <motion.span
+            <span
+              ref={span1Ref}
               style={{
                 display: "inline-block",
                 transformStyle: isMobile ? "flat" : "preserve-3d",
-                translateZ: useTransform(
-                  smoothProgress,
-                  [0, 1],
-                  isMobile ? [0, 0] : [0, 40]
-                ),
-                willChange: "transform",
               }}
               className="relative z-10 text-white"
             >
               Your vision. My code.
-            </motion.span>
+            </span>
             <br />
-            <motion.span
+            <span
+              ref={span2Ref}
               style={{
                 display: "inline-block",
                 transformStyle: isMobile ? "flat" : "preserve-3d",
-                translateZ: useTransform(
-                  smoothProgress,
-                  [0, 1],
-                  isMobile ? [0, 0] : [40, -40]
-                ),
-                rotateY: useTransform(
-                  smoothProgress,
-                  [0, 1],
-                  isMobile ? [0, 0] : [-8, 8]
-                ),
-                willChange: "transform",
               }}
               className="relative z-10 text-white"
             >
               <span className="relative inline-block">
                 <span className="gradient-animated-text">Real results.</span>
-                <motion.span
+                <span
+                  ref={glowRef}
                   className="absolute inset-0 gradient-animated-text blur-xl opacity-60"
-                  animate={{
-                    opacity: [0.4, 0.7, 0.4],
-                  }}
-                  transition={{
-                    duration: 3,
-                    repeat: Infinity,
-                    ease: "easeInOut",
-                    delay: 0.5,
-                  }}
                 >
                   Real results.
-                </motion.span>
+                </span>
               </span>
-            </motion.span>
-          </motion.h2>
-          <motion.p
+            </span>
+          </h2>
+          <p
+            ref={paraRef}
             style={{
-              rotateX: paraRotateX,
-              y: paraY,
-              translateZ: paraTranslateZ,
-              transformStyle: "preserve-3d",
-              willChange: "transform",
+              transformStyle: isMobile ? "flat" : "preserve-3d",
             }}
             className="text-base sm:text-lg md:text-xl text-gray-400 max-w-2xl mx-auto px-4"
           >
             A streamlined process designed to take your project from concept to
             reality efficiently.
-          </motion.p>
-        </motion.div>
+          </p>
+        </div>
 
         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8 relative">
-          {/* Connecting Line (Desktop) */}
           <div className="hidden lg:block absolute top-12 left-0 w-full h-0.5 bg-white/10 -z-10">
-            <motion.div
-              initial={{ width: 0 }}
-              whileInView={{ width: "100%" }}
-              viewport={{ once: true }}
-              transition={{ duration: 1.5, ease: "easeInOut" }}
-              className="h-full bg-primary/30"
-              style={{ width: "100%" }}
-            />
+            <div ref={lineRef} className="h-full bg-primary/30" />
           </div>
 
           {steps.map((step, index) => {
@@ -360,31 +529,7 @@ export default function Process() {
               );
             }
 
-            return (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0, y: 50, rotateY: 30 }}
-                whileInView={{ opacity: 1, y: 0, rotateY: 0 }}
-                viewport={{ once: true }}
-                transition={{
-                  delay: index * 0.2,
-                  duration: 0.8,
-                  type: "spring",
-                  bounce: 0.4,
-                }}
-                className="group p-6 md:p-8 rounded-2xl md:rounded-3xl bg-white/5 border border-white/10 hover:bg-white/10 transition-colors backdrop-blur-sm perspective-1000"
-              >
-                <div className="w-12 h-12 bg-primary/20 rounded-2xl flex items-center justify-center text-primary mb-4 md:mb-6 group-hover:scale-110 transition-transform duration-300">
-                  <step.icon className="w-6 h-6" />
-                </div>
-                <h3 className="text-lg md:text-xl font-black mb-2 md:mb-3">
-                  {step.title}
-                </h3>
-                <p className="text-sm md:text-base text-gray-400 leading-relaxed">
-                  {step.description}
-                </p>
-              </motion.div>
-            );
+            return <ProcessCard key={index} step={step} index={index} />;
           })}
         </div>
       </div>

@@ -1,13 +1,7 @@
 "use client";
 
-import {
-  motion,
-  useMotionValue,
-  useReducedMotion,
-  useScroll,
-  useSpring,
-  useTransform,
-} from "framer-motion";
+import { gsap } from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { ArrowRight } from "lucide-react";
 import dynamic from "next/dynamic";
 import { useEffect, useRef, useState } from "react";
@@ -18,291 +12,419 @@ const AnimatedOrb = dynamic(() => import("./AnimatedOrb"), {
   ssr: false,
 });
 
+gsap.registerPlugin(ScrollTrigger);
+
 export default function Hero() {
-  const ref = useRef(null);
+  const sectionRef = useRef<HTMLElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const h1Ref = useRef<HTMLHeadingElement>(null);
+  const paraRef = useRef<HTMLParagraphElement>(null);
+  const buttonsRef = useRef<HTMLDivElement>(null);
+  const statsRef = useRef<HTMLDivElement>(null);
+  const orbRef = useRef<HTMLDivElement>(null);
+  const span1Ref = useRef<HTMLSpanElement>(null);
+  const span2Ref = useRef<HTMLSpanElement>(null);
+  const span3Ref = useRef<HTMLSpanElement>(null);
+  const span4Ref = useRef<HTMLSpanElement>(null);
+
   const [isMobile, setIsMobile] = useState(false);
-  const prefersReducedMotion = useReducedMotion();
-
-  const mouseX = useMotionValue(0);
-  const mouseY = useMotionValue(0);
-
-  const springConfig = { damping: 25, stiffness: 150, mass: 0.1 };
-  const smoothMouseX = useSpring(mouseX, springConfig);
+  const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
 
   useEffect(() => {
-    let timeoutId: NodeJS.Timeout;
+    const mediaQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
+    setPrefersReducedMotion(mediaQuery.matches);
+
+    const handleChange = (e: MediaQueryListEvent) => {
+      setPrefersReducedMotion(e.matches);
+    };
+
+    mediaQuery.addEventListener("change", handleChange);
+    return () => mediaQuery.removeEventListener("change", handleChange);
+  }, []);
+
+  useEffect(() => {
     const checkMobile = () => {
-      clearTimeout(timeoutId);
-      timeoutId = setTimeout(() => {
-        const mobile = window.innerWidth < 768;
-        setIsMobile(mobile);
-        if (mobile) {
-          mouseX.set(0);
-          mouseY.set(0);
-        }
-      }, 150);
+      setIsMobile(window.innerWidth < 768);
     };
 
-    requestAnimationFrame(() => {
-      const mobile = window.innerWidth < 768;
-      setIsMobile(mobile);
-      if (mobile) {
-        mouseX.set(0);
-        mouseY.set(0);
-      }
-    });
-
+    checkMobile();
     window.addEventListener("resize", checkMobile, { passive: true });
-    return () => {
-      window.removeEventListener("resize", checkMobile);
-      clearTimeout(timeoutId);
-    };
-  }, [mouseX, mouseY]);
+    return () => window.removeEventListener("resize", checkMobile);
+  }, []);
 
   useEffect(() => {
-    if (isMobile) return;
+    if (!sectionRef.current || isMobile || prefersReducedMotion) return;
 
-    const handleMouseMove = (e: MouseEvent) => {
-      const { clientX, clientY } = e;
-      const x = (clientX / window.innerWidth - 0.5) * 20;
-      const y = (clientY / window.innerHeight - 0.5) * 20;
-      mouseX.set(x);
-      mouseY.set(y);
-    };
+    const ctx = gsap.context(() => {
+      gsap.set(h1Ref.current, {
+        opacity: 0,
+        rotateX: 20,
+        z: -200,
+        x: -100,
+        scale: 0.8,
+        transformPerspective: 1500,
+      });
 
-    window.addEventListener("mousemove", handleMouseMove, { passive: true });
-    return () => {
-      window.removeEventListener("mousemove", handleMouseMove);
-    };
-  }, [isMobile, mouseX, mouseY]);
+      gsap.set(paraRef.current, {
+        opacity: 0,
+        y: 20,
+        z: -100,
+        rotateX: 10,
+        transformPerspective: 1000,
+      });
 
-  const { scrollYProgress } = useScroll({
-    target: ref,
-    offset: ["start start", "end start"],
+      gsap.set(buttonsRef.current, {
+        opacity: 0,
+        y: 20,
+        z: -50,
+      });
+
+      gsap.set(statsRef.current, {
+        opacity: 0,
+        y: 20,
+        rotateX: 20,
+      });
+
+      gsap.set(
+        [
+          span1Ref.current,
+          span2Ref.current,
+          span3Ref.current,
+          span4Ref.current,
+        ],
+        {
+          opacity: 0,
+          y: 30,
+          rotateX: 15,
+          scale: 0.9,
+        }
+      );
+
+      const tl = gsap.timeline({
+        defaults: { ease: "power2.out" },
+        delay: 0.5,
+      });
+
+      tl.to(sectionRef.current, {
+        opacity: 1,
+        duration: 0.5,
+      })
+        .to(
+          h1Ref.current,
+          {
+            opacity: 1,
+            rotateX: 0,
+            z: 0,
+            x: 0,
+            scale: 1,
+            duration: 0.8,
+            ease: "back.out(1.2)",
+          },
+          "-=0.3"
+        )
+        .to(
+          [
+            span1Ref.current,
+            span2Ref.current,
+            span3Ref.current,
+            span4Ref.current,
+          ],
+          {
+            opacity: 1,
+            y: 0,
+            rotateX: 0,
+            scale: 1,
+            duration: 0.7,
+            stagger: 0.1,
+            ease: "back.out(1.5)",
+          },
+          "-=0.5"
+        )
+        .to(
+          paraRef.current,
+          {
+            opacity: 1,
+            y: 0,
+            z: 0,
+            rotateX: 0,
+            duration: 0.8,
+            ease: "back.out(1.2)",
+          },
+          "-=0.6"
+        )
+        .to(
+          buttonsRef.current,
+          {
+            opacity: 1,
+            y: 0,
+            z: 0,
+            duration: 0.8,
+            ease: "back.out(1.2)",
+          },
+          "-=0.6"
+        )
+        .to(
+          statsRef.current,
+          {
+            opacity: 1,
+            y: 0,
+            rotateX: 0,
+            duration: 0.8,
+            ease: "back.out(1.2)",
+          },
+          "-=0.6"
+        );
+
+      if (orbRef.current) {
+        gsap.fromTo(
+          orbRef.current,
+          { opacity: 0, scale: 0.8 },
+          {
+            opacity: 1,
+            scale: 1,
+            duration: 1,
+            delay: 0.5,
+            ease: "back.out(1.2)",
+          }
+        );
+      }
+
+      ScrollTrigger.create({
+        trigger: sectionRef.current,
+        start: "top top",
+        end: "bottom top",
+        scrub: 1,
+        onUpdate: (self) => {
+          const progress = self.progress;
+
+          if (containerRef.current) {
+            gsap.set(containerRef.current, {
+              y: -progress * 200,
+            });
+          }
+
+          if (h1Ref.current) {
+            gsap.set(h1Ref.current, {
+              rotateX: progress * 20,
+              x: -progress * 100,
+              z: -progress * 200,
+              scale: 1 - progress * 0.2,
+              opacity: 1 - progress * 0.3,
+              transformPerspective: 1500,
   });
+          }
 
-  const smoothProgress = useSpring(scrollYProgress, {
-    stiffness: isMobile ? 300 : 150,
-    damping: isMobile ? 35 : 25,
-    restDelta: 0.001,
-    mass: 0.1,
-  });
+          if (paraRef.current) {
+            gsap.set(paraRef.current, {
+              rotateX: progress * 10,
+              y: progress * 20,
+              z: -progress * 100,
+              opacity: 1 - progress * 0.4,
+            });
+          }
 
-  const textY = useTransform(scrollYProgress, [0, 1], [0, isMobile ? 0 : -200]);
+          if (span1Ref.current) {
+            gsap.set(span1Ref.current, {
+              rotateX: progress * 15,
+              y: progress * 30,
+              scale: 1 - progress * 0.1,
+              opacity: 1 - progress * 0.3,
+            });
+          }
+          if (span2Ref.current) {
+            gsap.set(span2Ref.current, {
+              rotateX: progress * 15,
+              y: progress * 30,
+              scale: 1 - progress * 0.1,
+              opacity: 1 - progress * 0.3,
+            });
+          }
+          if (span3Ref.current) {
+            gsap.set(span3Ref.current, {
+              rotateX: progress * 15,
+              y: progress * 30,
+              scale: 1 - progress * 0.1,
+              opacity: 1 - progress * 0.3,
+            });
+          }
+          if (span4Ref.current) {
+            gsap.set(span4Ref.current, {
+              rotateX: progress * 15,
+              y: progress * 30,
+              scale: 1 - progress * 0.1,
+              opacity: 1 - progress * 0.3,
+            });
+          }
 
-  const rotateX = useTransform(
-    smoothProgress,
-    [0, 1],
-    [0, isMobile || prefersReducedMotion ? 0 : -20]
-  );
-  const rotateY = useTransform(
-    smoothProgress,
-    [0, 1],
-    [0, isMobile || prefersReducedMotion ? 0 : 15]
-  );
-  const rotateZ = useTransform(
-    smoothProgress,
-    [0, 1],
-    [0, isMobile || prefersReducedMotion ? 0 : 3]
-  );
-  const translateZ = useTransform(
-    smoothProgress,
-    [0, 1],
-    [0, isMobile || prefersReducedMotion ? 0 : 80]
-  );
-  const textScale = useTransform(
-    smoothProgress,
-    [0, 0.5, 1],
-    [1, isMobile ? 1.02 : 1.05, isMobile ? 1.1 : 1.2]
-  );
+          if (buttonsRef.current) {
+            gsap.set(buttonsRef.current, {
+              y: progress * 20,
+              z: -progress * 50,
+              opacity: 1 - progress * 0.5,
+            });
+          }
 
-  const paraRotateX = useTransform(
-    smoothProgress,
-    [0, 1],
-    [0, isMobile || prefersReducedMotion ? 0 : -12]
-  );
-  const paraY = useTransform(
-    smoothProgress,
-    [0, 1],
-    [0, isMobile || prefersReducedMotion ? -15 : -40]
-  );
-  const paraTranslateZ = useTransform(
-    smoothProgress,
-    [0, 1],
-    [0, isMobile || prefersReducedMotion ? 0 : 40]
-  );
+          if (statsRef.current) {
+            gsap.set(statsRef.current, {
+              rotateX: progress * 20,
+              y: progress * 20,
+              opacity: 1 - progress * 0.5,
+            });
+          }
+        },
+      });
+
+      const statElements = statsRef.current?.querySelectorAll("[data-stat]");
+      statElements?.forEach((el) => {
+        gsap.to(el, {
+          y: -5,
+          scale: 1.05,
+          duration: 0.3,
+          ease: "power2.out",
+          paused: true,
+          onComplete: function () {
+            gsap.to(el, { y: 0, scale: 1, duration: 0.3, ease: "power2.out" });
+          },
+        });
+
+        el.addEventListener("mouseenter", () => {
+          gsap.to(el, {
+            y: -5,
+            scale: 1.05,
+            duration: 0.3,
+            ease: "power2.out",
+          });
+        });
+
+        el.addEventListener("mouseleave", () => {
+          gsap.to(el, { y: 0, scale: 1, duration: 0.3, ease: "power2.out" });
+        });
+      });
+    }, sectionRef);
+
+    return () => ctx.revert();
+  }, [isMobile, prefersReducedMotion]);
+
+  useEffect(() => {
+    if (isMobile || prefersReducedMotion) {
+      gsap.set(
+        [
+          sectionRef.current,
+          h1Ref.current,
+          paraRef.current,
+          buttonsRef.current,
+          statsRef.current,
+        ],
+        {
+          clearProps: "all",
+        }
+      );
+
+      const tl = gsap.timeline({ delay: 0.5 });
+      tl.fromTo(
+        sectionRef.current,
+        { opacity: 0 },
+        { opacity: 1, duration: 0.5 }
+      ).fromTo(
+        [h1Ref.current, paraRef.current, buttonsRef.current, statsRef.current],
+        { opacity: 0, y: 20 },
+        { opacity: 1, y: 0, duration: 0.8, stagger: 0.15, ease: "power2.out" },
+        "-=0.3"
+      );
+
+      if (orbRef.current) {
+        gsap.fromTo(
+          orbRef.current,
+          { opacity: 0, scale: 0.8 },
+          { opacity: 1, scale: 1, duration: 1, delay: 0.5 }
+        );
+      }
+
+      return () => {
+        tl.kill();
+      };
+    }
+  }, [isMobile, prefersReducedMotion]);
 
   return (
-    <motion.section
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{ duration: 0.5, delay: 0.5 }}
-      ref={ref}
+    <section
+      ref={sectionRef}
       className="relative min-h-screen flex items-center pt-24 sm:pt-28 md:pt-32 pb-16 sm:pb-20 md:pb-6 perspective-1000"
+      style={{ opacity: 0 }}
     >
       <div
         className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full grid lg:grid-cols-[80%_20%] gap-8 items-center"
         style={{ perspective: "1200px" }}
       >
-        <motion.div
-          style={{
-            y: textY,
-            willChange: "transform",
-          }}
+        <div
+          ref={containerRef}
           className="max-w-4xl relative z-10 max-md:opacity-100! max-md:translate-y-0! max-md:transform-none!"
-          initial="hidden"
-          animate="visible"
-          variants={{
-            hidden: { opacity: 0 },
-            visible: {
-              opacity: 1,
-              transition: {
-                staggerChildren: 0.15,
-                delayChildren: 0.5,
-              },
-            },
-          }}
         >
-
-          <motion.h1
-            variants={{
-              hidden: { opacity: 0, rotateX: 20, z: -200, x: -100, scale: 0.8 },
-              visible: {
-                opacity: 1,
-                rotateX: 0,
-                z: 0,
-                x: 0,
-                scale: 1,
-                transition: {
-                  type: "spring",
-                  damping: 20,
-                  stiffness: 100,
-                },
-              },
-            }}
+          <h1
+            ref={h1Ref}
             style={{
-              rotateX,
-              rotateY,
-              rotateZ,
-              translateZ,
-              scale: textScale,
               transformStyle: isMobile ? "flat" : "preserve-3d",
               perspective: isMobile ? "none" : "1500px",
-              willChange: "transform",
             }}
             className="text-4xl sm:text-5xl md:text-6xl lg:text-6xl 2xl:text-8xl font-black tracking-tight leading-[1.1] mb-6 md:mb-8 max-md:opacity-100! max-md:translate-y-0! max-md:transform-none!"
           >
-            <motion.span
+            <span
+              ref={span1Ref}
               style={{
                 display: "inline-block",
                 transformStyle: isMobile ? "flat" : "preserve-3d",
-                translateZ: useTransform(
-                  smoothProgress,
-                  [0, 1],
-                  [0, isMobile || prefersReducedMotion ? 0 : 40]
-                ),
-                willChange: "transform",
               }}
             >
               Crafting efficient,
-            </motion.span>
+            </span>
             <br />
-            <motion.span
+            <span
+              ref={span2Ref}
               style={{
                 display: "inline-block",
                 transformStyle: isMobile ? "flat" : "preserve-3d",
-                translateZ: useTransform(
-                  smoothProgress,
-                  [0, 1],
-                  [0, isMobile || prefersReducedMotion ? 0 : -50]
-                ),
-                rotateY: useTransform(
-                  smoothProgress,
-                  [0, 1],
-                  [0, isMobile || prefersReducedMotion ? 0 : 10]
-                ),
-                willChange: "transform",
               }}
             >
               scalable solutions
-            </motion.span>{" "}
+            </span>{" "}
             <br />
-            <motion.span
+            <span
+              ref={span3Ref}
               style={{
                 display: "inline-block",
                 transformStyle: isMobile ? "flat" : "preserve-3d",
-                translateZ: useTransform(
-                  smoothProgress,
-                  [0, 1],
-                  [0, isMobile || prefersReducedMotion ? 0 : 30]
-                ),
-                willChange: "transform",
               }}
             >
               in
-            </motion.span>{" "}
+            </span>{" "}
             <span className="relative inline-block">
-              <motion.span
+              <span
+                ref={span4Ref}
                 style={{
                   display: "inline-block",
                   transformStyle: isMobile ? "flat" : "preserve-3d",
-                  translateZ: useTransform(
-                    smoothProgress,
-                    [0, 1],
-                    [0, isMobile || prefersReducedMotion ? 0 : 30]
-                  ),
-                  willChange: "transform",
                 }}
                 className="gradient-animated-text"
               >
                 software & web.
-              </motion.span>
+              </span>
             </span>
-          </motion.h1>
+          </h1>
 
-          <motion.p
-            variants={{
-              hidden: { opacity: 0, y: 20, z: -100, rotateX: 10 },
-              visible: {
-                opacity: 1,
-                y: 0,
-                z: 0,
-                rotateX: 0,
-                transition: {
-                  type: "spring",
-                  damping: 20,
-                  stiffness: 100,
-                },
-              },
-            }}
+          <p
+            ref={paraRef}
             style={{
-              rotateX: paraRotateX,
-              y: paraY,
-              translateZ: paraTranslateZ,
               transformStyle: isMobile ? "flat" : "preserve-3d",
-              willChange: "transform",
             }}
             className="text-base sm:text-lg md:text-xl text-gray-400 max-w-2xl mb-8 md:mb-10 leading-relaxed max-md:opacity-100! max-md:translate-y-0! max-md:transform-none!"
           >
             I&apos;m Fabrizio La Rosa — full-stack engineer, code artisan,
             digital problem solver. Turning complex problems into elegant,
             user-centric digital experiences.
-          </motion.p>
+          </p>
 
-          <motion.div
-            variants={{
-              hidden: { opacity: 0, y: 20, z: -50 },
-              visible: {
-                opacity: 1,
-                y: 0,
-                z: 0,
-                transition: {
-                  type: "spring",
-                  damping: 20,
-                  stiffness: 100,
-                },
-              },
-            }}
+          <div
+            ref={buttonsRef}
             className="flex flex-col sm:flex-row gap-3 sm:gap-4 mb-12 max-md:opacity-100! max-md:translate-y-0!"
           >
             <Button
@@ -316,22 +438,10 @@ export default function Hero() {
             <Button href="#process" variant="secondary" size="lg">
               How I Work
             </Button>
-          </motion.div>
+          </div>
 
-          <motion.div
-            variants={{
-              hidden: { opacity: 0, y: 20, rotateX: 20 },
-              visible: {
-                opacity: 1,
-                y: 0,
-                rotateX: 0,
-                transition: {
-                  type: "spring",
-                  damping: 20,
-                  stiffness: 100,
-                },
-              },
-            }}
+          <div
+            ref={statsRef}
             className="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-8 border-t border-white/10 pt-6 md:pt-8"
           >
             {[
@@ -339,31 +449,25 @@ export default function Hero() {
               { value: "63+", label: "Projects Completed" },
               { value: "100%", label: "Client Satisfaction" },
             ].map((stat, i) => (
-              <motion.div
-                key={i}
-                whileHover={{ y: -5, scale: 1.05 }}
-                transition={{ type: "spring", stiffness: 300 }}
-              >
-                <div className="text-3xl sm:text-4xl md:text-5xl font-black mb-1 bg-gradient-to-r from-white to-gray-400 bg-clip-text text-transparent">
+              <div key={i} data-stat>
+                <div className="text-3xl sm:text-4xl md:text-5xl font-black mb-1 bg-linear-to-r from-white to-gray-400 bg-clip-text text-transparent">
                   {stat.value}
                 </div>
                 <div className="text-sm text-gray-400">{stat.label}</div>
-              </motion.div>
+              </div>
             ))}
-          </motion.div>
-        </motion.div>
+          </div>
+        </div>
 
         <div className="hidden lg:flex items-center justify-end relative z-0">
-          <motion.div
-            initial={{ opacity: 0, scale: 0.8 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 1, delay: 0.5 }}
+          <div
+            ref={orbRef}
             className="w-full h-full flex items-center justify-end"
           >
             <AnimatedOrb />
-          </motion.div>
+          </div>
         </div>
       </div>
-    </motion.section>
+    </section>
   );
 }

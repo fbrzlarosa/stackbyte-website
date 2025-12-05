@@ -1,7 +1,7 @@
 "use client";
 
-import { motion, Variants } from "framer-motion";
-import { useState } from "react";
+import { gsap } from "gsap";
+import { useEffect, useRef, useState } from "react";
 
 export default function Logo({
   className = "w-full h-auto",
@@ -13,6 +13,12 @@ export default function Logo({
   onIconClick?: (e: React.MouseEvent) => void;
 }) {
   const [isPressed, setIsPressed] = useState(false);
+  const svgRef = useRef<SVGSVGElement>(null);
+  const iconPath1Ref = useRef<SVGPathElement>(null);
+  const iconPath2Ref = useRef<SVGPathElement>(null);
+  const iconGroupRef = useRef<SVGGElement>(null);
+  const textGroupRef = useRef<SVGGElement>(null);
+  const letterPathsRef = useRef<(SVGPathElement | null)[]>([]);
 
   const handlePressStart = () => {
     setIsPressed(true);
@@ -24,170 +30,239 @@ export default function Logo({
     }, 150);
   };
 
-  const iconVariants: Variants = {
-    hidden: {
-      pathLength: 0,
-      opacity: 0,
-      fill: "rgba(6, 182, 212, 0)",
-    },
-    visible: {
-      pathLength: 1,
-      opacity: 1,
-      fill: "rgba(6, 182, 212, 1)",
-      transition: {
-        pathLength: { duration: 1.5, ease: "easeInOut", delay },
-        fill: { delay: 1 + delay, duration: 0.5 },
-      },
-    },
-  };
+  useEffect(() => {
+    if (!svgRef.current) return;
 
-  const textContainerVariants: Variants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.1,
-        delayChildren: 0.6 + delay,
-      },
-    },
-  };
+    const ctx = gsap.context(() => {
+      const getPathLength = (path: SVGPathElement | null): number => {
+        if (!path) return 1000;
+        try {
+          return path.getTotalLength();
+        } catch {
+          return 1000;
+        }
+      };
 
-  const letterVariants: Variants = {
-    hidden: {
-      pathLength: 0,
-      opacity: 0,
-      fill: "rgba(255, 255, 255, 0)",
-      stroke: "rgba(255, 255, 255, 1)",
-    },
-    visible: {
-      pathLength: 1,
-      opacity: 1,
-      fill: "rgba(255, 255, 255, 1)",
-      stroke: "rgba(255, 255, 255, 0)",
-      transition: {
-        pathLength: { duration: 1, ease: "easeInOut", delay: 0.2 + delay }, // Slight offset from icon if desired, or just delay
-        fill: { delay: 0.8 + delay, duration: 0.4 },
-        stroke: { delay: 0.8 + delay, duration: 0.4 },
-      },
-    },
-  };
+      const animatePath = (
+        path: SVGPathElement | null,
+        pathDelay: number,
+        pathDuration: number,
+        fillDelay: number
+      ) => {
+        if (!path) return;
+
+        const length = getPathLength(path);
+        gsap.set(path, {
+          strokeDasharray: length,
+          strokeDashoffset: length,
+          opacity: 0,
+          fillOpacity: 0,
+        });
+
+        gsap.to(path, {
+          strokeDashoffset: 0,
+          opacity: 1,
+          duration: pathDuration,
+          delay: pathDelay,
+          ease: "power2.inOut",
+        });
+
+        gsap.to(path, {
+          fillOpacity: 1,
+          duration: 0.5,
+          delay: fillDelay,
+        });
+      };
+
+      if (iconPath1Ref.current) {
+        animatePath(iconPath1Ref.current, delay, 1.5, 1 + delay);
+      }
+
+      if (iconPath2Ref.current) {
+        animatePath(iconPath2Ref.current, delay, 1.5, 1 + delay);
+      }
+
+      if (textGroupRef.current) {
+        gsap.set(textGroupRef.current, { opacity: 0 });
+        gsap.to(textGroupRef.current, {
+          opacity: 1,
+          duration: 0.3,
+          delay: 0.6 + delay,
+        });
+
+        letterPathsRef.current.forEach((path, i) => {
+          if (!path) return;
+          const letterDelay = 0.6 + delay + i * 0.1 + 0.2;
+          const length = getPathLength(path);
+          gsap.set(path, {
+            strokeDasharray: length,
+            strokeDashoffset: length,
+            opacity: 0,
+            fillOpacity: 0,
+            stroke: "currentColor",
+            strokeOpacity: 1,
+          });
+
+          gsap.to(path, {
+            strokeDashoffset: 0,
+            opacity: 1,
+            duration: 1,
+            delay: letterDelay,
+            ease: "power2.inOut",
+          });
+
+          gsap.to(path, {
+            fillOpacity: 1,
+            strokeOpacity: 0,
+            duration: 0.4,
+            delay: letterDelay + 0.8,
+          });
+        });
+      }
+    }, svgRef);
+
+    return () => ctx.revert();
+  }, [delay]);
+
+  useEffect(() => {
+    if (!iconGroupRef.current) return;
+
+    if (isPressed) {
+      gsap.to(iconGroupRef.current, {
+        y: 30,
+        duration: 0.2,
+        ease: "power2.inOut",
+      });
+    } else {
+      gsap.to(iconGroupRef.current, {
+        y: 0,
+        duration: 0.2,
+        ease: "power2.inOut",
+      });
+    }
+  }, [isPressed]);
 
   return (
-    <motion.svg
+    <svg
+      ref={svgRef}
       xmlns="http://www.w3.org/2000/svg"
       viewBox="0 0 1085.2 257.1"
       className={className}
-      initial="hidden"
-      animate="visible"
-      whileHover="hover"
       onMouseDown={handlePressStart}
       onMouseUp={handlePressEnd}
       onMouseLeave={() => setIsPressed(false)}
       onClick={onIconClick}
     >
-      {/* Icon Parts (Blue) */}
-      <motion.g 
-        
-        className="cursor-pointer"
-        style={{ pointerEvents: "all" }}
-      >
-        <motion.path
+      <g className="cursor-pointer" style={{ pointerEvents: "all" }}>
+        <path
+          ref={iconPath1Ref}
           d="M374.7,140.2c12.1,6.7,12.1,17.4,0,24.2L214,252.2c-12.1,6.6-32.1,6.6-44.2,0L9.1,164.4c-12.1-6.9-12.1-17.5,0-24.2l30.8-16.8c-3.8,5-2.1,11,5.3,15.1l129.1,70.4c9.7,5.3,25.7,5.3,35.4,0l129.1-70.4c7.4-4.1,9.1-10.1,5.3-15.1L374.7,140.2z"
-          className="fill-primary"
-          variants={iconVariants}
-          stroke="var(--primary)"
+          className="fill-primary stroke-primary"
           strokeWidth="2"
         />
-        <motion.g
-          animate={isPressed ? "pressed" : "visible"}
-          variants={{
-            hidden: { y: 0 },
-            visible: { y: 0 },
-            pressed: { y: 30 },
-          }}
-          transition={{
-            duration: 0.2,
-            ease: "easeInOut",
-          }}
-        >
-          <motion.path
+        <g ref={iconGroupRef}>
+          <path
+            ref={iconPath2Ref}
             d="M209.6,3.9l129.1,70.4c9.7,5.4,9.7,14,0,19.4l-129.1,70.5c-9.7,5.3-25.7,5.3-35.4,0L45.2,93.8c-9.7-5.4-9.7-14,0-19.4L174.2,3.9C183.9-1.3,199.9-1.3,209.6,3.9L209.6,3.9z"
-            className="fill-primary"
-            variants={iconVariants}
-            stroke="var(--primary)"
+            className="fill-primary stroke-primary"
             strokeWidth="2"
           />
-        </motion.g>
-      </motion.g>
+        </g>
+      </g>
 
-      {/* Text Parts (White) */}
-      <motion.g variants={textContainerVariants} className="fill-white">
-        <motion.path
-          variants={letterVariants}
+      <g ref={textGroupRef} className="fill-white">
+        <path
+          ref={(el) => {
+            letterPathsRef.current[0] = el;
+          }}
           strokeWidth="2"
           d="M454.4,115.5c-6,0-11.7-0.7-17.2-2.1c-5.5-1.4-9.8-3.2-13.1-5.4l6.6-14.4c3.3,1.9,7.1,3.5,11.5,4.7c4.4,1.3,8.7,1.9,12.9,1.9c4.7,0,8-0.6,9.9-1.7c1.9-1.1,2.9-2.7,2.9-4.7c0-1.6-0.8-2.9-2.3-3.7c-1.5-0.8-3.5-1.5-6-1.9c-2.5-0.4-5.2-0.9-8.3-1.3c-3-0.4-6-1-9-1.8c-3-0.8-5.8-1.9-8.3-3.3c-2.6-1.4-4.6-3.4-6.1-5.9c-1.5-2.5-2.3-5.8-2.3-9.8c0-4.4,1.3-8.3,3.9-11.8c2.6-3.4,6.3-6.1,11.1-8c4.8-1.9,10.5-2.9,17.3-2.9c4.9,0,9.7,0.5,14.6,1.6c4.9,1.1,9,2.6,12.4,4.5L478.2,64c-3.3-1.9-6.7-3.2-10.1-4c-3.4-0.8-6.7-1.2-9.8-1.2c-4.7,0-8.1,0.6-10.1,1.8c-2.1,1.2-3.1,2.8-3.1,4.7c0,1.7,0.8,3.1,2.3,4c1.6,0.9,3.6,1.6,6.1,2c2.5,0.4,5.3,0.9,8.3,1.3c3,0.4,6,1,9,1.8c2.9,0.8,5.7,1.9,8.3,3.3c2.6,1.4,4.6,3.4,6.1,5.9c1.5,2.5,2.3,5.8,2.3,9.8c0,4.2-1.3,8-3.9,11.4c-2.6,3.3-6.3,6-11.2,7.9C467.4,114.5,461.5,115.5,454.4,115.5z"
         />
-        <motion.path
-          variants={letterVariants}
+        <path
+          ref={(el) => {
+            letterPathsRef.current[1] = el;
+          }}
           strokeWidth="2"
           d="M491.5,60.1V44.5H540v15.6H491.5z M528.4,115.5c-8.2,0-14.6-2.1-19.2-6.3c-4.6-4.2-6.9-10.5-6.9-18.8V29h20.4v61c0,2.9,0.8,5.2,2.3,6.9c1.5,1.6,3.6,2.5,6.2,2.5c3.3,0,6.1-0.9,8.3-2.6l5.3,14.3c-2,1.5-4.4,2.6-7.3,3.3C534.5,115.1,531.5,115.5,528.4,115.5z"
         />
-        <motion.path
-          variants={letterVariants}
+        <path
+          ref={(el) => {
+            letterPathsRef.current[2] = el;
+          }}
           strokeWidth="2"
           d="M578.1,115.5c-5.4,0-10-0.9-13.9-2.8c-3.9-1.9-6.9-4.4-9-7.6c-2.1-3.2-3.2-6.8-3.2-10.8c0-4.1,1-7.7,3.1-10.9c2-3.2,5.3-5.6,9.7-7.3c4.4-1.7,10.2-2.6,17.4-2.6h18.5v11.7h-16.4c-4.8,0-8,0.8-9.8,2.3c-1.8,1.6-2.7,3.5-2.7,5.8c0,2.6,1,4.7,3.1,6.2c2,1.5,4.8,2.3,8.3,2.3c3.5,0,6.6-0.8,9.3-2.3c2.7-1.6,4.7-3.9,5.8-7.2l3.1,9.5c-1.5,4.3-4.2,7.7-8.1,10.1C589.2,114.3,584.2,115.5,578.1,115.5z M599.4,114.4v-13.7l-1.3-3V73.3c0-4.3-1.3-7.7-4-10.1c-2.6-2.4-6.7-3.6-12.2-3.6c-3.7,0-7.4,0.6-11,1.8c-3.6,1.2-6.7,2.8-9.3,4.7l-7.1-14.2c3.8-2.8,8.4-4.9,13.8-6.3c5.4-1.4,10.8-2.1,16.4-2.1c10.7,0,18.9,2.5,24.8,7.5c5.9,5,8.8,12.9,8.8,23.5v39.9H599.4z"
         />
-        <motion.path
-          variants={letterVariants}
+        <path
+          ref={(el) => {
+            letterPathsRef.current[3] = el;
+          }}
           strokeWidth="2"
           d="M670.5,115.5c-7.5,0-14.2-1.5-20.1-4.6c-5.9-3.1-10.4-7.3-13.8-12.8c-3.3-5.5-5-11.7-5-18.6c0-7,1.7-13.2,5-18.6c3.3-5.4,7.9-9.6,13.8-12.7c5.8-3.1,12.5-4.7,20.1-4.7c7.4,0,13.8,1.5,19.3,4.6c5.5,3.1,9.5,7.4,11.9,13.1l-15.6,8.6c-1.9-3.3-4.2-5.7-6.9-7.2c-2.7-1.5-5.6-2.3-8.8-2.3c-3.4,0-6.5,0.8-9.2,2.3c-2.8,1.5-5,3.7-6.6,6.6c-1.6,2.9-2.5,6.3-2.5,10.4c0,4.1,0.8,7.6,2.5,10.5c1.6,2.9,3.9,5.1,6.6,6.6c2.8,1.5,5.9,2.3,9.2,2.3c3.2,0,6.2-0.8,8.8-2.3c2.7-1.5,5-4,6.9-7.3l15.6,8.6c-2.4,5.5-6.4,9.9-11.9,13C684.3,113.9,677.9,115.5,670.5,115.5z"
         />
-        <motion.path
-          variants={letterVariants}
+        <path
+          ref={(el) => {
+            letterPathsRef.current[4] = el;
+          }}
           strokeWidth="2"
           d="M713.7,114.4V18h20.3v96.5H713.7z M730.4,100.1l0.5-24.8l32.6-30.8h24.2l-31.3,31.9L745.9,85L730.4,100.1z M765.8,114.4L742.1,85l12.7-15.7l35.5,45.1H765.8z"
         />
-        <motion.path
-          variants={letterVariants}
+        <path
+          ref={(el) => {
+            letterPathsRef.current[5] = el;
+          }}
           strokeWidth="2"
           d="M798.8,114.4V18h20.3v40.7l-1.3,20.7l0.4,20.8v14.3H798.8z M840,115.5c-6,0-11.2-1.3-15.7-3.8c-4.5-2.6-7.9-6.5-10.2-11.9c-2.3-5.4-3.5-12.1-3.5-20.3c0-8.2,1.2-15,3.7-20.3c2.5-5.3,5.9-9.2,10.3-11.8c4.4-2.6,9.5-3.9,15.3-3.9c6.7,0,12.6,1.5,17.9,4.5c5.2,3,9.4,7.2,12.5,12.5c3.1,5.4,4.6,11.7,4.6,19c0,7.3-1.5,13.6-4.6,19c-3.1,5.4-7.2,9.6-12.5,12.5C852.6,114,846.7,115.5,840,115.5z M836.6,98.8c3.4,0,6.4-0.8,9-2.3c2.6-1.5,4.8-3.7,6.4-6.7c1.6-2.9,2.4-6.4,2.4-10.4c0-4.1-0.8-7.5-2.4-10.4c-1.6-2.9-3.7-5-6.4-6.6c-2.6-1.5-5.7-2.3-9-2.3c-3.4,0-6.4,0.8-9.1,2.3c-2.7,1.5-4.8,3.7-6.4,6.6c-1.6,2.9-2.4,6.3-2.4,10.4c0,4,0.8,7.5,2.4,10.4c1.6,2.9,3.7,5.2,6.4,6.7C830.2,98.1,833.3,98.8,836.6,98.8z"
         />
-        <motion.path
-          variants={letterVariants}
+        <path
+          ref={(el) => {
+            letterPathsRef.current[6] = el;
+          }}
           strokeWidth="2"
           d="M897.5,140.7c-3.6,0-7.1-0.6-10.7-1.7c-3.6-1.1-6.5-2.7-8.8-4.7l7.4-14.6c1.6,1.5,3.4,2.6,5.4,3.4c2,0.8,4.1,1.2,6.2,1.2c2.8,0,5-0.7,6.7-2c1.7-1.3,3.2-3.6,4.6-6.7l3.6-8.6l1.6-2.2l25.2-60.3h19.4l-31.6,74.2c-2.3,5.7-4.8,10.2-7.7,13.3c-2.9,3.2-6.1,5.4-9.6,6.7C905.6,140,901.7,140.7,897.5,140.7z M909.4,117.2l-31.1-72.7h20.8l24.3,58.6L909.4,117.2z"
         />
-        <motion.path
-          variants={letterVariants}
+        <path
+          ref={(el) => {
+            letterPathsRef.current[7] = el;
+          }}
           strokeWidth="2"
           d="M958.1,60.1V44.5h48.5v15.6H958.1z M995,115.5c-8.2,0-14.6-2.1-19.2-6.3c-4.6-4.2-6.9-10.5-6.9-18.8V29h20.4v61c0,2.9,0.8,5.2,2.3,6.9c1.5,1.6,3.6,2.5,6.2,2.5c3.3,0,6.1-0.9,8.3-2.6l5.3,14.3c-2,1.5-4.4,2.6-7.3,3.3C1001.1,115.1,998.1,115.5,995,115.5z"
         />
-        <motion.path
-          variants={letterVariants}
+        <path
+          ref={(el) => {
+            letterPathsRef.current[8] = el;
+          }}
           strokeWidth="2"
           d="M1057.8,115.5c-8,0-15-1.6-20.9-4.7c-6-3.1-10.6-7.4-13.9-12.8c-3.3-5.4-4.9-11.6-4.9-18.5c0-6.9,1.6-13.1,4.7-18.6c3.2-5.5,7.6-9.7,13.3-12.8c5.7-3.1,12.1-4.6,19.2-4.6c6.8,0,13,1.5,18.5,4.4c5.5,2.9,9.9,7.1,13.1,12.5c3.2,5.4,4.8,11.8,4.8,19.4c0,0.8,0,1.7-0.1,2.7c-0.1,1-0.2,1.9-0.3,2.8h-56.8V73.3h46.2l-7.9,3.5c0.1-3.6-0.6-6.8-2.1-9.5c-1.5-2.7-3.5-4.8-6.1-6.3c-2.6-1.5-5.6-2.3-9.1-2.3c-3.5,0-6.5,0.8-9.2,2.3c-2.6,1.5-4.7,3.6-6.2,6.4c-1.5,2.7-2.2,6-2.2,9.7v3.1c0,3.9,0.9,7.3,2.6,10.1c1.7,2.9,4.1,5,7.1,6.6c3,1.5,6.7,2.3,10.9,2.3c3.6,0,6.9-0.6,9.7-1.7c2.8-1.1,5.4-2.8,7.7-5.1l10.8,11.7c-3.2,3.6-7.2,6.4-12.1,8.4C1069.7,114.5,1064.1,115.5,1057.8,115.5z"
         />
-        <motion.path
-          variants={letterVariants}
+        <path
+          ref={(el) => {
+            letterPathsRef.current[9] = el;
+          }}
           strokeWidth="2"
           d="M438.6,235.5c-3.5,0-6.4-1.2-8.9-3.6c-2.5-2.4-3.7-5.4-3.7-9c0-3.8,1.2-6.9,3.7-9.2s5.4-3.5,8.9-3.5c3.6,0,6.5,1.2,9,3.5c2.4,2.3,3.6,5.4,3.6,9.2c0,3.6-1.2,6.7-3.6,9C445.1,234.3,442.1,235.5,438.6,235.5z"
         />
-        <motion.path
-          variants={letterVariants}
+        <path
+          ref={(el) => {
+            letterPathsRef.current[10] = el;
+          }}
           strokeWidth="2"
           d="M495,235.5c-6.6,0-12.5-1.5-17.8-4.5c-5.3-3-9.4-7.2-12.5-12.5c-3-5.4-4.6-11.7-4.6-19c0-7.3,1.5-13.6,4.6-19c3-5.4,7.2-9.6,12.5-12.5c5.3-3,11.2-4.5,17.8-4.5c5.9,0,11.1,1.3,15.5,3.9s7.8,6.5,10.3,11.8c2.4,5.3,3.6,12,3.6,20.3c0,8.1-1.2,14.9-3.5,20.3c-2.3,5.4-5.7,9.3-10.1,11.9C506.4,234.2,501.1,235.5,495,235.5z M498.4,218.8c3.4,0,6.4-0.8,9.1-2.3c2.7-1.5,4.8-3.7,6.4-6.7c1.6-2.9,2.4-6.4,2.4-10.4c0-4.1-0.8-7.5-2.4-10.4s-3.7-5-6.4-6.6c-2.7-1.5-5.7-2.3-9.1-2.3c-3.3,0-6.3,0.8-9,2.3c-2.7,1.5-4.8,3.7-6.4,6.6c-1.6,2.9-2.4,6.3-2.4,10.4c0,4,0.8,7.5,2.4,10.4c1.6,2.9,3.7,5.2,6.4,6.7C492.1,218.1,495.1,218.8,498.4,218.8z M516.8,234.4v-14.3l0.4-20.8l-1.3-20.7V138h20.3v96.5H516.8z"
         />
-        <motion.path
-          variants={letterVariants}
+        <path
+          ref={(el) => {
+            letterPathsRef.current[11] = el;
+          }}
           strokeWidth="2"
           d="M589.6,235.5c-8,0-15-1.6-20.9-4.7c-6-3.1-10.6-7.4-13.9-12.8c-3.3-5.4-4.9-11.6-4.9-18.5c0-6.9,1.6-13.1,4.7-18.6c3.2-5.5,7.6-9.7,13.3-12.8c5.7-3.1,12.1-4.6,19.2-4.6c6.8,0,13,1.5,18.5,4.4c5.5,2.9,9.9,7.1,13.1,12.5c3.2,5.4,4.8,11.8,4.8,19.4c0,0.8,0,1.7-0.1,2.7c-0.1,1-0.2,1.9-0.3,2.8h-56.8v-11.8h46.2l-7.9,3.5c0.1-3.6-0.6-6.8-2.1-9.5c-1.5-2.7-3.5-4.8-6.1-6.3c-2.6-1.5-5.6-2.3-9.1-2.3c-3.5,0-6.5,0.8-9.2,2.3c-2.6,1.5-4.7,3.6-6.2,6.4c-1.5,2.7-2.2,6-2.2,9.7v3.1c0,3.9,0.9,7.3,2.6,10.1c1.7,2.9,4.1,5,7.1,6.6c3,1.5,6.7,2.3,10.9,2.3c3.6,0,6.9-0.6,9.7-1.7c2.8-1.1,5.4-2.8,7.7-5.1l10.8,11.7c-3.2,3.6-7.2,6.4-12.1,8.4C601.5,234.5,596,235.5,589.6,235.5z"
         />
-        <motion.path
-          variants={letterVariants}
+        <path
+          ref={(el) => {
+            letterPathsRef.current[12] = el;
+          }}
           strokeWidth="2"
           d="M656.1,234.4l-29.4-69.9h20.8l24.4,60.2h-10.4l25.5-60.2h19.4l-29.5,69.9H656.1z"
         />
-      </motion.g>
-    </motion.svg>
+      </g>
+    </svg>
   );
 }

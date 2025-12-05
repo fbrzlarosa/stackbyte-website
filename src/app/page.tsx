@@ -73,13 +73,6 @@ const Navbar = dynamic(() => import("@/components/Navbar"), {
   loading: () => null,
 });
 
-const ScrollBackground = dynamic(
-  () => import("@/components/ScrollBackground"),
-  {
-    loading: () => null,
-  }
-);
-
 const About = dynamic(() => import("@/components/About"), {
   loading: () => null,
 });
@@ -137,19 +130,17 @@ export default async function Home() {
       <MouseSpotlight />
       <Navbar />
 
-      <ScrollBackground>
-        <main className="min-h-screen text-foreground selection:bg-primary/30 relative">
-          <FloatingElements />
-          <Hero />
-          <About />
-          <Process />
-          <SkillsShowcase />
-          <ReadyToStart />
-          <DevToPosts posts={posts} />
-          <Contact />
-          <Footer />
-        </main>
-      </ScrollBackground>
+      <main className="min-h-screen text-foreground selection:bg-primary/30 relative">
+        <FloatingElements />
+        <Hero />
+        <About />
+        <Process />
+        <SkillsShowcase />
+        <ReadyToStart />
+        <DevToPosts posts={posts} />
+        <Contact />
+        <Footer />
+      </main>
     </>
   );
 }

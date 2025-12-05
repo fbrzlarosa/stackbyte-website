@@ -1,7 +1,10 @@
 "use client";
 
-import { motion, useScroll, useSpring, useTransform } from "framer-motion";
-import { forwardRef, useImperativeHandle, useRef } from "react";
+import { gsap } from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { forwardRef, useEffect, useImperativeHandle, useRef } from "react";
+
+gsap.registerPlugin(ScrollTrigger);
 
 interface FullScreenSectionProps {
   children: React.ReactNode;
@@ -20,44 +23,57 @@ const FullScreenSection = forwardRef<HTMLElement, FullScreenSectionProps>(
       []
     );
 
-    const { scrollYProgress } = useScroll({
-      target: internalRef,
-      offset: ["start end", "end start"],
-    });
+    useEffect(() => {
+      if (!internalRef.current) return;
 
-    // 3D Tilt Effect based on scroll position relative to viewport center
-    const tiltX = useTransform(scrollYProgress, [0, 0.5, 1], [5, 0, -5]);
-    const opacity = useTransform(
-      scrollYProgress,
-      [0, 0.2, 0.8, 1],
-      [0, 1, 1, 0]
-    );
-    const scale = useTransform(
-      scrollYProgress,
-      [0, 0.2, 0.8, 1],
-      [0.9, 1, 1, 0.9]
-    );
+      const ctx = gsap.context(() => {
+        ScrollTrigger.create({
+          trigger: internalRef.current,
+          start: "top bottom",
+          end: "bottom top",
+          scrub: 1,
+          onUpdate: (self) => {
+            const progress = self.progress;
 
-    // Spring smoothing
-    const springConfig = { stiffness: 150, damping: 25, mass: 0.1 };
-    const smoothTilt = useSpring(tiltX, springConfig);
-    const smoothScale = useSpring(scale, springConfig);
-    const smoothOpacity = useSpring(opacity, springConfig);
+            if (internalRef.current) {
+              const tiltX =
+                progress <= 0.5
+                  ? 5 - progress * 10
+                  : -5 + (progress - 0.5) * 10;
+
+              let opacity = 1;
+              if (!ignoreOpacity) {
+                if (progress <= 0.2) {
+                  opacity = progress / 0.2;
+                } else if (progress >= 0.8) {
+                  opacity = 1 - (progress - 0.8) / 0.2;
+                }
+              }
+
+              gsap.set(internalRef.current, {
+                // rotateX: tiltX,
+                opacity: ignoreOpacity ? 1 : opacity,
+                transformPerspective: 1000,
+              });
+            }
+          },
+        });
+      }, internalRef);
+
+      return () => ctx.revert();
+    }, [ignoreOpacity]);
 
     return (
-      <motion.section
+      <section
         ref={internalRef}
         id={id}
         style={{
-          opacity: ignoreOpacity ? 1 : smoothOpacity,
-          // scale: smoothScale,
-          rotateX: smoothTilt,
-          perspective: "1000px",
+          transformStyle: "preserve-3d",
         }}
         className={`sm:min-h-screen flex items-center justify-center relative ${className}`}
       >
         {children}
-      </motion.section>
+      </section>
     );
   }
 );
