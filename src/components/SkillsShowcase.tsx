@@ -227,20 +227,25 @@ function SkillCard({ skill, index, isMobile }: SkillCardProps) {
       const handleMouseMove = (e: MouseEvent) => {
         if (!cardRef.current || isMobile) return;
 
-        const rect = cardRef.current.getBoundingClientRect();
-        const centerX = rect.left + rect.width / 2;
-        const centerY = rect.top + rect.height / 2;
-
-        mousePos.current = {
-          x: e.clientX - centerX,
-          y: e.clientY - centerY,
-        };
-
-        targetRotateX = mapRange(mousePos.current.y, -300, 300, 5, -5);
-        targetRotateY = mapRange(mousePos.current.x, -300, 300, -5, 5);
-
         if (!rafId) {
-          rafId = requestAnimationFrame(updateMouseRotation);
+          rafId = requestAnimationFrame(() => {
+            if (!cardRef.current) return;
+
+            const rect = cardRef.current.getBoundingClientRect();
+            const centerX = rect.left + rect.width / 2;
+            const centerY = rect.top + rect.height / 2;
+
+            mousePos.current = {
+              x: e.clientX - centerX,
+              y: e.clientY - centerY,
+            };
+
+            targetRotateX = mapRange(mousePos.current.y, -300, 300, 5, -5);
+            targetRotateY = mapRange(mousePos.current.x, -300, 300, -5, 5);
+
+            updateMouseRotation();
+            rafId = null;
+          });
         }
       };
 

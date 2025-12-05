@@ -12,12 +12,24 @@ export default function FloatingElements() {
 
   useEffect(() => {
     setMounted(true);
+    let rafId: number | null = null;
+    
     const updateDimensions = () => {
-      setDimensions({ width: window.innerWidth, height: window.innerHeight });
+      if (rafId) cancelAnimationFrame(rafId);
+      
+      rafId = requestAnimationFrame(() => {
+        setDimensions({ width: window.innerWidth, height: window.innerHeight });
+        rafId = null;
+      });
     };
+    
     updateDimensions();
     window.addEventListener("resize", updateDimensions, { passive: true });
-    return () => window.removeEventListener("resize", updateDimensions);
+    
+    return () => {
+      window.removeEventListener("resize", updateDimensions);
+      if (rafId) cancelAnimationFrame(rafId);
+    };
   }, []);
 
   const shapes = useMemo(() => {

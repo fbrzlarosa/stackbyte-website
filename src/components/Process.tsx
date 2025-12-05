@@ -134,8 +134,10 @@ function ContactStep({
 
     if (rafId.current) cancelAnimationFrame(rafId.current);
     rafId.current = requestAnimationFrame(() => {
-      const { left, top, width, height } =
-        currentTarget.getBoundingClientRect();
+      if (!cardRef.current) return;
+      
+      const rect = currentTarget.getBoundingClientRect();
+      const { left, top, width, height } = rect;
       const x = (clientX - left) / width;
       const y = (clientY - top) / height;
 

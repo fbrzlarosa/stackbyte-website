@@ -21,17 +21,30 @@ export default function ScrollingBackgroundText({
   const [windowWidth, setWindowWidth] = useState(0);
 
   useEffect(() => {
+    let rafId: number | null = null;
+
     const handleResize = () => {
-      if (elementRef.current) {
-        setWidth(elementRef.current.scrollWidth);
-      }
-      setWindowWidth(window.innerWidth);
+      if (rafId) cancelAnimationFrame(rafId);
+
+      rafId = requestAnimationFrame(() => {
+        if (elementRef.current) {
+          const scrollWidth = elementRef.current.scrollWidth;
+          setWidth(scrollWidth);
+        }
+        setWindowWidth(window.innerWidth);
+        rafId = null;
+      });
     };
 
-    handleResize();
+    requestAnimationFrame(() => {
+      handleResize();
+    });
 
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
+    window.addEventListener("resize", handleResize, { passive: true });
+    return () => {
+      window.removeEventListener("resize", handleResize);
+      if (rafId) cancelAnimationFrame(rafId);
+    };
   }, []);
 
   useEffect(() => {

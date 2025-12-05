@@ -84,84 +84,84 @@ export default function AnimatedOrb() {
 
         if (rafId) cancelAnimationFrame(rafId);
         rafId = requestAnimationFrame(() => {
-          if (containerRef.current) {
-            const rect = containerRef.current.getBoundingClientRect();
-            const centerX = rect.left + rect.width / 2;
-            const centerY = rect.top + rect.height / 2;
-            mousePos.current = {
-              x: e.clientX - centerX,
-              y: e.clientY - centerY,
-            };
+          if (!containerRef.current) return;
 
-            const distance = Math.sqrt(
-              mousePos.current.x * mousePos.current.x +
-                mousePos.current.y * mousePos.current.y
-            );
-            const maxDistance = 500;
-            const intensity = maxDistance / (maxDistance + distance);
+          const rect = containerRef.current.getBoundingClientRect();
+          const centerX = rect.left + rect.width / 2;
+          const centerY = rect.top + rect.height / 2;
+          mousePos.current = {
+            x: e.clientX - centerX,
+            y: e.clientY - centerY,
+          };
 
-            if (orbRef.current) {
-              gsap.to(orbRef.current, {
-                rotateX: (mousePos.current.y / 1000) * -50 * intensity,
-                rotateY: (mousePos.current.x / 1000) * 50 * intensity,
-                duration: 0.5,
-                ease: "power2.out",
-              });
-            }
+          const distance = Math.sqrt(
+            mousePos.current.x * mousePos.current.x +
+              mousePos.current.y * mousePos.current.y
+          );
+          const maxDistance = 500;
+          const intensity = maxDistance / (maxDistance + distance);
 
-            if (logoContainerRef.current) {
-              gsap.to(logoContainerRef.current, {
-                x: (mousePos.current.x / 1000) * -200 * intensity,
-                y: (mousePos.current.y / 1000) * -200 * intensity,
-                duration: 0.5,
-                ease: "power2.out",
-              });
-            }
+          if (orbRef.current) {
+            gsap.to(orbRef.current, {
+              rotateX: (mousePos.current.y / 1000) * -50 * intensity,
+              rotateY: (mousePos.current.x / 1000) * 50 * intensity,
+              duration: 0.5,
+              ease: "power2.out",
+            });
+          }
 
-            if (coreGlowRef.current) {
-              gsap.to(coreGlowRef.current, {
-                x: (mousePos.current.x / 1000) * -25 * intensity,
-                y: (mousePos.current.y / 1000) * -25 * intensity,
-                duration: 0.5,
-                ease: "power2.out",
-              });
-            }
+          if (logoContainerRef.current) {
+            gsap.to(logoContainerRef.current, {
+              x: (mousePos.current.x / 1000) * -200 * intensity,
+              y: (mousePos.current.y / 1000) * -200 * intensity,
+              duration: 0.5,
+              ease: "power2.out",
+            });
+          }
 
-            if (ring1Ref.current) {
-              gsap.to(ring1Ref.current, {
-                x: (mousePos.current.x / 1000) * -80 * intensity,
-                y: (mousePos.current.y / 1000) * -80 * intensity,
-                duration: 0.5,
-                ease: "power2.out",
-              });
-            }
+          if (coreGlowRef.current) {
+            gsap.to(coreGlowRef.current, {
+              x: (mousePos.current.x / 1000) * -25 * intensity,
+              y: (mousePos.current.y / 1000) * -25 * intensity,
+              duration: 0.5,
+              ease: "power2.out",
+            });
+          }
 
-            if (ring2Ref.current) {
-              gsap.to(ring2Ref.current, {
-                x: (mousePos.current.x / 1000) * -60 * intensity,
-                y: (mousePos.current.y / 1000) * -60 * intensity,
-                duration: 0.5,
-                ease: "power2.out",
-              });
-            }
+          if (ring1Ref.current) {
+            gsap.to(ring1Ref.current, {
+              x: (mousePos.current.x / 1000) * -80 * intensity,
+              y: (mousePos.current.y / 1000) * -80 * intensity,
+              duration: 0.5,
+              ease: "power2.out",
+            });
+          }
 
-            if (orbitingContainerRef.current) {
-              gsap.to(orbitingContainerRef.current, {
-                x: (mousePos.current.x / 1000) * -40 * intensity,
-                y: (mousePos.current.y / 1000) * -40 * intensity,
-                duration: 0.5,
-                ease: "power2.out",
-              });
-            }
+          if (ring2Ref.current) {
+            gsap.to(ring2Ref.current, {
+              x: (mousePos.current.x / 1000) * -60 * intensity,
+              y: (mousePos.current.y / 1000) * -60 * intensity,
+              duration: 0.5,
+              ease: "power2.out",
+            });
+          }
 
-            if (particlesContainerRef.current) {
-              gsap.to(particlesContainerRef.current, {
-                x: (mousePos.current.x / 1000) * -90 * intensity,
-                y: (mousePos.current.y / 1000) * -90 * intensity,
-                duration: 0.5,
-                ease: "power2.out",
-              });
-            }
+          if (orbitingContainerRef.current) {
+            gsap.to(orbitingContainerRef.current, {
+              x: (mousePos.current.x / 1000) * -40 * intensity,
+              y: (mousePos.current.y / 1000) * -40 * intensity,
+              duration: 0.5,
+              ease: "power2.out",
+            });
+          }
+
+          if (particlesContainerRef.current) {
+            gsap.to(particlesContainerRef.current, {
+              x: (mousePos.current.x / 1000) * -90 * intensity,
+              y: (mousePos.current.y / 1000) * -90 * intensity,
+              duration: 0.5,
+              ease: "power2.out",
+            });
           }
         });
       };

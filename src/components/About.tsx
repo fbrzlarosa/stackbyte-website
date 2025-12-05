@@ -61,13 +61,15 @@ function ExperienceCard({
   const iconRef = useRef<HTMLDivElement>(null);
 
   const mousePos = useRef({ x: 0.5, y: 0.5 });
+  const lastUpdate = useRef(0);
+  const rafId = useRef<number | null>(null);
 
   useEffect(() => {
     const checkMobile = () => {
       setIsMobile(window.innerWidth < 768);
     };
     checkMobile();
-    window.addEventListener("resize", checkMobile);
+    window.addEventListener("resize", checkMobile, { passive: true });
     return () => window.removeEventListener("resize", checkMobile);
   }, []);
 
@@ -173,38 +175,50 @@ function ExperienceCard({
   }: MouseEvent<HTMLDivElement>) {
     if (isMobile || !cardRef.current) return;
 
-    const { left, top, width, height } = currentTarget.getBoundingClientRect();
-    const x = (clientX - left) / width;
-    const y = (clientY - top) / height;
+    const now = performance.now();
+    if (now - lastUpdate.current < 32) return;
+    lastUpdate.current = now;
 
-    mousePos.current = { x, y };
+    if (rafId.current) cancelAnimationFrame(rafId.current);
+    rafId.current = requestAnimationFrame(() => {
+      if (!cardRef.current) return;
+      
+      const rect = currentTarget.getBoundingClientRect();
+      const { left, top, width, height } = rect;
+      const x = (clientX - left) / width;
+      const y = (clientY - top) / height;
 
-    const rotateX = (y - 0.5) * -16;
-    const rotateY = (x - 0.5) * 16;
+      mousePos.current = { x, y };
 
-    gsap.to(cardRef.current, {
-      rotateX,
-      rotateY,
-      duration: 0.3,
-      ease: "power2.out",
-      transformPerspective: 1000,
+      const rotateX = (y - 0.5) * -16;
+      const rotateY = (x - 0.5) * 16;
+
+      gsap.to(cardRef.current, {
+        rotateX,
+        rotateY,
+        duration: 0.3,
+        ease: "power2.out",
+        transformPerspective: 1000,
+      });
+
+      if (spotlightRef.current) {
+        gsap.set(spotlightRef.current, {
+          background: `radial-gradient(650px circle at ${x * 100}% ${
+            y * 100
+          }%, rgba(var(--primary-rgb), 0.15), transparent 80%)`,
+        });
+      }
+
+      if (glowRef.current) {
+        gsap.set(glowRef.current, {
+          background: `radial-gradient(400px circle at ${x * 100}% ${
+            y * 100
+          }%, rgba(var(--primary-rgb), 0.2), transparent 70%)`,
+        });
+      }
+      
+      rafId.current = null;
     });
-
-    if (spotlightRef.current) {
-      gsap.set(spotlightRef.current, {
-        background: `radial-gradient(650px circle at ${x * 100}% ${
-          y * 100
-        }%, rgba(var(--primary-rgb), 0.15), transparent 80%)`,
-      });
-    }
-
-    if (glowRef.current) {
-      gsap.set(glowRef.current, {
-        background: `radial-gradient(400px circle at ${x * 100}% ${
-          y * 100
-        }%, rgba(var(--primary-rgb), 0.2), transparent 70%)`,
-      });
-    }
   }
 
   function handleMouseLeave() {

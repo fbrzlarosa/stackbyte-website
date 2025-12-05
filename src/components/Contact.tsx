@@ -53,19 +53,35 @@ export default function Contact() {
 
   useEffect(() => {
     let timeoutId: NodeJS.Timeout;
+    let rafId: number | null = null;
+    
     const checkMobile = () => {
       clearTimeout(timeoutId);
-      timeoutId = setTimeout(() => {
+      if (rafId) cancelAnimationFrame(rafId);
+      
+      rafId = requestAnimationFrame(() => {
         setIsMobile(window.innerWidth < 768);
+        rafId = null;
+      });
+      
+      timeoutId = setTimeout(() => {
+        if (rafId) cancelAnimationFrame(rafId);
+        rafId = requestAnimationFrame(() => {
+          setIsMobile(window.innerWidth < 768);
+          rafId = null;
+        });
       }, 150);
     };
+    
     requestAnimationFrame(() => {
       setIsMobile(window.innerWidth < 768);
     });
+    
     window.addEventListener("resize", checkMobile, { passive: true });
     return () => {
       window.removeEventListener("resize", checkMobile);
       clearTimeout(timeoutId);
+      if (rafId) cancelAnimationFrame(rafId);
     };
   }, []);
 
