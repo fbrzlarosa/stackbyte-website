@@ -16,6 +16,8 @@
     "@lottiefiles/react-lottie-player": "^3.6.0",
     "@react-three/drei": "^10.7.7",
     "@react-three/fiber": "^9.4.2",
+    "@vercel/analytics": "^1.6.1",
+    "@vercel/speed-insights": "^1.3.1",
     "axios": "^1.13.2",
     "clsx": "^2.1.1",
     "dotenv": "^17.2.3",
