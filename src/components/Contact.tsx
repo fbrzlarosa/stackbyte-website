@@ -99,6 +99,20 @@ export default function Contact() {
       const lerp = (start: number, end: number, t: number) =>
         start + (end - start) * t;
 
+      if (h2Ref.current) {
+        gsap.set(h2Ref.current, {
+          opacity: 0,
+          x: isMobile ? 0 : 50,
+          y: isMobile ? 0 : 80,
+          rotateX: isMobile ? 0 : 25,
+          rotateY: isMobile ? 0 : -20,
+          rotateZ: isMobile ? 0 : -1,
+          scale: isMobile ? 1 : 0.9,
+          translateZ: isMobile ? 0 : -100,
+          transformPerspective: 1500,
+        });
+      }
+
       ScrollTrigger.create({
         trigger: sectionRef.current,
         start: "top bottom",
@@ -117,7 +131,7 @@ export default function Contact() {
 
             let opacity = 1;
             if (p <= 0.2) {
-              opacity = lerp(0.2, 1, p / 0.2);
+              opacity = lerp(0, 1, p / 0.2);
             } else if (p >= 0.8) {
               opacity = lerp(1, 0.2, (p - 0.8) / 0.2);
             }
@@ -129,16 +143,40 @@ export default function Contact() {
               translateZ = lerp(100, -100, (p - 0.5) / 0.5);
             }
 
+            let h2X = 0;
+            let h2Y = 0;
+            let h2RotateX = 0;
+            let h2RotateY = 0;
+            let h2RotateZ = 0;
+
+            if (!isMobile) {
+              if (p <= 0.3) {
+                h2X = lerp(50, 0, p / 0.3);
+                h2Y = lerp(80, 0, p / 0.3);
+                h2RotateX = lerp(25, 0, p / 0.3);
+                h2RotateY = lerp(-20, 0, p / 0.3);
+                h2RotateZ = lerp(-1, 0, p / 0.3);
+              } else {
+                h2X = lerp(0, -30, (p - 0.3) / 0.7);
+                h2Y = lerp(0, -80, (p - 0.3) / 0.7);
+                h2RotateX = lerp(0, 25, (p - 0.3) / 0.7);
+                h2RotateY = lerp(0, 20, (p - 0.3) / 0.7);
+                h2RotateZ = lerp(0, 5, (p - 0.3) / 0.7);
+              }
+            } else {
+              h2Y = -p * 20;
+            }
+
             gsap.set(h2Ref.current, {
-              rotateX: isMobile ? 0 : 25 - p * 50,
-              rotateY: isMobile ? 0 : -20 + p * 40,
-              rotateZ: isMobile ? 0 : -1 + p * 6,
-              x: isMobile ? 0 : -30 + p * 60,
-              y: isMobile ? -p * 20 : 80 - p * 160,
+              rotateX: h2RotateX,
+              rotateY: h2RotateY,
+              rotateZ: h2RotateZ,
+              x: h2X,
+              y: h2Y,
               scale: isMobile ? 1 : scale,
               opacity: isMobile
                 ? p <= 0.2
-                  ? lerp(0.8, 1, p / 0.2)
+                  ? lerp(0, 1, p / 0.2)
                   : p >= 0.8
                   ? lerp(1, 0.9, (p - 0.8) / 0.2)
                   : 1
