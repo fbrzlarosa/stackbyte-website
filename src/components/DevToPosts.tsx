@@ -294,14 +294,14 @@ function PostCard({ post, index, isMobile }: PostCardProps) {
             ref={titleRef}
             className="text-xl sm:text-2xl font-black mb-3 text-white leading-tight"
           >
-            {post.title}
+            {post.title || ""}
           </h3>
 
           <p
             ref={descRef}
             className="text-gray-400 text-sm sm:text-base mb-6 line-clamp-3"
           >
-            {post.description}
+            {post.description || ""}
           </p>
 
           <div
@@ -310,12 +310,12 @@ function PostCard({ post, index, isMobile }: PostCardProps) {
           >
             <div className="flex items-center gap-2">
               <Calendar className="w-4 h-4 text-primary" />
-              <span>{formatDate(post.publishedAt)}</span>
+              <span>{formatDate(post.publishedAt) || ""}</span>
             </div>
             {post.readTime && (
               <>
                 <span className="text-white/20">•</span>
-                <span>{post.readTime} min read</span>
+                <span>{post.readTime || 0} min read</span>
               </>
             )}
           </div>

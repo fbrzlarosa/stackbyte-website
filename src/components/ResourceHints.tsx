@@ -15,13 +15,6 @@ export default function ResourceHints() {
       <link rel="dns-prefetch" href="https://cdn.iubenda.com" />
       <link rel="dns-prefetch" href="https://dev.to" />
       <link rel="dns-prefetch" href="https://res.cloudinary.com" />
-      <link
-        rel="preload"
-        href="/og-image.jpg"
-        as="image"
-        type="image/jpeg"
-        fetchPriority="high"
-      />
     </>
   );
 }

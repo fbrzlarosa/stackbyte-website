@@ -152,7 +152,7 @@ export default function MouseParticles() {
             willChange: "transform, opacity",
           }}
         >
-          {particle.text}
+          {particle.text || ""}
         </div>
       ))}
     </div>

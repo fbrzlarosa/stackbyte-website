@@ -75,7 +75,7 @@ export default function CodeRain() {
               <div key={k}>
                 {col.snippets.map((snippet, j) => (
                   <div key={j} className="transform rotate-0 mb-4">
-                    {snippet}
+                    {snippet || ""}
                   </div>
                 ))}
               </div>
