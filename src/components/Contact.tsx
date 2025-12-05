@@ -113,7 +113,7 @@ export default function Contact() {
         });
       }
 
-      ScrollTrigger.create({
+      const scrollTrigger = ScrollTrigger.create({
         trigger: sectionRef.current,
         start: "top bottom",
         end: "bottom top",
@@ -258,6 +258,11 @@ export default function Contact() {
           }
         },
       });
+
+      scrollTrigger.refresh();
+      if (scrollTrigger.progress > 0) {
+        scrollTrigger.update();
+      }
 
       if (dot1Ref.current) {
         gsap.to(dot1Ref.current, {
