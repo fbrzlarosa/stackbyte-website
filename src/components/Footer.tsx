@@ -322,7 +322,7 @@ export default function Footer() {
         </div>
 
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center pt-8 border-t border-white/10 text-xs sm:text-sm text-gray-300 gap-6">
-          <p className="text-center md:text-left w-full">
+          <p className="text-center md:text-left w-full" suppressHydrationWarning>
             © {new Date().getFullYear()} Fabrizio La Rosa. All Rights Reserved.
           </p>
 

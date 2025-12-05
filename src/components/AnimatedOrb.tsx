@@ -37,6 +37,8 @@ export default function AnimatedOrb() {
   const particleAnimationsRef = useRef<gsap.core.Tween[]>([]);
 
   useEffect(() => {
+    if (typeof window === "undefined") return;
+    
     const timer = setTimeout(() => {
       const newParticles = Array.from({ length: 5 }).map((_, i) => {
         const waypoints = 4;

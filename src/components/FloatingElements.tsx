@@ -170,6 +170,17 @@ export default function FloatingElements() {
     return () => ctx.revert();
   }, [shapes, dots, mounted]);
 
+  if (!mounted) {
+    return (
+      <div
+        ref={containerRef}
+        className="absolute inset-0 overflow-hidden pointer-events-none hidden md:block"
+        style={{ contain: "layout style paint" }}
+        suppressHydrationWarning
+      />
+    );
+  }
+
   return (
     <div
       ref={containerRef}

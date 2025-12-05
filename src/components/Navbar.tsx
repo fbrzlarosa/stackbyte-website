@@ -592,7 +592,7 @@ export default function Navbar() {
                         Local Time
                       </span>
                     </div>
-                    <div className="text-sm text-white font-medium">{time}</div>
+                    <div className="text-sm text-white font-medium" suppressHydrationWarning>{time || "--:--"}</div>
                   </div>
                   <div className="p-3 rounded-xl bg-white/5 border border-white/5 hover:border-white/10 transition-colors">
                     <div className="flex items-center gap-2 text-gray-400 mb-1">

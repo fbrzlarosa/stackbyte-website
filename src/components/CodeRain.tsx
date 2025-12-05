@@ -26,11 +26,15 @@ export default function CodeRain() {
   const [columns, setColumns] = useState<
     { delay: string; duration: string; opacity: number; snippets: string[] }[]
   >([]);
+  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
+    setMounted(true);
     // Use a timeout to push the state update to the next tick
     // avoiding synchronous setState warning in useEffect
     const timer = setTimeout(() => {
+      if (typeof window === "undefined") return;
+
       const isMobile = window.innerWidth < 768;
       // Reduced number of columns for performance
       const cols = Array.from({ length: isMobile ? 5 : 12 }).map(() => ({
@@ -47,16 +51,23 @@ export default function CodeRain() {
   }, []);
 
   // Render placeholder or null until hydrated to avoid hydration mismatch
-  if (columns.length === 0)
-    return <div className="absolute inset-0 bg-background -z-10" />;
+  if (!mounted || columns.length === 0)
+    return (
+      <div
+        className="absolute inset-0 bg-background -z-10"
+        suppressHydrationWarning
+      />
+    );
 
   return (
     <div className="absolute inset-0 overflow-hidden pointer-events-none select-none">
-      <div 
+      <div
         className="absolute inset-0 flex justify-between opacity-15 px-2"
         style={{
-          maskImage: "linear-gradient(to bottom, transparent 0%, black 20%, black 80%, transparent 100%)",
-          WebkitMaskImage: "linear-gradient(to bottom, transparent 0%, black 20%, black 80%, transparent 100%)"
+          maskImage:
+            "linear-gradient(to bottom, transparent 0%, black 20%, black 80%, transparent 100%)",
+          WebkitMaskImage:
+            "linear-gradient(to bottom, transparent 0%, black 20%, black 80%, transparent 100%)",
         }}
       >
         {columns.map((col, i) => (

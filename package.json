@@ -41,6 +41,7 @@
     "@types/nodemailer": "^7.0.4",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "baseline-browser-mapping": "^2.9.3",
     "eslint": "^9",
     "eslint-config-next": "16.0.4",
     "next-sitemap": "^4.2.3",

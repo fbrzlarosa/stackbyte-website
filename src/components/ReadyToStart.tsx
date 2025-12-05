@@ -66,15 +66,19 @@ export default function ReadyToStart() {
   const updateCombinedRef = useRef<(() => void) | null>(null);
 
   useEffect(() => {
+    if (typeof window === "undefined") return;
+    
     const checkMobile = () => {
       setIsMobile(window.innerWidth < 768);
     };
     checkMobile();
-    window.addEventListener("resize", checkMobile);
+    window.addEventListener("resize", checkMobile, { passive: true });
     return () => window.removeEventListener("resize", checkMobile);
   }, []);
 
   useEffect(() => {
+    if (typeof window === "undefined") return;
+    
     const newParticles = Array.from({ length: 15 }).map((_, i) => {
       const waypoints = 6;
       const pathX: number[] = [];
@@ -110,23 +114,27 @@ export default function ReadyToStart() {
       setParticles(newParticles);
     }, 0);
 
-    const newSmallParticles = Array.from({ length: 30 }).map((_, i) => ({
-      id: i,
-      initialX: Math.random() * window.innerWidth,
-      initialY: Math.random() * window.innerHeight,
-      animateY: [
-        Math.random() * window.innerHeight,
-        Math.random() * window.innerHeight,
-        Math.random() * window.innerHeight,
-      ],
-      animateX: [
-        Math.random() * window.innerWidth,
-        Math.random() * window.innerWidth,
-        Math.random() * window.innerWidth,
-      ],
-      duration: 15 + Math.random() * 10,
-      delay: Math.random() * 5,
-    }));
+    const newSmallParticles = Array.from({ length: 30 }).map((_, i) => {
+      const width = window.innerWidth;
+      const height = window.innerHeight;
+      return {
+        id: i,
+        initialX: Math.random() * width,
+        initialY: Math.random() * height,
+        animateY: [
+          Math.random() * height,
+          Math.random() * height,
+          Math.random() * height,
+        ],
+        animateX: [
+          Math.random() * width,
+          Math.random() * width,
+          Math.random() * width,
+        ],
+        duration: 15 + Math.random() * 10,
+        delay: Math.random() * 5,
+      };
+    });
 
     setTimeout(() => {
       setSmallParticles(newSmallParticles);
