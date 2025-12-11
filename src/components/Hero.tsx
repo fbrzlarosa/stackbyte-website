@@ -211,7 +211,7 @@ export default function Hero() {
               scale: 1 - progress * 0.2,
               opacity: 1 - progress * 0.3,
               transformPerspective: 1500,
-  });
+            });
           }
 
           if (paraRef.current) {

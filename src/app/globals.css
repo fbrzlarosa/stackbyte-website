@@ -105,14 +105,6 @@ html {
   -webkit-overflow-scrolling: touch;
 }
 
-/* GPU acceleration for animated elements */
-.motion-div,
-[class*="motion"],
-[data-framer-component] {
-  backface-visibility: hidden;
-  transform: translate3d(0, 0, 0);
-}
-
 /* Custom Scrollbar Styles - Global */
 * {
   scrollbar-width: thin;

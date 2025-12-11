@@ -1,5 +1,6 @@
 import GoogleAnalytics from "@/components/GoogleAnalytics";
 import IubendaScript from "@/components/IubendaScript";
+import PersonSchema from "@/components/PersonSchema";
 import ResourceHints from "@/components/ResourceHints";
 import SmoothScroll from "@/components/SmoothScroll";
 import { BackgroundProvider } from "@/context/BackgroundContext";
@@ -42,6 +43,9 @@ export const metadata: Metadata = {
   },
   description:
     "Fabrizio La Rosa is a Full Stack Engineer and Software Architect with 15+ years of experience in crafting efficient, scalable digital solutions.",
+  alternates: {
+    canonical: "https://stackbyte.dev",
+  },
   keywords: [
     "Full Stack Developer",
     "Software Engineer",
@@ -107,6 +111,7 @@ export default function RootLayout({
     <html lang="en" className="scroll-smooth">
       <head>
         <ResourceHints />
+        <PersonSchema />
       </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased bg-background text-foreground overflow-x-hidden w-full`}

@@ -1,6 +1,6 @@
-'use client';
+"use client";
 
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef } from "react";
 
 export default function MouseSpotlight() {
   const ref = useRef<HTMLDivElement>(null);
@@ -12,6 +12,7 @@ export default function MouseSpotlight() {
     const throttleMs = 32;
 
     const updateBackground = () => {
+      if (typeof window === "undefined") return;
       const now = performance.now();
       if (now - lastUpdate < throttleMs) {
         rafId.current = requestAnimationFrame(updateBackground);
@@ -32,11 +33,11 @@ export default function MouseSpotlight() {
       }
     };
 
-    window.addEventListener('mousemove', handleMouseMove, { passive: true });
+    window.addEventListener("mousemove", handleMouseMove, { passive: true });
     rafId.current = requestAnimationFrame(updateBackground);
 
     return () => {
-      window.removeEventListener('mousemove', handleMouseMove);
+      window.removeEventListener("mousemove", handleMouseMove);
       if (rafId.current !== null) {
         cancelAnimationFrame(rafId.current);
       }
@@ -48,8 +49,8 @@ export default function MouseSpotlight() {
       ref={ref}
       className="pointer-events-none fixed inset-0 z-30 hidden md:block"
       style={{
-        willChange: 'background',
-        contain: 'layout style paint',
+        willChange: "background",
+        contain: "layout style paint",
       }}
     />
   );

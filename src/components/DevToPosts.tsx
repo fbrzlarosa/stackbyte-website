@@ -267,7 +267,7 @@ function PostCard({ post, index, isMobile }: PostCardProps) {
             <div ref={imageRef} className="relative w-full h-full">
               <Image
                 src={post.image}
-                alt={post.title}
+                alt={`${post.title}`}
                 fill
                 sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                 className="object-cover pointer-events-none"

@@ -1,6 +1,6 @@
 # 🚀 Stackbyte.dev Website
 
-> Modern, performant portfolio website built with Next.js, React, and Framer Motion. Featuring smooth animations, real-time status tracking, and a beautiful gradient-based design.
+> Modern, performant portfolio website built with Next.js, React, and GSAP. Featuring smooth animations, real-time status tracking, and a beautiful gradient-based design.
 
 <div align="center">
 
@@ -21,7 +21,7 @@
 ## ✨ Features
 
 - 🎨 **Modern UI/UX** - Beautiful gradient-based design with smooth animations
-- 🎭 **Framer Motion** - Advanced 3D animations and transitions
+- 🎭 **GSAP Animations** - Advanced 3D animations and scroll-triggered effects
 - 📱 **Fully Responsive** - Optimized for all devices (mobile, tablet, desktop)
 - ⚡ **Performance Optimized** - Built with Next.js 16 for optimal speed
 - 🎯 **Real-time Status** - Live status tracking (Online/Offline/Holidays)
@@ -40,7 +40,7 @@
 
 ### Animation & UI
 
-- **[Framer Motion](https://www.framer.com/motion/)** - Production-ready motion library
+- **[GSAP](https://greensock.com/gsap/)** - Professional animation library with ScrollTrigger
 - **[Lenis](https://lenis.studiofreight.com/)** - Smooth scroll library
 - **[Lucide React](https://lucide.dev/)** - Beautiful icon toolkit
 
@@ -284,7 +284,7 @@ This project is open source and available under the [MIT License](LICENSE).
 
 - Built with amazing open source technologies
 - Icons by [Lucide](https://lucide.dev/)
-- Animations powered by [Framer Motion](https://www.framer.com/motion/)
+- Animations powered by [GSAP](https://greensock.com/gsap/)
 
 ## 🎯 Development Approach
 

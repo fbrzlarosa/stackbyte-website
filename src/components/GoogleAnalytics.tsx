@@ -5,13 +5,18 @@ import { useEffect, useState } from "react";
 
 export default function GoogleAnalytics() {
   const [consentGiven, setConsentGiven] = useState(false);
+  const [mounted, setMounted] = useState(false);
   const measurementId = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID;
 
   useEffect(() => {
-    if (!measurementId) return;
+    setMounted(true);
+  }, []);
+
+  useEffect(() => {
+    if (!mounted || !measurementId || typeof window === "undefined") return;
 
     const checkConsent = () => {
-      if (typeof window === "undefined" || !window._iub) {
+      if (!window._iub) {
         return;
       }
 
@@ -51,9 +56,9 @@ export default function GoogleAnalytics() {
       );
       clearInterval(interval);
     };
-  }, [measurementId]);
+  }, [measurementId, mounted]);
 
-  if (!measurementId || !consentGiven) {
+  if (!mounted || !measurementId || !consentGiven) {
     return null;
   }
 

@@ -102,12 +102,17 @@ const openSourceLibraries = [
 export default function Footer() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isPromptModalOpen, setIsPromptModalOpen] = useState(false);
+  const [isMounted, setIsMounted] = useState(false);
   const { cycleTheme } = useBackground();
 
   const modalOverlayRef = useRef<HTMLDivElement>(null);
   const modalContentRef = useRef<HTMLDivElement>(null);
   const promptModalOverlayRef = useRef<HTMLDivElement>(null);
   const promptModalContentRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
 
   useEffect(() => {
     if (isModalOpen && modalOverlayRef.current && modalContentRef.current) {
@@ -270,6 +275,19 @@ export default function Footer() {
                   <span className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-0 h-0.5 bg-primary group-hover:w-full transition-all duration-300" />
                 </Link>
               </li>
+              <li>
+                <a
+                  href={`https://www.iubenda.com/privacy-policy/${
+                    process.env.NEXT_PUBLIC_IUBENDA_POLICY_ID || ""
+                  }`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="relative group hover:text-primary transition-colors cursor-pointer inline-block"
+                >
+                  Privacy Policy
+                  <span className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-0 h-0.5 bg-primary group-hover:w-full transition-all duration-300" />
+                </a>
+              </li>
             </ul>
           </div>
 
@@ -322,7 +340,10 @@ export default function Footer() {
         </div>
 
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center pt-8 border-t border-white/10 text-xs sm:text-sm text-gray-300 gap-6">
-          <p className="text-center md:text-left w-full" suppressHydrationWarning>
+          <p
+            className="text-center md:text-left w-full"
+            suppressHydrationWarning
+          >
             © {new Date().getFullYear()} Fabrizio La Rosa. All Rights Reserved.
           </p>
 
@@ -350,24 +371,10 @@ export default function Footer() {
               </button>
             </div>
           </div>
-
-          <div className="flex justify-center w-full md:w-auto whitespace-nowrap">
-            <a
-              href={`https://www.iubenda.com/privacy-policy/${
-                process.env.NEXT_PUBLIC_IUBENDA_POLICY_ID || ""
-              }`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="relative group hover:text-primary transition-colors cursor-pointer inline-block text-xs sm:text-sm text-gray-300"
-            >
-              Privacy Policy
-              <span className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-0 h-0.5 bg-primary group-hover:w-full transition-all duration-300" />
-            </a>
-          </div>
         </div>
       </div>
 
-      {typeof window !== "undefined" &&
+      {isMounted &&
         isModalOpen &&
         createPortal(
           <div
@@ -507,7 +514,7 @@ export default function Footer() {
           document.body
         )}
 
-      {typeof window !== "undefined" &&
+      {isMounted &&
         isPromptModalOpen &&
         createPortal(
           <div

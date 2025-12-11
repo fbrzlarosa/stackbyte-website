@@ -122,7 +122,6 @@ const DevToPosts = dynamic(() => import("@/components/DevToPosts"), {
 
 export default async function Home() {
   const posts = await getDevToPosts();
-
   return (
     <>
       <NoiseOverlay />

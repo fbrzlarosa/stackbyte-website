@@ -54,16 +54,16 @@ export default function Contact() {
   useEffect(() => {
     let timeoutId: NodeJS.Timeout;
     let rafId: number | null = null;
-    
+
     const checkMobile = () => {
       clearTimeout(timeoutId);
       if (rafId) cancelAnimationFrame(rafId);
-      
+
       rafId = requestAnimationFrame(() => {
         setIsMobile(window.innerWidth < 768);
         rafId = null;
       });
-      
+
       timeoutId = setTimeout(() => {
         if (rafId) cancelAnimationFrame(rafId);
         rafId = requestAnimationFrame(() => {
@@ -72,11 +72,11 @@ export default function Contact() {
         });
       }, 150);
     };
-    
+
     requestAnimationFrame(() => {
       setIsMobile(window.innerWidth < 768);
     });
-    
+
     window.addEventListener("resize", checkMobile, { passive: true });
     return () => {
       window.removeEventListener("resize", checkMobile);
@@ -111,6 +111,8 @@ export default function Contact() {
   useEffect(() => {
     if (!sectionRef.current) return;
 
+    let scrollTrigger: ScrollTrigger | null = null;
+
     const ctx = gsap.context(() => {
       const lerp = (start: number, end: number, t: number) =>
         start + (end - start) * t;
@@ -129,11 +131,13 @@ export default function Contact() {
         });
       }
 
-      const scrollTrigger = ScrollTrigger.create({
+      scrollTrigger = ScrollTrigger.create({
         trigger: sectionRef.current,
         start: "top bottom",
         end: "bottom top",
         scrub: 0.5,
+        refreshPriority: -1,
+        invalidateOnRefresh: true,
         onUpdate: (self) => {
           const p = self.progress;
 
@@ -275,10 +279,50 @@ export default function Contact() {
         },
       });
 
-      scrollTrigger.refresh();
-      if (scrollTrigger.progress > 0) {
-        scrollTrigger.update();
-      }
+      const refreshAfterLoad = () => {
+        const images = document.querySelectorAll("img");
+        let loadedCount = 0;
+        const totalImages = images.length;
+
+        if (totalImages === 0) {
+          setTimeout(() => {
+            ScrollTrigger.refresh();
+            if (scrollTrigger) {
+              scrollTrigger.refresh();
+              scrollTrigger.update();
+            }
+          }, 200);
+          return;
+        }
+
+        const checkAllLoaded = () => {
+          loadedCount++;
+          if (loadedCount === totalImages) {
+            setTimeout(() => {
+              ScrollTrigger.refresh();
+              if (scrollTrigger) {
+                scrollTrigger.refresh();
+                scrollTrigger.update();
+              }
+            }, 100);
+          }
+        };
+
+        images.forEach((img) => {
+          if ((img as HTMLImageElement).complete) {
+            checkAllLoaded();
+          } else {
+            img.addEventListener("load", checkAllLoaded, { once: true });
+            img.addEventListener("error", checkAllLoaded, { once: true });
+          }
+        });
+      };
+
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          refreshAfterLoad();
+        });
+      });
 
       if (dot1Ref.current) {
         gsap.to(dot1Ref.current, {
@@ -373,13 +417,37 @@ export default function Contact() {
     const handleResize = () => {
       requestAnimationFrame(() => {
         refreshScrollTrigger();
+        if (scrollTrigger) {
+          scrollTrigger.refresh();
+          scrollTrigger.update();
+        }
+      });
+    };
+
+    const handleLoad = () => {
+      requestAnimationFrame(() => {
+        ScrollTrigger.refresh();
+        if (scrollTrigger) {
+          scrollTrigger.refresh();
+          scrollTrigger.update();
+        }
       });
     };
 
     window.addEventListener("resize", handleResize, { passive: true });
 
+    if (document.readyState === "complete") {
+      setTimeout(handleLoad, 300);
+    } else {
+      window.addEventListener("load", handleLoad, { once: true });
+    }
+
     return () => {
       window.removeEventListener("resize", handleResize);
+      window.removeEventListener("load", handleLoad);
+      if (scrollTrigger) {
+        scrollTrigger.kill();
+      }
       ctx.revert();
     };
   }, [isMobile]);
