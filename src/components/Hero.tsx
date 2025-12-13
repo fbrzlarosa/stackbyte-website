@@ -26,6 +26,7 @@ export default function Hero() {
   const span2Ref = useRef<HTMLSpanElement>(null);
   const span3Ref = useRef<HTMLSpanElement>(null);
   const span4Ref = useRef<HTMLSpanElement>(null);
+  const glowRef = useRef<HTMLSpanElement>(null);
 
   const [isMobile, setIsMobile] = useState(false);
   const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
@@ -174,6 +175,21 @@ export default function Hero() {
           },
           "-=0.6"
         );
+
+      if (glowRef.current) {
+        gsap.fromTo(
+          glowRef.current,
+          { opacity: 0.4 },
+          {
+            opacity: 0.7,
+            duration: 1.5,
+            delay: 0.5,
+            yoyo: true,
+            repeat: -1,
+            ease: "sine.inOut",
+          }
+        );
+      }
 
       if (orbRef.current) {
         gsap.fromTo(
@@ -326,7 +342,7 @@ export default function Hero() {
         { opacity: 0 },
         { opacity: 1, duration: 0.5 }
       ).fromTo(
-        [h1Ref.current, paraRef.current, buttonsRef.current, statsRef.current],
+        [h1Ref.current, paraRef.current, statsRef.current],
         { opacity: 0, y: 20 },
         { opacity: 1, y: 0, duration: 0.8, stagger: 0.15, ease: "power2.out" },
         "-=0.3"
@@ -340,6 +356,21 @@ export default function Hero() {
         );
       }
 
+      if (glowRef.current) {
+        gsap.fromTo(
+          glowRef.current,
+          { opacity: 0.4 },
+          {
+            opacity: 0.7,
+            duration: 1.5,
+            delay: 0.5,
+            yoyo: true,
+            repeat: -1,
+            ease: "sine.inOut",
+          }
+        );
+      }
+
       return () => {
         tl.kill();
       };
@@ -349,7 +380,7 @@ export default function Hero() {
   return (
     <section
       ref={sectionRef}
-      className="relative min-h-screen flex items-center pt-24 sm:pt-28 md:pt-32 pb-16 sm:pb-20 md:pb-6 perspective-1000"
+      className="relative flex items-center pt-24 sm:pt-28 md:pt-32 pb-16 sm:pb-20 md:pb-6 perspective-1000"
       style={{ opacity: 0 }}
     >
       <div
@@ -404,7 +435,7 @@ export default function Hero() {
                   display: "inline-block",
                   transformStyle: isMobile ? "flat" : "preserve-3d",
                 }}
-                className="gradient-animated-text"
+                className="gradient-animated-text relative z-10"
               >
                 software & web.
               </span>

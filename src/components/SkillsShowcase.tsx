@@ -145,7 +145,7 @@ function SkillCard({ skill, index, isMobile }: SkillCardProps) {
   const paraRef = useRef<HTMLParagraphElement>(null);
   const detailsRef = useRef<HTMLDivElement>(null);
   const linkRef = useRef<HTMLDivElement>(null);
-  const iconContainerRef = useRef<HTMLDivElement>(null);
+  const circlesRef = useRef<HTMLDivElement>(null);
 
   const mousePos = useRef({ x: 0, y: 0 });
   const contentRotateX = useRef(0);
@@ -421,16 +421,16 @@ function SkillCard({ skill, index, isMobile }: SkillCardProps) {
   }, []);
 
   useEffect(() => {
-    if (!iconContainerRef.current) return;
+    if (!circlesRef.current) return;
 
-    gsap.to(iconContainerRef.current, {
+    gsap.to(circlesRef.current, {
       rotation: 360,
       duration: 20,
       repeat: -1,
       ease: "none",
     });
 
-    gsap.to(iconContainerRef.current, {
+    gsap.to(circlesRef.current, {
       keyframes: [{ scale: 1 }, { scale: 1.1 }, { scale: 1 }],
       duration: 4,
       repeat: -1,
@@ -516,12 +516,13 @@ function SkillCard({ skill, index, isMobile }: SkillCardProps) {
 
         <div className="absolute inset-0 flex items-center justify-center">
           <div
-            ref={iconContainerRef}
             className="relative w-96 h-96"
             style={{ transformStyle: "preserve-3d" }}
           >
-            <div className="absolute inset-0 border-2 border-dashed border-white/20 rounded-full" />
-            <div className="absolute inset-12 border border-white/10 rounded-full" />
+            <div ref={circlesRef} className="absolute inset-0">
+              <div className="absolute inset-0 border-2 border-dashed border-white/20 rounded-full" />
+              <div className="absolute inset-12 border border-white/10 rounded-full" />
+            </div>
 
             <div className="absolute inset-0 flex items-center justify-center">
               <skill.icon
@@ -673,8 +674,8 @@ export default function SkillsShowcase() {
   }, []);
 
   return (
-    <section ref={containerRef} className="relative h-[800vh]" id="services">
-      <div className="sticky top-0 h-screen overflow-visible flex items-center justify-center">
+    <section ref={containerRef} className="relative h-[800vh] w-full" id="services">
+      <div className="sticky overflow-hidden top-0 h-screen flex items-center justify-center">
         <div className="absolute bottom-6 sm:bottom-12 left-4 sm:left-1/2 sm:-translate-x-1/2 z-50 flex items-center gap-3 sm:gap-4 bg-black/40 backdrop-blur-md px-4 sm:px-6 py-2 sm:py-3 rounded-full border border-white/10 overflow-x-auto max-w-[calc(100vw-2rem)] sm:max-w-fit no-scrollbar">
           {skills.map((skill, index) => (
             <NavigationDot
@@ -688,17 +689,17 @@ export default function SkillsShowcase() {
 
         <ScrollingBackgroundTextWrapper
           containerRef={containerRef}
-          className="absolute bottom-8 sm:bottom-auto sm:-top-0 whitespace-nowrap text-[15vh] sm:text-[30vw] md:text-[40vw] font-black text-transparent stroke-text select-none pointer-events-none left-0 opacity-50 sm:opacity-100"
+          className="absolute bottom-0 h-full leading-[100vh] flex justify-center whitespace-nowrap text-[15vh] sm:text-[30vw] md:text-[40vw] font-black text-transparent stroke-text select-none pointer-events-none left-0 opacity-50 sm:opacity-100"
           style={{
             WebkitTextStroke: "2px rgba(255,255,255,0.08)",
           }}
         >
           CODE &bull; COFFEE &bull;{" "}
-          <span className="text-primary/1" style={{ WebkitTextStroke: "0px" }}>
+          <span className="text-primary/10" style={{ WebkitTextStroke: "0px" }}>
             INNOVATION
           </span>{" "}
           &bull; CREATIVITY &bull;{" "}
-          <span className="text-primary/1" style={{ WebkitTextStroke: "0px" }}>
+          <span className="text-primary/10" style={{ WebkitTextStroke: "0px" }}>
             PASSION &bull;
           </span>{" "}
         </ScrollingBackgroundTextWrapper>

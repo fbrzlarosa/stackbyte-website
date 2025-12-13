@@ -291,7 +291,7 @@ export default function Contact() {
               scrollTrigger.refresh();
               scrollTrigger.update();
             }
-          }, 200);
+          }, 500);
           return;
         }
 

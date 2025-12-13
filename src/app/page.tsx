@@ -1,3 +1,4 @@
+import DevToPosts from "@/components/DevToPosts";
 import dynamic from "next/dynamic";
 
 async function getDevToPosts() {
@@ -8,7 +9,7 @@ async function getDevToPosts() {
     }
 
     const response = await fetch(
-      `https://dev.to/api/articles?username=${devToUsername}&per_page=6&page=1`,
+      `https://dev.to/api/articles?username=${devToUsername}&per_page=3&page=1`,
       {
         headers: {
           Accept: "application/json",
@@ -116,10 +117,6 @@ const SkillsShowcase = dynamic(() => import("@/components/SkillsShowcase"), {
   loading: () => null,
 });
 
-const DevToPosts = dynamic(() => import("@/components/DevToPosts"), {
-  loading: () => null,
-});
-
 export default async function Home() {
   const posts = await getDevToPosts();
   return (
@@ -129,7 +126,7 @@ export default async function Home() {
       <MouseSpotlight />
       <Navbar />
 
-      <main className="min-h-screen text-foreground selection:bg-primary/30 relative">
+      <main className="text-foreground selection:bg-primary/30 relative">
         <FloatingElements />
         <Hero />
         <About />

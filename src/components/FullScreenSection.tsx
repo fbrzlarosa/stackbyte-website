@@ -67,10 +67,7 @@ const FullScreenSection = forwardRef<HTMLElement, FullScreenSectionProps>(
       <section
         ref={internalRef}
         id={id}
-        style={{
-          transformStyle: "preserve-3d",
-        }}
-        className={`sm:min-h-screen flex items-center justify-center relative ${className}`}
+        className={`flex items-center justify-center relative ${className}`}
       >
         {children}
       </section>

@@ -97,7 +97,7 @@ function ExperienceCard({
       });
 
       if (dotRef.current) {
-        gsap.set(dotRef.current, { scale: 0 });
+        // gsap.set(dotRef.current, { scale: 0 });
 
         ScrollTrigger.create({
           trigger: cardRef.current,
@@ -105,12 +105,6 @@ function ExperienceCard({
           onEnter: () => {
             const dotTl = gsap.timeline({ delay: index * 0.15 + 0.2 });
             dotTl
-              .fromTo(
-                dotRef.current,
-                { scale: 0 },
-                { scale: 1.2, duration: 0.3, ease: "back.out(1.7)" }
-              )
-              .to(dotRef.current, { scale: 1, duration: 0.2 })
               .to(
                 dotRef.current,
                 { borderColor: "var(--primary)", duration: 0, delay: -0.5 },

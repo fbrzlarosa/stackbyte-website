@@ -114,6 +114,7 @@ export default function RootLayout({
         <PersonSchema />
       </head>
       <body
+        suppressHydrationWarning
         className={`${geistSans.variable} ${geistMono.variable} antialiased bg-background text-foreground overflow-x-hidden w-full`}
       >
         <BackgroundProvider>

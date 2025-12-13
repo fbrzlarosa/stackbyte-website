@@ -13,7 +13,6 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
-import { createPortal } from "react-dom";
 import Logo from "./Logo";
 
 function DevToIcon() {
@@ -102,17 +101,12 @@ const openSourceLibraries = [
 export default function Footer() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isPromptModalOpen, setIsPromptModalOpen] = useState(false);
-  const [isMounted, setIsMounted] = useState(false);
   const { cycleTheme } = useBackground();
 
   const modalOverlayRef = useRef<HTMLDivElement>(null);
   const modalContentRef = useRef<HTMLDivElement>(null);
   const promptModalOverlayRef = useRef<HTMLDivElement>(null);
   const promptModalContentRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    setIsMounted(true);
-  }, []);
 
   useEffect(() => {
     if (isModalOpen && modalOverlayRef.current && modalContentRef.current) {
@@ -374,244 +368,235 @@ export default function Footer() {
         </div>
       </div>
 
-      {isMounted &&
-        isModalOpen &&
-        createPortal(
+      {isModalOpen && (
+        <div
+          ref={modalOverlayRef}
+          onClick={closeModal}
+          className="fixed inset-0 bg-black/80 backdrop-blur-md z-[99999] flex items-center justify-center p-4"
+        >
           <div
-            ref={modalOverlayRef}
-            onClick={closeModal}
-            className="fixed inset-0 bg-black/80 backdrop-blur-md z-[99999] flex items-center justify-center p-4"
+            ref={modalContentRef}
+            onClick={(e) => e.stopPropagation()}
+            className="w-full max-w-4xl max-h-[90vh] bg-[#0D1117] border border-primary/30 rounded-3xl shadow-2xl overflow-hidden flex flex-col"
           >
+            <div className="absolute inset-0 bg-[linear-gradient(rgba(6,182,212,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(6,182,212,0.03)_1px,transparent_1px)] bg-[size:50px_50px]" />
+
             <div
-              ref={modalContentRef}
-              onClick={(e) => e.stopPropagation()}
-              className="w-full max-w-4xl max-h-[90vh] bg-[#0D1117] border border-primary/30 rounded-3xl shadow-2xl overflow-hidden flex flex-col"
+              className="relative z-10 p-6 sm:p-8 md:p-12 overflow-y-auto flex-1 custom-scrollbar"
+              data-lenis-prevent
             >
-              <div className="absolute inset-0 bg-[linear-gradient(rgba(6,182,212,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(6,182,212,0.03)_1px,transparent_1px)] bg-[size:50px_50px]" />
+              <div className="flex items-start justify-between mb-8 space-x-2">
+                <div>
+                  <h2 className="text-3xl sm:text-4xl font-black mb-2 gradient-animated-text">
+                    Open Source
+                  </h2>
+                  <p className="text-gray-400 text-sm sm:text-base">
+                    Built with amazing open source technologies
+                  </p>
+                </div>
+                <button
+                  onClick={closeModal}
+                  className="p-2 rounded-full bg-white/5 hover:bg-white/10 border border-white/10 hover:border-primary/50 transition-all cursor-pointer group"
+                >
+                  <X className="w-5 h-5 text-gray-400 group-hover:text-primary transition-colors" />
+                </button>
+              </div>
 
-              <div
-                className="relative z-10 p-6 sm:p-8 md:p-12 overflow-y-auto flex-1 custom-scrollbar"
-                data-lenis-prevent
-              >
-                <div className="flex items-center justify-between mb-8">
-                  <div>
-                    <h2 className="text-3xl sm:text-4xl font-black mb-2 gradient-animated-text">
-                      Open Source
-                    </h2>
-                    <p className="text-gray-400 text-sm sm:text-base">
-                      Built with amazing open source technologies
+              <div className="mb-6 p-6 rounded-2xl bg-gradient-to-r from-primary/10 via-primary-light/10 to-secondary/10 border border-primary/20 backdrop-blur-sm">
+                <div className="flex items-center gap-4">
+                  <div className="w-12 h-12 rounded-xl bg-black/30 flex items-center justify-center border border-primary/30">
+                    <Github className="w-6 h-6 text-white" />
+                  </div>
+                  <div className="flex-1">
+                    <h3 className="text-lg font-black text-white mb-1">
+                      Open Source Project
+                    </h3>
+                    <p className="text-sm text-gray-400 mb-3">
+                      This website is open source and available on my GitHub.
+                      Feel free to explore, contribute, or fork it!
                     </p>
-                  </div>
-                  <button
-                    onClick={closeModal}
-                    className="p-2 rounded-full bg-white/5 hover:bg-white/10 border border-white/10 hover:border-primary/50 transition-all cursor-pointer group"
-                  >
-                    <X className="w-5 h-5 text-gray-400 group-hover:text-primary transition-colors" />
-                  </button>
-                </div>
-
-                <div className="mb-6 p-6 rounded-2xl bg-gradient-to-r from-primary/10 via-primary-light/10 to-secondary/10 border border-primary/20 backdrop-blur-sm">
-                  <div className="flex items-center gap-4">
-                    <div className="w-12 h-12 rounded-xl bg-black/30 flex items-center justify-center border border-primary/30">
-                      <Github className="w-6 h-6 text-white" />
-                    </div>
-                    <div className="flex-1">
-                      <h3 className="text-lg font-black text-white mb-1">
-                        Open Source Project
-                      </h3>
-                      <p className="text-sm text-gray-400 mb-3">
-                        This website is open source and available on my GitHub.
-                        Feel free to explore, contribute, or fork it!
-                      </p>
-                      <a
-                        href={
-                          process.env.NEXT_PUBLIC_SOCIAL_GITHUB ||
-                          "https://github.com"
-                        }
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="inline-flex items-center gap-2 text-sm text-primary hover:text-secondary-light transition-colors cursor-pointer group"
-                      >
-                        View My Repositories
-                        <ExternalLink className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                      </a>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="mb-8 p-6 rounded-2xl bg-gradient-to-r from-primary/10 via-primary-light/10 to-secondary/10 border border-primary/20 backdrop-blur-sm">
-                  <div className="flex items-center gap-4">
-                    <div className="w-12 h-12 rounded-xl bg-black/30 flex items-center justify-center border border-primary/30">
-                      <svg
-                        className="w-8 h-8"
-                        viewBox="0 0 76 65"
-                        fill="none"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <path
-                          d="M37.5274 0L75.0548 65H0L37.5274 0Z"
-                          fill="white"
-                        />
-                      </svg>
-                    </div>
-                    <div className="flex-1">
-                      <h3 className="text-lg font-black text-white mb-1">
-                        Deployed on Vercel
-                      </h3>
-                      <p className="text-sm text-gray-400 mb-3">
-                        This website is hosted on Vercel&apos;s edge network for
-                        optimal performance
-                      </p>
-                      <a
-                        href="https://vercel.com"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="inline-flex items-center gap-2 text-sm text-primary hover:text-secondary-light transition-colors cursor-pointer group"
-                      >
-                        Visit Vercel
-                        <ExternalLink className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                      </a>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  {openSourceLibraries.map((lib) => (
                     <a
-                      key={lib.name}
-                      href={lib.url}
+                      href={
+                        process.env.NEXT_PUBLIC_SOCIAL_GITHUB ||
+                        "https://github.com"
+                      }
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="group p-5 rounded-xl bg-white/5 border border-white/10 hover:border-primary/50 hover:bg-white/10 transition-all cursor-pointer relative overflow-hidden hover:scale-[1.02] hover:-translate-y-0.5"
+                      className="inline-flex items-center gap-2 text-sm text-primary hover:text-secondary-light transition-colors cursor-pointer group"
                     >
-                      <div className="absolute inset-0 bg-gradient-to-r from-primary/0 via-primary/5 to-secondary/0 opacity-0 group-hover:opacity-100 transition-opacity" />
-                      <div className="relative z-10">
-                        <div className="flex items-start justify-between mb-2">
-                          <h4 className="text-lg font-black text-white group-hover:text-primary transition-colors">
-                            {lib.name}
-                          </h4>
-                          <ExternalLink className="w-4 h-4 text-gray-500 group-hover:text-primary transition-colors opacity-0 group-hover:opacity-100" />
-                        </div>
-                        <p className="text-xs text-gray-500 mb-3 uppercase tracking-wider">
-                          {lib.category}
-                        </p>
-                        <p className="text-sm text-gray-400">
-                          {lib.description}
-                        </p>
-                      </div>
+                      View My Repositories
+                      <ExternalLink className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                     </a>
-                  ))}
+                  </div>
+                </div>
+              </div>
+
+              <div className="mb-8 p-6 rounded-2xl bg-gradient-to-r from-primary/10 via-primary-light/10 to-secondary/10 border border-primary/20 backdrop-blur-sm">
+                <div className="flex items-center gap-4">
+                  <div className="w-12 h-12 rounded-xl bg-black/30 flex items-center justify-center border border-primary/30">
+                    <svg
+                      className="w-8 h-8"
+                      viewBox="0 0 76 65"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M37.5274 0L75.0548 65H0L37.5274 0Z"
+                        fill="white"
+                      />
+                    </svg>
+                  </div>
+                  <div className="flex-1">
+                    <h3 className="text-lg font-black text-white mb-1">
+                      Deployed on Vercel
+                    </h3>
+                    <p className="text-sm text-gray-400 mb-3">
+                      This website is hosted on Vercel&apos;s edge network for
+                      optimal performance
+                    </p>
+                    <a
+                      href="https://vercel.com"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-2 text-sm text-primary hover:text-secondary-light transition-colors cursor-pointer group"
+                    >
+                      Visit Vercel
+                      <ExternalLink className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                    </a>
+                  </div>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                {openSourceLibraries.map((lib) => (
+                  <a
+                    key={lib.name}
+                    href={lib.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="group p-5 rounded-xl bg-white/5 border border-white/10 hover:border-primary/50 hover:bg-white/10 transition-all cursor-pointer relative overflow-hidden hover:scale-[1.02] hover:-translate-y-0.5"
+                  >
+                    <div className="absolute inset-0 bg-gradient-to-r from-primary/0 via-primary/5 to-secondary/0 opacity-0 group-hover:opacity-100 transition-opacity" />
+                    <div className="relative z-10">
+                      <div className="flex items-start justify-between mb-2">
+                        <h4 className="text-lg font-black text-white group-hover:text-primary transition-colors">
+                          {lib.name}
+                        </h4>
+                        <ExternalLink className="w-4 h-4 text-gray-500 group-hover:text-primary transition-colors opacity-0 group-hover:opacity-100" />
+                      </div>
+                      <p className="text-xs text-gray-500 mb-3 uppercase tracking-wider">
+                        {lib.category}
+                      </p>
+                      <p className="text-sm text-gray-400">{lib.description}</p>
+                    </div>
+                  </a>
+                ))}
+              </div>
+
+              <div className="mt-8 pt-6 border-t border-white/10 text-center">
+                <p className="text-xs text-gray-500">
+                  Made with ❤️ using open source technologies
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {isPromptModalOpen && (
+        <div
+          ref={promptModalOverlayRef}
+          onClick={closePromptModal}
+          className="fixed inset-0 bg-black/80 backdrop-blur-md z-[99999] flex items-center justify-center p-4"
+        >
+          <div
+            ref={promptModalContentRef}
+            onClick={(e) => e.stopPropagation()}
+            className="w-full max-w-4xl max-h-[90vh] bg-[#0D1117] border border-secondary/30 rounded-3xl shadow-2xl overflow-hidden flex flex-col"
+          >
+            <div className="absolute inset-0 bg-[linear-gradient(rgba(168,85,247,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(168,85,247,0.03)_1px,transparent_1px)] bg-[size:50px_50px]" />
+
+            <div
+              className="relative z-10 p-6 sm:p-8 md:p-12 overflow-y-auto flex-1 custom-scrollbar"
+              data-lenis-prevent
+            >
+              <div className="flex items-start justify-between mb-8 space-x-2">
+                <div>
+                  <h2 className="text-3xl sm:text-4xl font-black mb-2 gradient-animated-text">
+                    Prompt Engineered
+                  </h2>
+                  <p className="text-gray-400 text-sm sm:text-base">
+                    Built with AI, guided by human vision
+                  </p>
+                </div>
+                <button
+                  onClick={closePromptModal}
+                  className="p-2 rounded-full bg-white/5 hover:bg-white/10 border border-white/10 hover:border-secondary/50 transition-all cursor-pointer group"
+                >
+                  <X className="w-5 h-5 text-gray-400 group-hover:text-secondary transition-colors" />
+                </button>
+              </div>
+
+              <div className="space-y-6">
+                <div className="p-6 rounded-2xl bg-gradient-to-r from-secondary/10 via-primary/10 to-secondary/10 border border-secondary/20 backdrop-blur-sm">
+                  <div className="flex items-start gap-4">
+                    <div className="md:flex hidden w-12 h-12 rounded-xl bg-black/30 items-center justify-center border border-secondary/30 flex-shrink-0">
+                      <Sparkles className="w-6 h-6 text-secondary" />
+                    </div>
+                    <div className="flex-1">
+                      <h3 className="text-lg font-black text-white mb-3">
+                        How This Site Was Built
+                      </h3>
+                      <p className="text-gray-300 leading-relaxed mb-4">
+                        Here&apos;s the thing - this entire website was created
+                        100% by AI, but don&apos;t worry, I was watching closely
+                        the whole time! Think of me as the director and the AI
+                        as the talented crew bringing the vision to life.
+                      </p>
+                      <p className="text-gray-300 leading-relaxed mb-4">
+                        Every line of code, every design decision, and every
+                        animation you see here was crafted through careful
+                        prompt engineering. I guided the process, refined the
+                        outputs, and made sure everything aligned with my vision
+                        - but the heavy lifting? That was all AI.
+                      </p>
+                      <p className="text-gray-300 leading-relaxed mb-4">
+                        This whole project was built using{" "}
+                        <span className="text-secondary font-semibold">
+                          vibe coding
+                        </span>
+                        - that flow state where you just go with the feeling,
+                        iterate on the fly, and let the creative process guide
+                        you. No rigid planning, just pure experimentation and
+                        refinement until it feels right.
+                      </p>
+                      <p className="text-gray-300 leading-relaxed">
+                        It&apos;s pretty wild what&apos;s possible when you
+                        combine human creativity with AI capabilities. This site
+                        is a testament to that collaboration - showing that with
+                        the right prompts, a clear vision, and a good vibe, you
+                        can build something truly special.
+                      </p>
+                    </div>
+                  </div>
                 </div>
 
-                <div className="mt-8 pt-6 border-t border-white/10 text-center">
-                  <p className="text-xs text-gray-500">
-                    Made with ❤️ using open source technologies
+                <div className="p-6 rounded-2xl bg-secondary/5 border border-secondary/10">
+                  <p className="text-sm text-gray-400 text-center">
+                    <span className="text-secondary font-semibold">
+                      100% AI-generated
+                    </span>
+                    {" • "}
+                    <span className="text-primary font-semibold">
+                      100% human-guided
+                    </span>
                   </p>
                 </div>
               </div>
             </div>
-          </div>,
-          document.body
-        )}
-
-      {isMounted &&
-        isPromptModalOpen &&
-        createPortal(
-          <div
-            ref={promptModalOverlayRef}
-            onClick={closePromptModal}
-            className="fixed inset-0 bg-black/80 backdrop-blur-md z-[99999] flex items-center justify-center p-4"
-          >
-            <div
-              ref={promptModalContentRef}
-              onClick={(e) => e.stopPropagation()}
-              className="w-full max-w-2xl max-h-[90vh] bg-[#0D1117] border border-secondary/30 rounded-3xl shadow-2xl overflow-hidden flex flex-col"
-            >
-              <div className="absolute inset-0 bg-[linear-gradient(rgba(168,85,247,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(168,85,247,0.03)_1px,transparent_1px)] bg-[size:50px_50px]" />
-
-              <div
-                className="relative z-10 p-6 sm:p-8 md:p-12 overflow-y-auto flex-1 custom-scrollbar"
-                data-lenis-prevent
-              >
-                <div className="flex items-center justify-between mb-8">
-                  <div>
-                    <h2 className="text-3xl sm:text-4xl font-black mb-2 gradient-animated-text">
-                      Prompt Engineered
-                    </h2>
-                    <p className="text-gray-400 text-sm sm:text-base">
-                      Built with AI, guided by human vision
-                    </p>
-                  </div>
-                  <button
-                    onClick={closePromptModal}
-                    className="p-2 rounded-full bg-white/5 hover:bg-white/10 border border-white/10 hover:border-secondary/50 transition-all cursor-pointer group"
-                  >
-                    <X className="w-5 h-5 text-gray-400 group-hover:text-secondary transition-colors" />
-                  </button>
-                </div>
-
-                <div className="space-y-6">
-                  <div className="p-6 rounded-2xl bg-gradient-to-r from-secondary/10 via-primary/10 to-secondary/10 border border-secondary/20 backdrop-blur-sm">
-                    <div className="flex items-start gap-4">
-                      <div className="w-12 h-12 rounded-xl bg-black/30 flex items-center justify-center border border-secondary/30 flex-shrink-0">
-                        <Sparkles className="w-6 h-6 text-secondary" />
-                      </div>
-                      <div className="flex-1">
-                        <h3 className="text-lg font-black text-white mb-3">
-                          How This Site Was Built
-                        </h3>
-                        <p className="text-gray-300 leading-relaxed mb-4">
-                          Here&apos;s the thing - this entire website was
-                          created 100% by AI, but don&apos;t worry, I was
-                          watching closely the whole time! Think of me as the
-                          director and the AI as the talented crew bringing the
-                          vision to life.
-                        </p>
-                        <p className="text-gray-300 leading-relaxed mb-4">
-                          Every line of code, every design decision, and every
-                          animation you see here was crafted through careful
-                          prompt engineering. I guided the process, refined the
-                          outputs, and made sure everything aligned with my
-                          vision - but the heavy lifting? That was all AI.
-                        </p>
-                        <p className="text-gray-300 leading-relaxed mb-4">
-                          This whole project was built using{" "}
-                          <span className="text-secondary font-semibold">
-                            vibe coding
-                          </span>
-                          - that flow state where you just go with the feeling,
-                          iterate on the fly, and let the creative process guide
-                          you. No rigid planning, just pure experimentation and
-                          refinement until it feels right.
-                        </p>
-                        <p className="text-gray-300 leading-relaxed">
-                          It&apos;s pretty wild what&apos;s possible when you
-                          combine human creativity with AI capabilities. This
-                          site is a testament to that collaboration - showing
-                          that with the right prompts, a clear vision, and a
-                          good vibe, you can build something truly special.
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="p-6 rounded-2xl bg-secondary/5 border border-secondary/10">
-                    <p className="text-sm text-gray-400 text-center">
-                      <span className="text-secondary font-semibold">
-                        100% AI-generated
-                      </span>
-                      {" • "}
-                      <span className="text-primary font-semibold">
-                        100% human-guided
-                      </span>
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>,
-          document.body
-        )}
+          </div>
+        </div>
+      )}
     </footer>
   );
 }

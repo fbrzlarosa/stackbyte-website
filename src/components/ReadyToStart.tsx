@@ -36,6 +36,8 @@ export default function ReadyToStart() {
   const subtitleRef = useRef<HTMLParagraphElement>(null);
   const orb1Ref = useRef<HTMLDivElement>(null);
   const orb2Ref = useRef<HTMLDivElement>(null);
+  const glow1Ref = useRef<HTMLSpanElement>(null);
+  const glow3Ref = useRef<HTMLSpanElement>(null);
   const [particles, setParticles] = useState<Particle[]>([]);
   const [smallParticles, setSmallParticles] = useState<SmallParticle[]>([]);
   const [isMobile, setIsMobile] = useState(false);
@@ -60,14 +62,10 @@ export default function ReadyToStart() {
     translateZ: 0,
     y: 0,
   });
-  const word1AnimValues = useRef({ rotateX: 0, rotateY: 0, translateZ: 0 });
-  const word2AnimValues = useRef({ rotateX: 0, rotateY: 0, translateZ: 0 });
-  const word3AnimValues = useRef({ rotateX: 0, rotateY: 0, translateZ: 0 });
-  const updateCombinedRef = useRef<(() => void) | null>(null);
 
   useEffect(() => {
     if (typeof window === "undefined") return;
-    
+
     const checkMobile = () => {
       setIsMobile(window.innerWidth < 768);
     };
@@ -78,7 +76,7 @@ export default function ReadyToStart() {
 
   useEffect(() => {
     if (typeof window === "undefined") return;
-    
+
     const newParticles = Array.from({ length: 15 }).map((_, i) => {
       const waypoints = 6;
       const pathX: number[] = [];
@@ -205,10 +203,6 @@ export default function ReadyToStart() {
               translateZ: isMobile ? 0 : lerp(-100, 100, p),
               y: isMobile ? 0 : lerp(20, -20, p),
             };
-          }
-
-          if (updateCombinedRef.current) {
-            updateCombinedRef.current();
           }
 
           if (subtitleRef.current) {
@@ -373,50 +367,6 @@ export default function ReadyToStart() {
       return;
 
     const ctx = gsap.context(() => {
-      const updateCombined = () => {
-        if (word1Ref.current) {
-          gsap.set(word1Ref.current, {
-            rotateX:
-              word1BaseValues.current.rotateX + word1AnimValues.current.rotateX,
-            rotateY:
-              word1BaseValues.current.rotateY + word1AnimValues.current.rotateY,
-            translateZ:
-              word1BaseValues.current.translateZ +
-              word1AnimValues.current.translateZ,
-            y: word1BaseValues.current.y,
-          });
-        }
-
-        if (word2Ref.current) {
-          gsap.set(word2Ref.current, {
-            rotateX:
-              word2BaseValues.current.rotateX + word2AnimValues.current.rotateX,
-            rotateY:
-              word2BaseValues.current.rotateY + word2AnimValues.current.rotateY,
-            translateZ:
-              word2BaseValues.current.translateZ +
-              word2AnimValues.current.translateZ,
-            y: word2BaseValues.current.y,
-          });
-        }
-
-        if (word3Ref.current) {
-          gsap.set(word3Ref.current, {
-            rotateX:
-              word3BaseValues.current.rotateX + word3AnimValues.current.rotateX,
-            rotateY:
-              word3BaseValues.current.rotateY + word3AnimValues.current.rotateY,
-            translateZ:
-              word3BaseValues.current.translateZ +
-              word3AnimValues.current.translateZ,
-            y: word3BaseValues.current.y,
-          });
-        }
-      };
-
-      updateCombinedRef.current = updateCombined;
-      updateCombined();
-
       const word1AnimObj = { rotateX: 0, rotateY: 0, translateZ: 0 };
       const word2AnimObj = { rotateX: 0, rotateY: 0, translateZ: 0 };
       const word3AnimObj = { rotateX: 0, rotateY: 0, translateZ: 0 };
@@ -431,10 +381,6 @@ export default function ReadyToStart() {
         duration: 8,
         repeat: -1,
         ease: "sine.inOut",
-        onUpdate: () => {
-          word1AnimValues.current = { ...word1AnimObj };
-          updateCombined();
-        },
       });
 
       gsap.to(word2AnimObj, {
@@ -448,10 +394,6 @@ export default function ReadyToStart() {
         repeat: -1,
         ease: "power2.inOut",
         delay: 1.2,
-        onUpdate: () => {
-          word2AnimValues.current = { ...word2AnimObj };
-          updateCombined();
-        },
       });
 
       gsap.to(word3AnimObj, {
@@ -465,11 +407,37 @@ export default function ReadyToStart() {
         repeat: -1,
         ease: "sine.inOut",
         delay: 2,
-        onUpdate: () => {
-          word3AnimValues.current = { ...word3AnimObj };
-          updateCombined();
-        },
       });
+
+      if (glow1Ref.current) {
+        gsap.fromTo(
+          glow1Ref.current,
+          { opacity: 0.4 },
+          {
+            opacity: 0.7,
+            duration: 1.5,
+            delay: 0.5,
+            yoyo: true,
+            repeat: -1,
+            ease: "sine.inOut",
+          }
+        );
+      }
+
+      if (glow3Ref.current) {
+        gsap.fromTo(
+          glow3Ref.current,
+          { opacity: 0.4 },
+          {
+            opacity: 0.7,
+            duration: 1.5,
+            delay: 0.5,
+            yoyo: true,
+            repeat: -1,
+            ease: "sine.inOut",
+          }
+        );
+      }
     }, sectionRef);
 
     return () => ctx.revert();
@@ -539,8 +507,16 @@ export default function ReadyToStart() {
                   transformStyle: "preserve-3d",
                 }}
               >
-                <span className="relative z-10 gradient-animated-text">
-                  CODE.
+                <span className="relative inline-block">
+                  <span className="relative z-10 gradient-animated-text">
+                    CODE.
+                  </span>
+                  <span
+                    ref={glow1Ref}
+                    className="block absolute inset-0 gradient-animated-text blur-[20px] opacity-60 z-0"
+                  >
+                    CODE.
+                  </span>
                 </span>
               </h2>
 
@@ -561,8 +537,16 @@ export default function ReadyToStart() {
                   transformStyle: "preserve-3d",
                 }}
               >
-                <span className="relative z-10 gradient-animated-text">
-                  CONQUER.
+                <span className="relative inline-block">
+                  <span className="relative z-10 gradient-animated-text">
+                    CONQUER.
+                  </span>
+                  <span
+                    ref={glow3Ref}
+                    className="absolute inset-0 gradient-animated-text blur-[20px] opacity-60 z-0"
+                  >
+                    CONQUER.
+                  </span>
                 </span>
               </h2>
             </div>
