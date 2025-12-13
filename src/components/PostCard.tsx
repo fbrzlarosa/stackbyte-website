@@ -271,9 +271,9 @@ export default function PostCard({ post, index, isMobile }: PostCardProps) {
                 fill
                 sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                 className="object-cover pointer-events-none"
-                loading={"eager"}
-                quality={85}
-                fetchPriority={index < 3 ? "high" : "auto"}
+                loading={index < 2 ? "eager" : "lazy"}
+                quality={75}
+                fetchPriority={index < 2 ? "high" : "auto"}
               />
             </div>
             <div className="absolute inset-0 bg-linear-to-t from-[#0D1117] to-transparent pointer-events-none" />
