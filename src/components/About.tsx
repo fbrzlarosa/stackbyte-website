@@ -4,6 +4,7 @@ import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { Briefcase, GraduationCap, Trophy } from "lucide-react";
 import { MouseEvent, useEffect, useRef, useState } from "react";
+import TechStack3D from "./TechStack3D";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -582,25 +583,10 @@ export default function About() {
                   architect of your next digital masterpiece!
                 </p>
               </div>
+            </div>
 
-              <div ref={statsRef} className="mt-12 flex gap-8">
-                {[
-                  { value: "15+", label: "Years Experience" },
-                  { value: "63+", label: "Projects Completed" },
-                ].map((stat, i) => (
-                  <div key={i} className="relative group" data-stat>
-                    <div className="relative z-10">
-                      <div className="text-3xl sm:text-4xl md:text-5xl font-black bg-linear-to-r from-white to-gray-400 bg-clip-text text-transparent mb-2">
-                        {stat.value}
-                      </div>
-                      <div className="text-sm text-gray-500 uppercase tracking-wider">
-                        {stat.label}
-                      </div>
-                    </div>
-                    <div className="absolute inset-0 bg-primary/5 rounded-lg blur-xl -z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                  </div>
-                ))}
-              </div>
+            <div ref={statsRef} className="mt-8 flex gap-8">
+              <TechStack3D />
             </div>
           </div>
 
