@@ -310,7 +310,9 @@ export default function PostCard({ post, index, isMobile }: PostCardProps) {
           >
             <div className="flex items-center gap-2">
               <Calendar className="w-4 h-4 text-primary" />
-              <span>{formatDate(post.publishedAt) || ""}</span>
+              <span suppressHydrationWarning>
+                {formatDate(post.publishedAt) || ""}
+              </span>
             </div>
             {post.readTime && (
               <>
