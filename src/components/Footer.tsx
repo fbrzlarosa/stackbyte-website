@@ -279,6 +279,15 @@ export default function Footer() {
                 </Link>
               </li>
               <li>
+                <Link
+                  href="/ai-log"
+                  className="relative group hover:text-primary transition-colors cursor-pointer inline-block"
+                >
+                  AI Log
+                  <span className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-0 h-0.5 bg-primary group-hover:w-full transition-all duration-300" />
+                </Link>
+              </li>
+              <li>
                 <a
                   href={`https://www.iubenda.com/privacy-policy/${
                     process.env.NEXT_PUBLIC_IUBENDA_POLICY_ID || ""

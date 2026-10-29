@@ -49,6 +49,7 @@ const navLinks = [
   { name: "How I Work", href: "#process" },
   { name: "Expertise", href: "#services" },
   { name: "Terminale", href: "/terminale" },
+  { name: "AI Log", href: "/ai-log" },
   { name: "Posts", href: "#posts" },
 ];
 
