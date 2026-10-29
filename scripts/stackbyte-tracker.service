@@ -1,0 +1,17 @@
+# systemd user unit for the status tracker (Linux desktop).
+# Install:
+#   ln -s "$PWD/scripts/stackbyte-tracker.service" ~/.config/systemd/user/
+#   systemctl --user daemon-reload && systemctl --user enable --now stackbyte-tracker
+[Unit]
+Description=Stackbyte status tracker
+After=graphical-session.target
+PartOf=graphical-session.target
+
+[Service]
+WorkingDirectory=%h/Workspace/stackbyte-website
+ExecStart=/usr/bin/node scripts/tracker.js
+Restart=on-failure
+RestartSec=10
+
+[Install]
+WantedBy=graphical-session.target

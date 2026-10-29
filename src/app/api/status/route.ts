@@ -11,8 +11,9 @@ export async function POST(request: Request) {
         const body = await request.json();
         const { status, secret } = body;
 
-        // Simple security check
-        if (secret !== process.env.STATUS_API_SECRET) {
+        // Simple security check (an unset secret must never match a missing one)
+        const expectedSecret = process.env.STATUS_API_SECRET;
+        if (!expectedSecret || secret !== expectedSecret) {
             return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
         }
 
