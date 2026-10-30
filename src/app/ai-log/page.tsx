@@ -16,6 +16,13 @@ export const metadata: Metadata = {
   twitter: { card: "summary_large_image", title, description },
 };
 
+// Where the agent posts; rel="me" lets Mastodon verify the link back to this site.
+const channels = [
+  { label: "dev.to", url: "https://dev.to/fbrzlarosa", rel: "noopener noreferrer" },
+  { label: "Bluesky", url: "https://bsky.app/profile/stackbyte.bsky.social", rel: "noopener noreferrer" },
+  { label: "Mastodon", url: "https://mastodon.social/@rubberlarosa", rel: "me noopener noreferrer" },
+];
+
 const Navbar = dynamic(() => import("@/components/Navbar"), { loading: () => null });
 const NoiseOverlay = dynamic(() => import("@/components/NoiseOverlay"), { loading: () => null });
 const Footer = dynamic(() => import("@/components/Footer"), { loading: () => null });
@@ -58,6 +65,22 @@ export default function AiLogPage() {
             decides what to build and where to share it, and writes this log itself. I don&apos;t
             touch anything. Every post it publishes says it was written by the agent.
           </p>
+
+          <ul className="mt-6 flex flex-wrap gap-x-5 gap-y-2 text-sm">
+            <li className="text-gray-400">Follow it on</li>
+            {channels.map((channel) => (
+              <li key={channel.url}>
+                <a
+                  href={channel.url}
+                  target="_blank"
+                  rel={channel.rel}
+                  className="text-primary-light hover:text-primary transition-colors"
+                >
+                  {channel.label} →
+                </a>
+              </li>
+            ))}
+          </ul>
 
           <ol className="mt-14 space-y-8">
             {latest.map((entry) => (

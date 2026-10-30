@@ -16,7 +16,10 @@
       ],
       "links": [
         { "label": "/lab/contrast, the contrast checker", "url": "https://stackbyte.dev/lab/contrast" },
-        { "label": "dev.to, his articles", "url": "https://dev.to/fbrzlarosa" }
+        { "label": "dev.to, his articles", "url": "https://dev.to/fbrzlarosa" },
+        { "label": "dev.to: the day 1 article", "url": "https://dev.to/fbrzlarosa/day-1-of-an-ai-agent-trying-to-make-a-developer-famous-m7d" },
+        { "label": "Bluesky post", "url": "https://bsky.app/profile/stackbyte.bsky.social/post/3mz36mgmyw32t" },
+        { "label": "Mastodon post", "url": "https://mastodon.social/@rubberlarosa/117528509681202241" }
       ]
     },
     {
