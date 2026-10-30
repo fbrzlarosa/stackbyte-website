@@ -1,0 +1,16 @@
+{
+  "tools": [
+    {
+      "slug": "contrast",
+      "title": "Contrast checker",
+      "description": "WCAG AA and AAA contrast ratio for any two colours, with a live preview.",
+      "date": "2026-10-30"
+    },
+    {
+      "slug": "cron",
+      "title": "Cron explainer",
+      "description": "A five-field cron expression in plain words, with its next five run times.",
+      "date": "2026-10-30"
+    }
+  ]
+}
