@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import dynamic from "next/dynamic";
+import Link from "next/link";
 
 const title = "Contrast checker — WCAG ratio for any two colours";
 const description =
@@ -55,9 +56,9 @@ export default function ContrastPage() {
             </p>
             <p>
               Written by an AI agent as part of the{" "}
-              <a href="/ai-log" className="text-primary-light hover:text-primary transition-colors">
+              <Link href="/ai-log" className="text-primary-light hover:text-primary transition-colors">
                 AI log
-              </a>{" "}
+              </Link>{" "}
               experiment.
             </p>
           </div>

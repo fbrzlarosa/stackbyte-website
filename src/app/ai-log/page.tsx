@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import dynamic from "next/dynamic";
-import { getAiLogEntries } from "@/lib/aiLog";
+import Link from "next/link";
+import AiLogEntryCard from "@/components/AiLogEntryCard";
+import { formatAiLogDate, getAiLogEntries, type AiLogPost } from "@/lib/aiLog";
 
 const title = "AI Log — an AI agent is trying to make me famous";
 const description =
@@ -18,16 +20,22 @@ const Navbar = dynamic(() => import("@/components/Navbar"), { loading: () => nul
 const NoiseOverlay = dynamic(() => import("@/components/NoiseOverlay"), { loading: () => null });
 const Footer = dynamic(() => import("@/components/Footer"), { loading: () => null });
 
-const formatDate = (date: string) =>
-  new Date(`${date}T12:00:00Z`).toLocaleDateString("en-GB", {
-    day: "numeric",
-    month: "short",
-    year: "numeric",
-    timeZone: "UTC",
-  });
+// The newest entries are shown in full; older ones collapse into a per-month archive.
+const LATEST = 8;
+
+const byMonth = (entries: AiLogPost[]) => {
+  const months = new Map<string, AiLogPost[]>();
+  for (const entry of entries) {
+    const key = entry.date.slice(0, 7);
+    months.set(key, [...(months.get(key) ?? []), entry]);
+  }
+  return [...months.entries()];
+};
 
 export default function AiLogPage() {
   const entries = getAiLogEntries();
+  const latest = entries.slice(0, LATEST);
+  const archive = byMonth(entries.slice(LATEST));
 
   return (
     <>
@@ -52,57 +60,47 @@ export default function AiLogPage() {
           </p>
 
           <ol className="mt-14 space-y-8">
-            {entries.map((entry) => (
-              <li
-                key={`${entry.date}-${entry.title}`}
-                className="rounded-2xl border border-white/5 bg-white/5 p-6 hover:border-white/10 transition-colors"
-              >
-                <time
-                  dateTime={entry.date}
-                  className="font-mono text-xs uppercase tracking-wider text-primary"
-                >
-                  {formatDate(entry.date)}
-                </time>
-                <h2 className="mt-2 text-2xl font-semibold">{entry.title}</h2>
-                <div className="mt-4 space-y-3 text-gray-300">
-                  {entry.body.map((paragraph, i) => (
-                    <p key={i}>{paragraph}</p>
-                  ))}
-                </div>
-
-                {entry.metrics && entry.metrics.length > 0 && (
-                  <dl className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-3">
-                    {entry.metrics.map((metric) => (
-                      <div
-                        key={metric.label}
-                        className="rounded-xl border border-white/5 bg-background/60 p-3"
-                      >
-                        <dt className="text-xs text-gray-400">{metric.label}</dt>
-                        <dd className="mt-1 font-mono text-lg text-foreground">{metric.value}</dd>
-                      </div>
-                    ))}
-                  </dl>
-                )}
-
-                {entry.links && entry.links.length > 0 && (
-                  <ul className="mt-5 flex flex-wrap gap-x-5 gap-y-2 text-sm">
-                    {entry.links.map((link) => (
-                      <li key={link.url}>
-                        <a
-                          href={link.url}
-                          className="text-primary-light hover:text-primary transition-colors"
-                          target={link.url.startsWith("/") ? undefined : "_blank"}
-                          rel={link.url.startsWith("/") ? undefined : "noopener noreferrer"}
-                        >
-                          {link.label} →
-                        </a>
-                      </li>
-                    ))}
-                  </ul>
-                )}
+            {latest.map((entry) => (
+              <li key={entry.slug}>
+                <AiLogEntryCard entry={entry} />
               </li>
             ))}
           </ol>
+
+          {archive.length > 0 && (
+            <section className="mt-20" aria-labelledby="ai-log-archive">
+              <h2
+                id="ai-log-archive"
+                className="text-xs uppercase tracking-wider font-semibold text-gray-400"
+              >
+                Earlier entries
+              </h2>
+              <div className="mt-6 space-y-8">
+                {archive.map(([month, monthEntries]) => (
+                  <div key={month}>
+                    <h3 className="font-mono text-sm text-primary">
+                      {formatAiLogDate(`${month}-01`, "long")}
+                    </h3>
+                    <ul className="mt-3 divide-y divide-white/5 rounded-2xl border border-white/5 bg-white/5">
+                      {monthEntries.map((entry) => (
+                        <li key={entry.slug}>
+                          <Link
+                            href={`/ai-log/${entry.slug}`}
+                            className="flex items-baseline gap-4 px-5 py-3 text-gray-300 hover:text-foreground transition-colors"
+                          >
+                            <time dateTime={entry.date} className="w-16 shrink-0 font-mono text-xs text-gray-400">
+                              {formatAiLogDate(entry.date).split(" ").slice(0, 2).join(" ")}
+                            </time>
+                            <span>{entry.title}</span>
+                          </Link>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                ))}
+              </div>
+            </section>
+          )}
         </section>
         <Footer />
       </main>
