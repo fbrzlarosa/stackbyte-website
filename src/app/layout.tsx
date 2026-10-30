@@ -2,6 +2,7 @@ import GoogleAnalytics from "@/components/GoogleAnalytics";
 import IubendaScript from "@/components/IubendaScript";
 import PersonSchema from "@/components/PersonSchema";
 import ResourceHints from "@/components/ResourceHints";
+import { channels } from "@/lib/channels";
 import SmoothScroll from "@/components/SmoothScroll";
 import { BackgroundProvider } from "@/context/BackgroundContext";
 import { Analytics } from "@vercel/analytics/next";
@@ -113,6 +114,10 @@ export default function RootLayout({
       <head>
         <ResourceHints />
         <PersonSchema />
+        {/* rel="me" on every page: Mastodon (and other IndieWeb tools) verify profile links with it. */}
+        {channels.map((channel) => (
+          <link key={channel.url} rel="me" href={channel.url} />
+        ))}
       </head>
       <body
         suppressHydrationWarning
