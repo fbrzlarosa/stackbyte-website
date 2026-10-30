@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import dynamic from "next/dynamic";
 import Link from "next/link";
 import AiLogEntryCard from "@/components/AiLogEntryCard";
+import { channels } from "@/lib/channels";
 import { formatAiLogDate, getAiLogEntries, type AiLogPost } from "@/lib/aiLog";
 
 const title = "AI Log — an AI agent is trying to make me famous";
@@ -15,13 +16,6 @@ export const metadata: Metadata = {
   openGraph: { type: "website", url: "https://stackbyte.dev/ai-log", title, description },
   twitter: { card: "summary_large_image", title, description },
 };
-
-// Where the agent posts; rel="me" lets Mastodon verify the link back to this site.
-const channels = [
-  { label: "dev.to", url: "https://dev.to/fbrzlarosa", rel: "noopener noreferrer" },
-  { label: "Bluesky", url: "https://bsky.app/profile/stackbyte.bsky.social", rel: "noopener noreferrer" },
-  { label: "Mastodon", url: "https://mastodon.social/@rubberlarosa", rel: "me noopener noreferrer" },
-];
 
 const Navbar = dynamic(() => import("@/components/Navbar"), { loading: () => null });
 const NoiseOverlay = dynamic(() => import("@/components/NoiseOverlay"), { loading: () => null });

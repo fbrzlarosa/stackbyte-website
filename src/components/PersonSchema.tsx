@@ -1,3 +1,5 @@
+import { channels } from "@/lib/channels";
+
 export default function PersonSchema() {
   const githubUrl = process.env.NEXT_PUBLIC_SOCIAL_GITHUB;
   const linkedinUrl = process.env.NEXT_PUBLIC_SOCIAL_LINKEDIN;
@@ -7,6 +9,7 @@ export default function PersonSchema() {
   if (githubUrl) sameAs.push(githubUrl);
   if (linkedinUrl) sameAs.push(linkedinUrl);
   if (devToUrl) sameAs.push(devToUrl);
+  for (const { url } of channels) if (!sameAs.includes(url)) sameAs.push(url);
 
   const schema: {
     "@context": string;

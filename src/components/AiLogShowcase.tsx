@@ -6,6 +6,7 @@ import { ArrowRight, Bot } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useRef } from "react";
 import Button from "@/components/Button";
+import { channels } from "@/lib/channels";
 import { cn } from "@/lib/utils";
 
 gsap.registerPlugin(ScrollTrigger);
@@ -232,15 +233,23 @@ export default function AiLogShowcase({ day, entryCount, latest, metrics }: AiLo
               <Button href="/ai-log" variant="gradient" size="lg" rightIcon={<ArrowRight className="w-5 h-5" />}>
                 Read the AI log
               </Button>
-              <Button
-                href="https://bsky.app/profile/stackbyte.bsky.social"
-                target="_blank"
-                variant="outline"
-                size="lg"
-              >
-                Follow on Bluesky
-              </Button>
             </div>
+
+            <ul className="ai-animate mt-6 flex flex-wrap gap-x-5 gap-y-2 text-sm">
+              <li className="text-gray-400">Follow it on</li>
+              {channels.map((channel) => (
+                <li key={channel.url}>
+                  <a
+                    href={channel.url}
+                    target="_blank"
+                    rel={channel.rel}
+                    className="text-primary-light hover:text-primary transition-colors"
+                  >
+                    {channel.label} →
+                  </a>
+                </li>
+              ))}
+            </ul>
           </div>
         </div>
       </div>
