@@ -1,5 +1,6 @@
 import DevToPosts from "@/components/DevToPosts";
 import dynamic from "next/dynamic";
+import { formatAiLogDate, getAiLogEntries } from "@/lib/aiLog";
 
 async function getDevToPosts() {
   try {
@@ -122,8 +123,30 @@ const TerminaleShowcase = dynamic(
   { loading: () => null }
 );
 
+const AiLogShowcase = dynamic(() => import("@/components/AiLogShowcase"), {
+  loading: () => null,
+});
+
+// Day 0 of the AI log experiment; the page revalidates hourly, so the counter stays current.
+const AI_LOG_START = Date.UTC(2026, 9, 29);
+
+function getAiLogTeaser() {
+  const entries = getAiLogEntries();
+  return {
+    day: Math.max(0, Math.floor((Date.now() - AI_LOG_START) / 86_400_000)),
+    entryCount: entries.length,
+    latest: entries.slice(0, 3).map(({ slug, date, title }) => ({
+      slug,
+      title,
+      dateLabel: formatAiLogDate(date).split(" ").slice(0, 2).join(" "),
+    })),
+    metrics: (entries[0]?.metrics ?? []).slice(0, 4),
+  };
+}
+
 export default async function Home() {
   const posts = await getDevToPosts();
+  const aiLog = getAiLogTeaser();
   return (
     <>
       <NoiseOverlay />
@@ -138,6 +161,7 @@ export default async function Home() {
         <Process />
         <SkillsShowcase />
         <TerminaleShowcase />
+        <AiLogShowcase {...aiLog} />
         <ReadyToStart />
         <DevToPosts posts={posts} />
         <Contact />
