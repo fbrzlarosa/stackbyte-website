@@ -45,6 +45,7 @@ export const metadata: Metadata = {
     "Fabrizio La Rosa is a Full Stack Engineer and Software Architect with 15+ years of experience in crafting efficient, scalable digital solutions.",
   alternates: {
     canonical: "https://stackbyte.dev",
+    types: { "application/rss+xml": [{ url: "/feed.xml", title: "stackbyte.dev: AI log and lab" }] },
   },
   keywords: [
     "Full Stack Developer",
