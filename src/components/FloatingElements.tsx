@@ -105,6 +105,15 @@ export default function FloatingElements() {
     )
       return;
 
+    // The layer is display:none below md; don't tick tweens nobody can see.
+    // Also skip on touch devices and for reduced motion.
+    if (
+      !window.matchMedia(
+        "(min-width: 768px) and (pointer: fine) and (prefers-reduced-motion: no-preference)",
+      ).matches
+    )
+      return;
+
     const ctx = gsap.context(() => {
       shapes.forEach((shape, i) => {
         const shapeEl = shapeRefs.current[i];
@@ -174,7 +183,7 @@ export default function FloatingElements() {
     return (
       <div
         ref={containerRef}
-        className="absolute inset-0 overflow-hidden pointer-events-none hidden md:block"
+        className="absolute inset-0 overflow-hidden pointer-events-none hidden md:pointer-fine:motion-safe:block"
         style={{ contain: "layout style paint" }}
         suppressHydrationWarning
       />
@@ -184,7 +193,7 @@ export default function FloatingElements() {
   return (
     <div
       ref={containerRef}
-      className="absolute inset-0 overflow-hidden pointer-events-none hidden md:block"
+      className="absolute inset-0 overflow-hidden pointer-events-none hidden md:pointer-fine:motion-safe:block"
       style={{ contain: "layout style paint" }}
     >
       {shapes.map((shape, i) => (

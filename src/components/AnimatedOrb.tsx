@@ -84,13 +84,20 @@ export default function AnimatedOrb() {
       const logoX = gsap.quickTo(logoContainerRef.current!, "x", { duration: 0.5, ease: "power2.out" });
       const logoY = gsap.quickTo(logoContainerRef.current!, "y", { duration: 0.5, ease: "power2.out" });
 
+      // Cache the container rect: reading layout on every mousemove frame
+      // forces a synchronous reflow. Only re-measure after scroll/resize.
+      let rect: DOMRect | null = null;
+      const invalidateRect = () => {
+        rect = null;
+      };
+
       const handleMouseMove = (e: MouseEvent) => {
         if (rafId) return; // coalesce to one rAF at most
         rafId = requestAnimationFrame(() => {
           rafId = undefined;
           if (!containerRef.current) return;
 
-          const rect = containerRef.current.getBoundingClientRect();
+          if (!rect) rect = containerRef.current.getBoundingClientRect();
           const mx = e.clientX - (rect.left + rect.width / 2);
           const my = e.clientY - (rect.top + rect.height / 2);
           mousePos.current = { x: mx, y: my };
@@ -105,17 +112,15 @@ export default function AnimatedOrb() {
         });
       };
 
-      window.addEventListener("mousemove", handleMouseMove, { passive: true });
+      // Mouse tracking is pointless on touch devices.
+      const trackMouse = window.matchMedia("(pointer: fine)").matches;
+      if (trackMouse) {
+        window.addEventListener("mousemove", handleMouseMove, { passive: true });
+        window.addEventListener("scroll", invalidateRect, { passive: true });
+        window.addEventListener("resize", invalidateRect, { passive: true });
+      }
 
       if (coreGlowRef.current) {
-        gsap.to(coreGlowRef.current, {
-          scale: 0.8,
-          opacity: 0.2,
-          yoyo: true,
-          repeat: -1,
-          duration: 2,
-          ease: "sine.inOut",
-        });
         gsap.to(coreGlowRef.current, {
           scale: 1.2,
           opacity: 0.5,
@@ -155,6 +160,8 @@ export default function AnimatedOrb() {
 
       return () => {
         window.removeEventListener("mousemove", handleMouseMove);
+        window.removeEventListener("scroll", invalidateRect);
+        window.removeEventListener("resize", invalidateRect);
         if (rafId) cancelAnimationFrame(rafId);
         rafId = undefined;
       };
@@ -244,6 +251,7 @@ export default function AnimatedOrb() {
         duration: 10,
         repeat: -1,
         ease: "none",
+        overwrite: "auto",
       });
       gsap.to(ring2Ref.current, { scale: 0.9, duration: 0.3 });
     } else if (ring1Ref.current && ring2Ref.current) {
@@ -253,6 +261,7 @@ export default function AnimatedOrb() {
         duration: 30,
         repeat: -1,
         ease: "none",
+        overwrite: "auto",
       });
       gsap.to(ring2Ref.current, { scale: 1, duration: 0.3 });
     }

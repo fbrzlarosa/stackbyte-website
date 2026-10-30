@@ -47,6 +47,13 @@ export default function MouseParticles() {
   const animatedParticles = useRef<Set<number>>(new Set());
 
   useEffect(() => {
+    // No mouse to follow on touch devices / with reduced motion.
+    if (
+      window.matchMedia("(pointer: coarse), (prefers-reduced-motion: reduce)")
+        .matches
+    )
+      return;
+
     const handleMouseMove = (e: MouseEvent) => {
       const now = performance.now();
       // 150ms throttle + 50% skip: fewer state updates, less re-render churn
@@ -135,7 +142,7 @@ export default function MouseParticles() {
   return (
     <div
       ref={containerRef}
-      className="fixed inset-0 pointer-events-none z-40 hidden md:block overflow-hidden"
+      className="fixed inset-0 pointer-events-none z-40 hidden md:pointer-fine:motion-safe:block overflow-hidden"
       style={{ contain: "layout style paint" }}
     >
       {particles.map((particle) => (

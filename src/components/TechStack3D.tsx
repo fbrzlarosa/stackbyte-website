@@ -52,21 +52,26 @@ export default function TechStack3D() {
         });
 
         // Mouse Parallax Effect
-        const handleMouseMove = (e: MouseEvent) => {
-          if (!sceneRef.current) return;
-          const { clientX, clientY } = e;
-          const x = (clientX / window.innerWidth - 0.5) * 20;
-          const y = (clientY / window.innerHeight - 0.5) * 20;
+        // quickTo reuses one tween per property instead of creating a new
+        // gsap.to on every mousemove event.
+        const rotateY = gsap.quickTo(sceneRef.current!, "rotateY", {
+          duration: 1,
+          ease: "power2.out",
+        });
+        const rotateX = gsap.quickTo(sceneRef.current!, "rotateX", {
+          duration: 1,
+          ease: "power2.out",
+        });
 
-          gsap.to(sceneRef.current, {
-            rotateY: x,
-            rotateX: -y,
-            duration: 1,
-            ease: "power2.out",
-          });
+        const handleMouseMove = (e: MouseEvent) => {
+          const { clientX, clientY } = e;
+          rotateY((clientX / window.innerWidth - 0.5) * 20);
+          rotateX(-(clientY / window.innerHeight - 0.5) * 20);
         };
 
-        window.addEventListener("mousemove", handleMouseMove);
+        window.addEventListener("mousemove", handleMouseMove, {
+          passive: true,
+        });
 
         return () => {
           window.removeEventListener("mousemove", handleMouseMove);
@@ -87,7 +92,7 @@ export default function TechStack3D() {
       {/* 3D Scene Container */}
       <div
         ref={sceneRef}
-        className="relative w-full md:w-[800px] h-[500px] transition-transform ease-out"
+        className="relative w-full md:w-[800px] h-[500px]"
         style={{ transformStyle: "preserve-3d" }}
       >
         {/* 1. Main Code Editor Window (Center) */}

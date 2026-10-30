@@ -60,7 +60,7 @@ export default function CodeRain() {
     );
 
   return (
-    <div className="absolute inset-0 overflow-hidden pointer-events-none select-none">
+    <div className="absolute inset-0 overflow-hidden pointer-events-none select-none motion-reduce:hidden">
       <div
         className="absolute inset-0 flex justify-between opacity-15 px-2"
         style={{

@@ -224,3 +224,22 @@ html.lenis body {
   background-size: 300% auto;
   animation: gradient 8s linear infinite;
 }
+
+/* Low-power / accessibility: stop the looping gradient paints (background-position
+   is not compositor-friendly, it repaints every frame). */
+@media (prefers-reduced-motion: reduce) {
+  .gradient-animated,
+  .gradient-animated-text,
+  .gradient-rainbow-text,
+  .gradient-animated-glow {
+    animation: none;
+  }
+}
+
+/* On touch devices freeze only the blurred glow clones (blur-[..px] + gradient):
+   re-blurring an animated gradient every frame is the costly part. */
+@media (pointer: coarse) {
+  [class*="blur-["][class*="gradient-"] {
+    animation: none;
+  }
+}
