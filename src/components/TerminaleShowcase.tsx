@@ -63,7 +63,7 @@ export default function TerminaleShowcase() {
             </p>
 
             {/* Heading */}
-            <h2 className="t-animate text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black leading-tight mb-6">
+            <h2 className="t-animate text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black leading-[1.05] tracking-tight mb-6">
               <span className="text-white">terminale</span>
               <br />
               <span className="relative inline-block">

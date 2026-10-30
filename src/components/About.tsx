@@ -535,7 +535,7 @@ export default function About() {
             >
               <h2
                 ref={h2Ref}
-                className="text-4xl sm:text-5xl font-black mb-8 tracking-tight leading-tight"
+                className="text-4xl sm:text-5xl font-black mb-8 tracking-tight leading-[1.05]"
               >
                 Every great{" "}
                 <span className="relative inline-block">

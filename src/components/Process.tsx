@@ -472,7 +472,7 @@ export default function Process() {
               transformStyle: isMobile ? "flat" : "preserve-3d",
               perspective: isMobile ? "none" : "1200px",
             }}
-            className="max-w-68 mx-auto sm:mx-0 sm:max-w-none text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-black mb-4 md:mb-6 relative"
+            className="max-w-68 mx-auto sm:mx-0 sm:max-w-none text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-black leading-[1.05] mb-4 md:mb-6 relative"
           >
             <span
               ref={span1Ref}

@@ -514,7 +514,7 @@ export default function Contact() {
                 transformStyle: isMobile ? "flat" : "preserve-3d",
                 perspective: isMobile ? "none" : "1500px",
               }}
-              className="text-center text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-black mb-12 md:mb-16 lg:mb-24 px-4 sm:px-4 mx-auto max-w-full sm:max-w-[90vw] wrap-break-word"
+              className="text-center text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-black leading-[1.05] mb-12 md:mb-16 lg:mb-24 px-4 sm:px-4 mx-auto max-w-full sm:max-w-[90vw] wrap-break-word"
             >
               <span
                 style={{

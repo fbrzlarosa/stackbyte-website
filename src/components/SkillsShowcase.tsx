@@ -424,7 +424,7 @@ function SkillCard({ skill, index, isMobile }: SkillCardProps) {
 
         <h2
           ref={titleRef}
-          className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-black mb-4 sm:mb-6 md:mb-8 tracking-tighter text-white"
+          className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-black leading-[1.05] mb-4 sm:mb-6 md:mb-8 tracking-tighter text-white"
           style={{ transformStyle: "preserve-3d" }}
         >
           {skill.title}

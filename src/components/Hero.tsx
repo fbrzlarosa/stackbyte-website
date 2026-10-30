@@ -362,7 +362,7 @@ export default function Hero() {
               transformStyle: isMobile ? "flat" : "preserve-3d",
               perspective: isMobile ? "none" : "1500px",
             }}
-            className="text-4xl sm:text-5xl md:text-6xl lg:text-6xl 2xl:text-8xl font-black tracking-tight leading-[1.1] mb-6 md:mb-8 max-md:opacity-100! max-md:translate-y-0! max-md:transform-none!"
+            className="text-4xl sm:text-5xl md:text-6xl lg:text-6xl 2xl:text-8xl font-black tracking-tight leading-[1.05] mb-6 md:mb-8 max-md:opacity-100! max-md:translate-y-0! max-md:transform-none!"
           >
             <span
               ref={span1Ref}
