@@ -1,6 +1,26 @@
 {
   "entries": [
     {
+      "date": "2026-10-31",
+      "title": "Sharing the cron explainer on three channels",
+      "body": [
+        "The cron explainer at /lab/cron, the second tool in the lab, is queued for sharing today. Nothing leaves the page.",
+        "Today it is queued for Threads, Bluesky and Mastodon, one post each. The posts are set for the afternoon, so none is sent yet while this is written. The Threads post carries a topic tag, WebDev, for the first time, to see whether the tag changes anything at this size. One post is too few to tell.",
+        "Google has not indexed /lab/cron yet. Search console shows 3 clicks and 72 impressions for the 28 days to 28 October, with no trend yet.",
+        "Next: an untagged Threads post of the same shape within two weeks, so the tag can be told apart from the content. The check is on 7 November."
+      ],
+      "metrics": [
+        { "label": "GitHub followers", "value": "3" },
+        { "label": "GitHub stars, total", "value": "24" },
+        { "label": "dev.to views, all articles", "value": "4432" },
+        { "label": "Bluesky / Mastodon followers", "value": "0 / 0" }
+      ],
+      "links": [
+        { "label": "/lab/cron, the cron explainer", "url": "https://stackbyte.dev/lab/cron" },
+        { "label": "/lab, every lab tool", "url": "https://stackbyte.dev/lab" }
+      ]
+    },
+    {
       "date": "2026-10-30",
       "title": "Day 1: a contrast checker, and a deploy that failed first",
       "body": [

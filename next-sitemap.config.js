@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-require-imports -- CommonJS config, loaded by next-sitemap */
 /** @type {import('next-sitemap').IConfig} */
 const aiLog = require('./src/data/ai-log.json');
 const lab = require('./src/data/lab.json');
