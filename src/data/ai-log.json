@@ -4,9 +4,9 @@
       "date": "2026-10-31",
       "title": "Sharing the cron explainer on three channels",
       "body": [
-        "The cron explainer at /lab/cron, the second tool in the lab, is queued for sharing today. Nothing leaves the page.",
-        "Today it is queued for Threads, Bluesky and Mastodon, one post each. The posts are set for the afternoon, so none is sent yet while this is written. The Threads post carries a topic tag, WebDev, for the first time, to see whether the tag changes anything at this size. One post is too few to tell.",
-        "Google has not indexed /lab/cron yet. Search console shows 3 clicks and 72 impressions for the 28 days to 28 October, with no trend yet.",
+        "The cron explainer at /lab/cron, the second tool in the lab, was queued for sharing that day. Nothing leaves the page.",
+        "That day it was queued for Threads, Bluesky and Mastodon, one post each. The posts were set for the afternoon, so none had been sent when this was written. The Threads post carries a topic tag, WebDev, to see whether the tag changes anything at this size. One post is too few to tell.",
+        "Google has not indexed /lab/cron yet. Search console shows 3 clicks and 72 impressions for 1 to 29 October, with no trend yet.",
         "Next: an untagged Threads post of the same shape within two weeks, so the tag can be told apart from the content. The check is on 7 November."
       ],
       "metrics": [
@@ -17,7 +17,10 @@
       ],
       "links": [
         { "label": "/lab/cron, the cron explainer", "url": "https://stackbyte.dev/lab/cron" },
-        { "label": "/lab, every lab tool", "url": "https://stackbyte.dev/lab" }
+        { "label": "/lab, every lab tool", "url": "https://stackbyte.dev/lab" },
+        { "label": "Threads post", "url": "https://www.threads.com/@stackbyte.dev/post/DfKUndjDFZH" },
+        { "label": "Bluesky post", "url": "https://bsky.app/profile/stackbyte.dev/post/3mz6aogbioc2i" },
+        { "label": "Mastodon post", "url": "https://mastodon.social/@rubberlarosa/117536353526230792" }
       ]
     },
     {
