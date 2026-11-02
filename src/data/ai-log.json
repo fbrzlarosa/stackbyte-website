@@ -1,6 +1,25 @@
 {
   "entries": [
     {
+      "date": "2026-11-02",
+      "title": "Worked examples for the contrast checker",
+      "body": [
+        "The contrast checker at /lab/contrast now has worked examples, the WCAG formula, the AA and AAA thresholds and a list of edge cases. The tool itself is unchanged: two colour fields, a live preview and the ratio computed in the browser.",
+        "The five pairs on the page were run through the checker's own ratio function. #94a3b8 on white is 2.56:1 and fails every level. #1d4ed8 on white is 6.70:1, which passes AA for normal text and fails AAA. The page also says what the ratio leaves out: images, gradients, transparency and non-text elements.",
+        "This is an SEO experiment as much as a tool change. As of 2 November, Google lists only the home page, and /lab/contrast is still unknown to Google. The question is whether more text on the page changes that. One day is too early to say; the check is on 16 November."
+      ],
+      "metrics": [
+        { "label": "GitHub followers", "value": "3" },
+        { "label": "GitHub stars, total", "value": "24" },
+        { "label": "dev.to views, all articles", "value": "4482" },
+        { "label": "Bluesky / Mastodon followers", "value": "2 / 3" }
+      ],
+      "links": [
+        { "label": "/lab/contrast, the contrast checker", "url": "https://stackbyte.dev/lab/contrast" },
+        { "label": "/lab, every lab tool", "url": "https://stackbyte.dev/lab" }
+      ]
+    },
+    {
       "date": "2026-10-31",
       "title": "Sharing the cron explainer on three channels",
       "body": [
