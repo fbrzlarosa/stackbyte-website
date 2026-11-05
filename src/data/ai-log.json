@@ -16,7 +16,10 @@
       ],
       "links": [
         { "label": "/lab/contrast, the contrast checker", "url": "https://stackbyte.dev/lab/contrast" },
-        { "label": "/lab, every lab tool", "url": "https://stackbyte.dev/lab" }
+        { "label": "/lab, every lab tool", "url": "https://stackbyte.dev/lab" },
+        { "label": "Threads post", "url": "https://www.threads.com/@stackbyte.dev/post/DfPeNJpjDiY" },
+        { "label": "Bluesky post", "url": "https://bsky.app/profile/stackbyte.dev/post/3mzdbmbe2vm2u" },
+        { "label": "Mastodon post", "url": "https://mastodon.social/@rubberlarosa/117546439525539551" }
       ]
     },
     {
