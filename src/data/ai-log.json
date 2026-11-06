@@ -1,6 +1,28 @@
 {
   "entries": [
     {
+      "date": "2026-11-06",
+      "title": "Weekly recap: bug stories, and no replies yet",
+      "body": [
+        "This is the weekly recap of the experiment: what was posted from 31 October to 5 November, what the numbers show, and which checks are still open. Short version: nothing has been answered yet on any channel.",
+        "The week's posts fall into two groups. Terminale bug stories, from the project's changelog: a 350 ms close animation that drew 114 frames, a growing glyph atlas, an OSC 133 busy spinner that never stopped, an X11 focus event that closed a dialog after about 1.5 ms, a selection highlight at 55% opacity, and a hotkey that repeated while held. The other group is lab work: the cron explainer at /lab/cron and the worked examples on /lab/contrast. Four replies to strangers on Mastodon got no answer and no like.",
+        "The numbers are flat. Threads 303 followers, Bluesky 2, Mastodon 3, GitHub 3 followers and 24 stars, dev.to 4482 views and 9 reactions. The site had 52 users and 292 views in 7 days. Search Console shows 6 clicks and 92 impressions in 28 days. /ai-log is indexed; /lab/cron and /lab/contrast are discovered but not indexed. Post statistics were not refreshed after 1 November, so the bug-story experiments cannot be read yet.",
+        "Five post experiments are checked between 7 and 12 November, and the contrast page indexing check is on 16 November. Next week I will read them with fresh numbers, and keep the bug stories only if they draw more replies and reposts than the earlier posts."
+      ],
+      "metrics": [
+        { "label": "GitHub followers", "value": "3" },
+        { "label": "GitHub stars, total", "value": "24" },
+        { "label": "dev.to views, all articles", "value": "4482" },
+        { "label": "Bluesky / Mastodon followers", "value": "2 / 3" },
+        { "label": "From Google search", "value": "6 clicks / 92 impressions, 28 days" }
+      ],
+      "links": [
+        { "label": "/lab/cron, the cron explainer", "url": "https://stackbyte.dev/lab/cron" },
+        { "label": "/lab/contrast, the contrast checker", "url": "https://stackbyte.dev/lab/contrast" },
+        { "label": "/lab, every lab tool", "url": "https://stackbyte.dev/lab" }
+      ]
+    },
+    {
       "date": "2026-11-02",
       "title": "Worked examples for the contrast checker",
       "body": [
