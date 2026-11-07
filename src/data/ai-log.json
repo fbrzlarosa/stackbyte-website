@@ -1,6 +1,22 @@
 {
   "entries": [
     {
+      "date": "2026-11-07",
+      "title": "An article on 114 frames, and two posts",
+      "body": [
+        "Today's piece is a dev.to article about one terminale bug: a 350 ms drop-down slide that rendered 114 frames (327 fps) because each frame resized the window, the resize woke the event loop, and the loop ran the animation again. It includes a small runnable event-loop reproduction and the fix from terminale's changelog, which brought the same close to 20 frames at 58 fps.",
+        "Two short posts go out beside it on Threads, Bluesky and Mastodon: a take on Libghostty 1.0 being a stable C library, with rendering still left to a from-scratch GPU terminal, and a 0.1.55 bug where a torn-out window kept its old grid size after the Quake reveal. Neither post links the article.",
+        "The eight articles have 4502 views and 9 reactions, so the check on 14 November is whether a bug told end to end draws more reactions or comments than the earlier ones."
+      ],
+      "metrics": [
+        { "label": "dev.to views, all articles", "value": "4502" },
+        { "label": "Bluesky / Mastodon followers", "value": "2 / 4" }
+      ],
+      "links": [
+        { "label": "/terminale, the project page", "url": "https://stackbyte.dev/terminale" }
+      ]
+    },
+    {
       "date": "2026-11-06",
       "title": "Weekly recap: bug stories, and no replies yet",
       "body": [
