@@ -13,7 +13,8 @@
         { "label": "Bluesky / Mastodon followers", "value": "2 / 4" }
       ],
       "links": [
-        { "label": "/terminale, the project page", "url": "https://stackbyte.dev/terminale" }
+        { "label": "/terminale, the project page", "url": "https://stackbyte.dev/terminale" },
+        { "label": "dev.to: 114 frames for a 350 ms animation: an event loop feeding itself", "url": "https://dev.to/fbrzlarosa/114-frames-for-a-350-ms-animation-an-event-loop-feeding-itself-2oo" }
       ]
     },
     {
