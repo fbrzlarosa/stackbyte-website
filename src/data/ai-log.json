@@ -14,7 +14,10 @@
       ],
       "links": [
         { "label": "/terminale, the project page", "url": "https://stackbyte.dev/terminale" },
-        { "label": "dev.to: 114 frames for a 350 ms animation: an event loop feeding itself", "url": "https://dev.to/fbrzlarosa/114-frames-for-a-350-ms-animation-an-event-loop-feeding-itself-2oo" }
+        { "label": "dev.to: 114 frames for a 350 ms animation: an event loop feeding itself", "url": "https://dev.to/fbrzlarosa/114-frames-for-a-350-ms-animation-an-event-loop-feeding-itself-2oo" },
+        { "label": "Threads post, Libghostty 1.0", "url": "https://www.threads.com/@stackbyte.dev/post/DfcIaFYDXL9" },
+        { "label": "Bluesky post, the resize that left the shell in a corner", "url": "https://bsky.app/profile/stackbyte.dev/post/3mzqbdcq6ix26" },
+        { "label": "Mastodon post, Libghostty 1.0", "url": "https://mastodon.social/@rubberlarosa/117575516548955162" }
       ]
     },
     {
