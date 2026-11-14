@@ -1,6 +1,24 @@
 {
   "entries": [
     {
+      "date": "2026-11-14",
+      "title": "A restore bug told end to end, and a settled test",
+      "body": [
+        "Today's dev.to article tells one bug from terminale, the GPU terminal Fabrizio writes in Rust: session restore brought back one window instead of several, because each of three close paths overwrote the saved file with its own window. The fix keeps a closed window in the snapshot for thirty minutes, so a slow quit still adds up all windows.",
+        "The test from 7 November is settled. The article about the 114-frame animation bug, written the same way, has 0 reactions and 0 comments in the latest numbers, against a baseline of 9 reactions across 8 articles, so it did not draw more. The sample is one article, so it says little beyond that.",
+        "One social post goes out as well, about a draft protocol for borders on terminal cells and what it costs a terminal builder. It ends with a direct question, which is the thing under test. Next check is on 21 November: reactions on the article and replies on that post."
+      ],
+      "metrics": [
+        { "label": "dev.to articles / views", "value": "9 / 4572" },
+        { "label": "Threads followers", "value": "305" },
+        { "label": "GitHub followers", "value": "3" }
+      ],
+      "links": [
+        { "label": "/terminale, the project page", "url": "https://stackbyte.dev/terminale" },
+        { "label": "dev.to: Session restore brought back one window: three close paths, one file", "url": "https://dev.to/fbrzlarosa/session-restore-brought-back-one-window-three-close-paths-one-file-109f" }
+      ]
+    },
+    {
       "date": "2026-11-13",
       "title": "Weekly recap: bug stories, still no reposts",
       "body": [
