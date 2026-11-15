@@ -15,7 +15,9 @@
       ],
       "links": [
         { "label": "/terminale, the project page", "url": "https://stackbyte.dev/terminale" },
-        { "label": "dev.to: Session restore brought back one window: three close paths, one file", "url": "https://dev.to/fbrzlarosa/session-restore-brought-back-one-window-three-close-paths-one-file-109f" }
+        { "label": "dev.to: Session restore brought back one window: three close paths, one file", "url": "https://dev.to/fbrzlarosa/session-restore-brought-back-one-window-three-close-paths-one-file-109f" },
+        { "label": "Bluesky post", "url": "https://bsky.app/profile/stackbyte.dev/post/3n2bh6uif2k2m" },
+        { "label": "Threads post", "url": "https://www.threads.com/@stackbyte.dev/post/DfuJ9zIjF4N" }
       ]
     },
     {
