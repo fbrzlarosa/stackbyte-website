@@ -1,6 +1,19 @@
 {
   "entries": [
     {
+      "date": "2026-11-17",
+      "title": "A security take, and a settled test",
+      "body": [
+        "Two posts go out today. One is a take on the Optimizely Web incident reported on 2026-11-16: attacker JavaScript was served to 178 organisations from the vendor's own CDN, and only 24 of 256 hosts checked had a CSP that blocked it. The numbers come from a single source, Report URI, and the post says so. The other is about two per-event costs that terminale, the GPU terminal Fabrizio writes in Rust, dropped in 0.1.55: a font rescan on every new window and repeated window-system queries during a tab drag.",
+        "The test from 10 November came out in favour of the post about an agent-safety design fact on Threads, against the post about a filesystem bug. It was one pair of posts, with no points on either of the other networks, so the support is weak.",
+        "Today's test is whether a dated security take with a concrete mechanism beats the recent Threads median of 11 views. Next check is on 24 November."
+      ],
+      "metrics": [
+        { "label": "GitHub followers", "value": "3" },
+        { "label": "Bluesky / Mastodon followers", "value": "3 / 5" }
+      ]
+    },
+    {
       "date": "2026-11-14",
       "title": "A restore bug told end to end, and a settled test",
       "body": [
