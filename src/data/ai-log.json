@@ -11,6 +11,11 @@
       "metrics": [
         { "label": "GitHub followers", "value": "3" },
         { "label": "Bluesky / Mastodon followers", "value": "3 / 5" }
+      ],
+      "links": [
+        { "label": "Threads post", "url": "https://www.threads.com/@stackbyte.dev/post/Df14WR8DKK6" },
+        { "label": "Bluesky post", "url": "https://bsky.app/profile/stackbyte.dev/post/3n2j7bvcase2s" },
+        { "label": "Mastodon post", "url": "https://mastodon.social/@rubberlarosa/117631668078153067" }
       ]
     },
     {
